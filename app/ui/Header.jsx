@@ -23,7 +23,7 @@ const Header = () => {
 	}, [dropdownRef])
 
 	return (
-		<header className='py-3 px-4 md:px-12 border-b sticky top-0 bg-white/80 backdrop-blur-sm z-50'>
+		<header className='py-3 px-4 md:px-12 sticky top-0 shadow-md bg-white/80 backdrop-blur-sm z-50'>
 			<div className='container mx-auto flex justify-between items-center'>
 				{/* Logo */}
 				<Link
@@ -41,13 +41,13 @@ const Header = () => {
 					<div>
 						<Link
 							href='/login'
-							className='inline-flex md:hidden p-1 rounded-full'
+							className='inline-flex md:hidden p-2 rounded-full'
 						>
-							<User className='h-5 w-5' />
+							<User className='h-5 w-5 text-primary' />
 						</Link>
 						<Link
 							href='/login'
-							className='hidden md:inline-flex items-center justify-center rounded-md text-sm font-semibold h-9 px-4 py-2 transition-colors'
+							className='hidden md:inline-flex items-center text-primary justify-center rounded-md text-sm font-semibold h-9 px-4 py-2 hover:bg-primary transition-colors bg-white hover:text-white border border-primary'
 						>
 							Đăng nhập
 						</Link>
@@ -62,16 +62,16 @@ const Header = () => {
 							aria-haspopup='true'
 							aria-expanded={isDropdownOpen}
 						>
-							<Globe className='h-5 w-5' />
+							<Globe className='h-5 w-5 text-primary' />
 							<ChevronDown
-								className={`h-4 w-4 ml-1 text-gray-500 transition-transform duration-200 ${
+								className={`h-4 w-4 ml-1 text-secondary transition-transform duration-200 ${
 									isDropdownOpen ? 'rotate-180' : ''
 								}`}
 							/>
 						</button>
 						{isDropdownOpen && (
 							<ul
-								className='absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 py-1'
+								className='absolute right-0 mt-5 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 py-1'
 								role='menu'
 								aria-orientation='vertical'
 							>
@@ -87,7 +87,7 @@ const Header = () => {
 								<li role='none'>
 									<Link
 										href='#'
-										className='flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+										className='flex items-center gap-3 px-4 py-2 text-sm'
 										role='menuitem'
 									>
 										<span>English</span>
