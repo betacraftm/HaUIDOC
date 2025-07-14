@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model comments {
+  id          Int        @id @default(autoincrement())
+  user_id     Int?
+  document_id Int?
+  content     String?    @db.Text
+  rating      Int?
+  created_at  DateTime?  @db.DateTime(0)
+  users       users?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_1")
+  documents   documents? @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_2")
+
+  @@index([document_id], map: "document_id")
+  @@index([user_id], map: "user_id")
+}
+
+model departments {
+  id     Int      @id @default(autoincrement())
+  name   String?  @db.VarChar(255)
+  majors majors[]
+  users  users[]
+}
+
+model documents {
+  id          Int        @id @default(autoincrement())
+  title       String?    @db.VarChar(255)
+  desc        String?    @db.Text
+  file_url    String?    @db.VarChar(255)
+  subject_id  Int?
+  uploaded_by Int?
+  created_at  DateTime?  @db.DateTime(0)
+  comments    comments[]
+  subjects    subjects?  @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_1")
+  users       users?     @relation(fields: [uploaded_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_2")
+
+  @@index([subject_id], map: "subject_id")
+  @@index([uploaded_by], map: "uploaded_by")
+}
+
+model majors {
+  id            Int          @id @default(autoincrement())
+  name          String?      @db.VarChar(255)
+  department_id Int?
+  departments   departments? @relation(fields: [department_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "majors_ibfk_1")
+  subjects      subjects[]
+  users         users[]
+
+  @@index([department_id], map: "department_id")
+}
+
+model oauth_accounts {
+  id               Int       @id @default(autoincrement())
+  user_id          Int?
+  provider         String?   @db.VarChar(50)
+  provider_user_id String?   @db.VarChar(255)
+  access_token     String?   @db.VarChar(255)
+  created_at       DateTime? @db.DateTime(0)
+  users            users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "oauth_accounts_ibfk_1")
+
+  @@index([user_id], map: "user_id")
+}
+
+model subjects {
+  id        Int         @id @default(autoincrement())
+  name      String?     @db.VarChar(255)
+  major_id  Int?
+  documents documents[]
+  majors    majors?     @relation(fields: [major_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "subjects_ibfk_1")
+
+  @@index([major_id], map: "major_id")
+}
+
+model users {
+  id             Int              @id @default(autoincrement())
+  name           String?          @db.VarChar(255)
+  email          String?          @db.VarChar(255)
+  password_hash  String?          @db.VarChar(255)
+  role           String?          @db.VarChar(50)
+  created_at     DateTime?        @db.DateTime(0)
+  image_url      String?          @db.VarChar(255)
+  major_id       Int?
+  department_id  Int?
+  comments       comments[]
+  documents      documents[]
+  oauth_accounts oauth_accounts[]
+  majors         majors?          @relation(fields: [major_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_1")
+  departments    departments?     @relation(fields: [department_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_2")
+
+  @@index([department_id], map: "department_id")
+  @@index([major_id], map: "major_id")
+}
