@@ -3,11 +3,14 @@
 import Link from "next/link";
 import { anton } from "@/ui/fonts";
 import { useState } from "react";
+import { registerUser } from "@/lib/action";
+import { redirect } from "next/navigation";
 
 const RegisterPage = ({ majorsList }) => {
   const [majorInput, setMajorInput] = useState("");
   const [filteredMajors, setFilteredMajors] = useState(majorsList);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [error, setError] = useState("");
 
   const handleMajorChange = (e) => {
     const value = e.target.value;
@@ -31,7 +34,25 @@ const RegisterPage = ({ majorsList }) => {
   };
 
   const handleMajorBlur = () => {
-    setTimeout(() => setDropdownOpen(false), 100); // Delay to allow click
+    setTimeout(() => setDropdownOpen(false), 100);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const major = majorsList.find(
+      (m) => m.name.toLowerCase() === majorInput.toLowerCase(),
+    );
+    formData.set("major_id", major.id);
+
+    const result = await registerUser(formData);
+    if (result?.error) {
+      setError(result.error);
+    } else {
+      e.target.reset();
+      setMajorInput("");
+      redirect("/login");
+    }
   };
 
   return (
@@ -43,7 +64,10 @@ const RegisterPage = ({ majorsList }) => {
       >
         Đăng ký tài khoản
       </h1>
-      <form className="space-y-5 rounded-lg bg-white p-8 shadow">
+      <form
+        className="space-y-5 rounded-lg bg-white p-8 shadow"
+        onSubmit={handleSubmit}
+      >
         <div>
           <label
             htmlFor="name"
@@ -128,6 +152,7 @@ const RegisterPage = ({ majorsList }) => {
             )}
           </div>
         </div>
+        {error && <div className="text-sm text-red-600">{error}</div>}
         <button
           type="submit"
           className="bg-primary hover:bg-primary/90 w-full rounded-md px-4 py-2 text-base font-bold text-white transition"
