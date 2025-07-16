@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="vn">
       <body className={`${raleway.className} antialiased`}>
         <Header />
         <main>{children}</main>
