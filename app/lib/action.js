@@ -2,44 +2,42 @@
 
 import { PrismaClient } from "../../generated/prisma";
 import bcrypt from "bcryptjs";
-import { z } from "zod";
+import { registerSchema } from "./definition";
+import { redirect } from "next/navigation";
 
 const prisma = new PrismaClient();
 
-const registerSchema = z.object({
-  name: z.string().min(8, "Họ và tên phải có ít nhất 8 ký tự"),
-  username: z.string().min(8, "Tên đăng nhập phải có ít nhất 8 ký tự"),
-  password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
-});
+export async function registerUser(prevState, formData) {
+  const data = Object.fromEntries(formData.entries());
 
-export async function registerUser(formData) {
-  // Convert FormData to object
-
-  const data = Object.fromEntries(formData);
-
-  // Validate input
-  const parsed = registerSchema.safeParse(data);
+  const parsed = registerSchema.safeParse({
+    name: data.name,
+    username: data.username,
+    password: data.password,
+  });
   if (!parsed.success) {
-    const errorMessages = parsed.error.issues.map((issue) => issue.message);
-    return { error: errorMessages.join(", ") };
+    return { error: parsed.error.flatten().fieldErrors };
   }
-  const { name, username, password, major_id } = parsed.data;
+  const { name, username, password } = parsed.data;
+  const major_name = data.major_name;
 
-  // Check if username exists
   const existingUser = await prisma.users.findUnique({
     where: { username },
   });
   if (existingUser) {
-    return { error: "Tên đăng nhập đã tồn tại" };
+    return { error: { message: "Tên đăng nhập đã tồn tại" } };
   }
 
-  // Hash password
+  const major_id = (
+    await prisma.majors.findFirst({ where: { name: major_name } })
+  )?.id;
+
+  if (!major_id) {
+    return { error: { message: "Ngành học không hợp lệ" } };
+  }
+
   const hashedPassword = await bcrypt.hash(password, 10);
-
-  // Change major_id type to integer
-  const majorIdInt = parseInt(major_id, 10);
-
-  // Create user
+  const majorIdInt = parseInt(major_id);
   await prisma.users.create({
     data: {
       name,
@@ -48,4 +46,5 @@ export async function registerUser(formData) {
       major_id: majorIdInt,
     },
   });
+  redirect("/login");
 }

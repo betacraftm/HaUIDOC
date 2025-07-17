@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { anton } from "@/ui/fonts";
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { registerUser } from "@/lib/action";
-import { redirect } from "next/navigation";
 
 const RegisterPage = ({ majorsList }) => {
   const [majorInput, setMajorInput] = useState("");
   const [filteredMajors, setFilteredMajors] = useState(majorsList);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [error, setError] = useState("");
+  const [state, action, pending] = useActionState(registerUser, undefined);
 
   const handleMajorChange = (e) => {
     const value = e.target.value;
@@ -37,24 +36,6 @@ const RegisterPage = ({ majorsList }) => {
     setTimeout(() => setDropdownOpen(false), 100);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const major = majorsList.find(
-      (m) => m.name.toLowerCase() === majorInput.toLowerCase(),
-    );
-    formData.set("major_id", major.id);
-
-    const result = await registerUser(formData);
-    if (result?.error) {
-      setError(result.error);
-    } else {
-      e.target.reset();
-      setMajorInput("");
-      redirect("/login");
-    }
-  };
-
   return (
     <section
       className={`mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-6 py-12`}
@@ -66,7 +47,7 @@ const RegisterPage = ({ majorsList }) => {
       </h1>
       <form
         className="space-y-5 rounded-lg bg-white p-8 shadow"
-        onSubmit={handleSubmit}
+        action={action}
       >
         <div>
           <label
@@ -83,6 +64,9 @@ const RegisterPage = ({ majorsList }) => {
             className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:outline-none"
             placeholder="Nhập họ và tên"
           />
+          {state?.error.name && (
+            <div className="text-sm text-red-600">{state.error.name}</div>
+          )}
         </div>
         <div>
           <label
@@ -99,6 +83,9 @@ const RegisterPage = ({ majorsList }) => {
             className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:outline-none"
             placeholder="Nhập tên đăng nhập"
           />
+          {state?.error.username && (
+            <div className="text-sm text-red-600">{state.error.username}</div>
+          )}
         </div>
         <div>
           <label
@@ -115,18 +102,21 @@ const RegisterPage = ({ majorsList }) => {
             className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:outline-none"
             placeholder="Nhập mật khẩu"
           />
+          {state?.error.password && (
+            <div className="text-sm text-red-600">{state.error.password}</div>
+          )}
         </div>
         <div>
           <label
-            htmlFor="major_id"
+            htmlFor="major_name"
             className="mb-1 block text-base font-semibold text-gray-800"
           >
             Ngành học
           </label>
           <div className="relative">
             <input
-              id="major_id"
-              name="major_id"
+              id="major_name"
+              name="major_name"
               type="text"
               autoComplete="off"
               required
@@ -152,9 +142,12 @@ const RegisterPage = ({ majorsList }) => {
             )}
           </div>
         </div>
-        {error && <div className="text-sm text-red-600">{error}</div>}
+        {state?.error.message && (
+          <div className="text-sm text-red-600">{state.error.message}</div>
+        )}
         <button
           type="submit"
+          disabled={pending}
           className="bg-primary hover:bg-primary/90 w-full rounded-md px-4 py-2 text-base font-bold text-white transition"
         >
           Đăng ký
