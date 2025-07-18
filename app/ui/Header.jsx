@@ -9,6 +9,7 @@ const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [showHeader, setShowHeader] = useState(true);
+  const [isAuth, setIsAuth] = useState(false);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
@@ -38,6 +39,20 @@ const Header = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch("/api/auth-status"); // Gọi API endpoint
+        const data = await response.json();
+        setIsAuth(data.isAuthenticated);
+      } catch (error) {
+        setIsAuth(false);
+      }
+    };
+
+    checkAuthStatus();
   }, []);
 
   return (
