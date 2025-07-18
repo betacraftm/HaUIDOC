@@ -4,6 +4,7 @@ import { PrismaClient } from "../../generated/prisma";
 import bcrypt from "bcryptjs";
 import { registerSchema } from "./definition";
 import { redirect } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
 const prisma = new PrismaClient();
 
@@ -40,6 +41,7 @@ export async function registerUser(prevState, formData) {
   const majorIdInt = parseInt(major_id);
   await prisma.users.create({
     data: {
+      id: uuidv4(),
       name,
       username,
       password_hash: hashedPassword,
@@ -47,4 +49,29 @@ export async function registerUser(prevState, formData) {
     },
   });
   redirect("/login");
+}
+
+export async function loginUser(prevState, formData) {
+  const data = Object.fromEntries(formData.entries());
+
+  const { username, password } = data;
+
+  if (!username || !password) {
+    return { error: { message: "Tên đăng nhập và mật khẩu là bắt buộc" } };
+  }
+
+  const user = await prisma.users.findUnique({
+    where: { username },
+  });
+  if (!user) {
+    return { error: { message: "Tên đăng nhập hoặc mật khẩu không đúng" } };
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+  if (!isPasswordValid) {
+    return { error: { message: "Tên đăng nhập hoặc mật khẩu không đúng" } };
+  }
+
+  // Redirect to the home page or dashboard after successful login
+  redirect("/dashboard");
 }

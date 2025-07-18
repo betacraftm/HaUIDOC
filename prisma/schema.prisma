@@ -9,9 +9,9 @@ datasource db {
 }
 
 model comments {
-  id          Int        @id @default(autoincrement())
-  user_id     Int?
-  document_id Int?
+  id          String     @id
+  user_id     String?
+  document_id String?
   content     String?    @db.Text
   created_at  DateTime?  @db.DateTime(0) @default(now())
   users       users?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_1")
@@ -22,12 +22,12 @@ model comments {
 }
 
 model documents {
-  id          Int        @id @default(autoincrement())
+  id          String     @id
   title       String     @db.VarChar(255)
   desc        String?    @db.Text
   file_url    String?    @db.VarChar(255)
-  subject_id  Int?
-  uploaded_by Int?
+  subject_id  String?
+  uploaded_by String?
   created_at  DateTime?  @db.DateTime(0) @default(now())
   comments    comments[]
   subjects    subjects?  @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_1")
@@ -48,7 +48,7 @@ model majors {
 }
 
 model subjects {
-  id        Int         @id @default(autoincrement())
+  id        String      @id
   name      String      @db.VarChar(255)
   major_id  Int?
   documents documents[]
@@ -64,7 +64,7 @@ enum UserRole {
 }
 
 model users {
-  id             Int              @id @default(autoincrement())
+  id             String           @id
   name           String           @db.VarChar(255)
   username       String           @db.VarChar(255) @unique
   password_hash  String?          @db.VarChar(255)
