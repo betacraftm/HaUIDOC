@@ -16,3 +16,21 @@ export const fetchMajors = async () => {
     return [];
   }
 };
+
+export const getUserById = async (userId) => {
+  try {
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        major_id: true,
+      },
+    });
+    return user;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
+};

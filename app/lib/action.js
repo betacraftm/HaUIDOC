@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { registerSchema } from "./definition";
 import { redirect } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { createSession } from "./session";
+import { createSession, deleteSession } from "./session";
 
 const prisma = new PrismaClient();
 
@@ -50,11 +50,12 @@ export async function registerUser(prevState, formData) {
         major_id: majorIdInt,
       },
     });
-    redirect("/login");
   } catch (error) {
     console.log("Error registering user:", error);
     return { error: { message: "Đã xảy ra lỗi khi đăng ký" } };
   }
+
+  redirect("/login");
 }
 
 export async function loginUser(prevState, formData) {
@@ -80,11 +81,20 @@ export async function loginUser(prevState, formData) {
     }
 
     await createSession(user.id);
-
-    // Redirect to the home page or dashboard after successful login
-    redirect("/dashboard");
   } catch (error) {
     console.error("Error logging in user:", error);
     return { error: { message: "Đã xảy ra lỗi khi đăng nhập" } };
   }
+
+  redirect("/dashboard");
+}
+
+export async function logoutUser() {
+  try {
+    await deleteSession();
+  } catch (error) {
+    console.error("Error logging out user:", error);
+  }
+
+  redirect("/");
 }
