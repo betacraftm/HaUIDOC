@@ -11,7 +11,7 @@ datasource db {
 }
 
 model comments {
-  id          String    @id
+  id          String    @id @default(uuid())
   user_id     String?
   document_id String?
   content     String?   @db.Text
@@ -24,7 +24,7 @@ model comments {
 }
 
 model documents {
-  id          String      @id
+  id          String      @id @default(uuid())
   title       String      @db.VarChar(255)
   desc        String?     @db.Text
   file_url    String?     @db.VarChar(255)
@@ -45,7 +45,7 @@ model documents {
 }
 
 model majors {
-  id          Int        @id @default(autoincrement())
+  id          String     @id @default(uuid())
   name        String     @db.VarChar(255)
   subjects    subjects[]
   users       users[]
@@ -54,9 +54,9 @@ model majors {
 }
 
 model subjects {
-  id          String      @id
+  id          String      @id @default(uuid())
   name        String      @db.VarChar(255)
-  major_id    Int?
+  major_id    String?
   documents   documents[]
   majors      majors?     @relation(fields: [major_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "subjects_ibfk_1")
 
@@ -70,14 +70,14 @@ enum UserRole {
 }
 
 model users {
-  id             String                @id
+  id             String                @id @default(uuid())
   name           String                @db.VarChar(255)
   username       String                @db.VarChar(255) @unique
   password_hash  String?               @db.VarChar(255)
   role           UserRole?             @default(client)
   created_at     DateTime?             @db.DateTime(0) @default(now())
   image_url      String?               @db.VarChar(255)
-  major_id       Int?
+  major_id       String?
   comments       comments[]
   documents      documents[] // Documents uploaded by this user
   majors         majors?               @relation(fields: [major_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_1")

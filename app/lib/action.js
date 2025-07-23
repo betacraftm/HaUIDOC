@@ -4,7 +4,6 @@ import { PrismaClient } from "../../generated/prisma";
 import bcrypt from "bcryptjs";
 import { registerSchema } from "./definition";
 import { redirect } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
 import { createSession, deleteSession } from "./session";
 
 const prisma = new PrismaClient();
@@ -40,14 +39,12 @@ export async function registerUser(prevState, formData) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const majorIdInt = parseInt(major_id);
     await prisma.users.create({
       data: {
-        id: uuidv4(),
         name,
         username,
         password_hash: hashedPassword,
-        major_id: majorIdInt,
+        major_id,
       },
     });
   } catch (error) {
