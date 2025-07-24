@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+/* Ẩn thanh cuộn cho Firefox */
+.hide-scrollbar {
+  scrollbar-width: none;
+  /* Ẩn thanh cuộn */
+}
+
+/* Ẩn thanh cuộn cho Internet Explorer và Edge */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* Ẩn thanh cuộn */
+}
+
+/* Ẩn thanh cuộn cho Chrome, Safari và Opera (sử dụng pseudo-elements) */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* Ẩn toàn bộ thanh cuộn */
+  width: 0;
+  /* Đảm bảo không chiếm không gian */
+  height: 0;
+  /* Đảm bảo không chiếm không gian */
+}
+
 html {
   scroll-behavior: smooth;
 }

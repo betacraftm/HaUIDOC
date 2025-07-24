@@ -17,7 +17,7 @@ const HeroSection = () => {
       <div className="relative mx-auto mt-6 w-full sm:max-w-md">
         <input
           type="text"
-          placeholder="Tìm kiếm tài liệu..."
+          placeholder="Tìm kiếm tài liệu, khóa học, hoặc đề tài..."
           className="focus:ring-primary w-full rounded-full border border-gray-300 py-3 pr-12 pl-4 shadow transition focus:ring-2 focus:outline-none"
         />
         <span className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400">

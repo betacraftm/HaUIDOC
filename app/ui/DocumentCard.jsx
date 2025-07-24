@@ -2,26 +2,19 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const DocumentCard = ({
-  title,
-  description,
-  type,
-  imageUrl,
-  linkUrl = "#",
-}) => {
+const DocumentCard = ({ title, description, imageUrl, linkUrl = "#" }) => {
   return (
     <Link
       href={linkUrl}
-      className="group block overflow-hidden rounded-lg border bg-white shadow-sm transition-all duration-200 hover:shadow-md"
+      className="block h-72 w-60 overflow-hidden rounded-lg border bg-white shadow-sm transition-all duration-200 hover:shadow-md"
     >
       <div className="relative flex h-36 w-full items-center justify-center bg-gray-100">
-        {/* Placeholder for document image/preview */}
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={title}
-            width={200} // Điều chỉnh kích thước phù hợp với card
-            height={144} // 144px = h-36
+            width={100} // Điều chỉnh kích thước phù hợp với card
+            height={100} // 144px = h-36
             objectFit="cover"
             className="h-full w-full"
           />
@@ -38,7 +31,6 @@ const DocumentCard = ({
             {description}
           </p>
         )}
-        {type && <p className="mt-2 text-xs text-gray-400">{type}</p>}
       </div>
     </Link>
   );

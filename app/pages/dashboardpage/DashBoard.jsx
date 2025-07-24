@@ -1,4 +1,3 @@
-import DocumentCard from "@/ui/DocumentCard";
 import { Search } from "lucide-react";
 import {
   recentlyViewed,
@@ -6,7 +5,7 @@ import {
   likedDocuments,
   myDocuments,
 } from "@/lib/placeholder";
-import Link from "next/link";
+import DashBoardSection from "./DashBoardSection";
 
 const DashBoard = () => {
   return (
@@ -22,116 +21,26 @@ const DashBoard = () => {
         </button>
       </div>
 
-      <section className="mb-10">
-        <h2 className="mb-6 text-2xl font-bold text-gray-800">
-          Tài liệu mới nhất
-        </h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {latestDocuments.map((doc) => (
-            <DocumentCard
-              key={doc.id}
-              title={doc.title}
-              description={doc.description}
-              type={doc.type}
-              imageUrl={doc.imageUrl}
-            />
-          ))}
-        </div>
-        {latestDocuments.length >= 5 && (
-          <div className="mt-8 text-center">
-            <Link
-              href="/latest-documents"
-              className="text-primary font-semibold hover:underline"
-            >
-              Xem tất cả tài liệu mới nhất &rarr;
-            </Link>
-          </div>
-        )}
-      </section>
-
-      <section className="mb-10">
-        <h2 className="mb-6 text-2xl font-bold text-gray-800">
-          Tài liệu bạn đã xem gần đây
-        </h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {recentlyViewed.map((doc) => (
-            <DocumentCard
-              key={doc.id}
-              title={doc.title}
-              description={doc.description}
-              type={doc.type}
-              imageUrl={doc.imageUrl}
-            />
-          ))}
-        </div>
-
-        {recentlyViewed.length >= 5 && (
-          <div className="mt-8 text-center">
-            <Link
-              href="/recently-viewed"
-              className="text-primary font-semibold hover:underline"
-            >
-              Xem tất cả tài liệu đã xem gần đây &rarr;
-            </Link>
-          </div>
-        )}
-      </section>
-
-      <section className="mb-10">
-        <h2 className="mb-6 text-2xl font-bold text-gray-800">
-          Tài liệu đã thích
-        </h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {likedDocuments.map((doc) => (
-            <DocumentCard
-              key={doc.id}
-              title={doc.title}
-              description={doc.description}
-              type={doc.type}
-              imageUrl={doc.imageUrl}
-            />
-          ))}
-        </div>
-
-        {likedDocuments.length >= 5 && (
-          <div className="mt-8 text-center">
-            <Link
-              href="/liked-documents"
-              className="text-primary font-semibold hover:underline"
-            >
-              Xem tất cả tài liệu đã thích &rarr;
-            </Link>
-          </div>
-        )}
-      </section>
-
-      <section className="mb-10">
-        <h2 className="mb-6 text-2xl font-bold text-gray-800">
-          Tài liệu của tôi
-        </h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {myDocuments.map((doc) => (
-            <DocumentCard
-              key={doc.id}
-              title={doc.title}
-              description={doc.description}
-              type={doc.type}
-              imageUrl={doc.imageUrl}
-            />
-          ))}
-        </div>
-
-        {myDocuments.length >= 5 && (
-          <div className="mt-8 text-center">
-            <Link
-              href="/my-documents"
-              className="text-primary font-semibold hover:underline"
-            >
-              Xem tất cả tài liệu của tôi &rarr;
-            </Link>
-          </div>
-        )}
-      </section>
+      <DashBoardSection
+        title={"Tài liệu mới nhất"}
+        data={latestDocuments}
+        viewAllString={"Xem tất cả các tài liệu mới nhất"}
+      />
+      <DashBoardSection
+        title={"Tài liệu bạn đã xem gần đây"}
+        data={recentlyViewed}
+        viewAllString={"Xem tất cả các tài liệu đã xem gần đây"}
+      />
+      <DashBoardSection
+        title={"Tài liệu đã thích"}
+        data={likedDocuments}
+        viewAllString={"Xem tất cả các tài liệu đã thích"}
+      />
+      <DashBoardSection
+        title={"Tài liệu của tôi"}
+        data={myDocuments}
+        viewAllString={"Xem tất cả các tài liệu của tôi"}
+      />
     </div>
   );
 };
