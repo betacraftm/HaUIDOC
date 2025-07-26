@@ -47,7 +47,6 @@ model documents {
 model majors {
   id          String     @id @default(uuid())
   name        String     @db.VarChar(255)
-  subjects    subjects[]
   users       users[]
 
   @@index([name])
@@ -56,11 +55,8 @@ model majors {
 model subjects {
   id          String      @id @default(uuid())
   name        String      @db.VarChar(255)
-  major_id    String?
   documents   documents[]
-  majors      majors?     @relation(fields: [major_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "subjects_ibfk_1")
 
-  @@index([major_id], map: "major_id")
   @@index([name])
 }
 

@@ -6,7 +6,7 @@ const DocumentCard = ({ title, description, imageUrl, linkUrl = "#" }) => {
   return (
     <Link
       href={linkUrl}
-      className="block h-72 w-60 overflow-hidden rounded-lg border bg-white shadow-sm transition-all duration-200 hover:shadow-md"
+      className="group block h-72 w-60 overflow-hidden rounded-lg border bg-white shadow-sm transition-all duration-200 hover:shadow-md"
     >
       <div className="relative flex h-36 w-full items-center justify-center bg-gray-100">
         {imageUrl ? (

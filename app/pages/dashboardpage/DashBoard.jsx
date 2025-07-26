@@ -4,7 +4,7 @@ import {
   latestDocuments,
   likedDocuments,
   myDocuments,
-} from "@/lib/placeholder";
+} from "@/lib/seeded-data";
 import DashBoardSection from "./DashBoardSection";
 
 const DashBoard = () => {
