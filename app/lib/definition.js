@@ -27,3 +27,8 @@ export const loginSchema = z.object({
   username: z.string().min(1, "Tên đăng nhập là bắt buộc"),
   password: z.string().min(1, "Mật khẩu là bắt buộc"),
 });
+
+export const uploadSchema = z.object({
+  title: z.string().min(1, "Tiêu đề là bắt buộc"),
+  description: z.string().optional(),
+});

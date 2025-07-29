@@ -2,7 +2,7 @@
 
 import { PrismaClient } from "../../generated/prisma";
 import bcrypt from "bcryptjs";
-import { loginSchema, registerSchema } from "./definition";
+import { loginSchema, registerSchema, uploadSchema } from "./definition";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "./session";
 
@@ -98,4 +98,38 @@ export async function logoutUser() {
   }
 
   redirect("/");
+}
+
+export async function uploadDocument(prevState, formData) {
+  try {
+    const title = formData.get("title");
+    const description = formData.get("description");
+    const documentFile = formData.get("documentFile");
+
+    const parsed = uploadSchema.safeParse({
+      title: title,
+      description: description,
+    });
+    if (!parsed.success) {
+      return { error: parsed.error.flatten().fieldErrors };
+    }
+    // Validate file type and size here if needed
+
+    // Save the file to your storage (e.g., local filesystem, cloud storage)
+    // For example, using a library like multer for Node.js
+
+    // Save document metadata to the database
+    await prisma.documents.create({
+      data: {
+        title,
+        description,
+        file_path: documentFile.name, // Adjust based on your storage solution
+      },
+    });
+  } catch (error) {
+    console.error("Error uploading document:", error);
+    return { error: { message: "Đã xảy ra lỗi khi tải lên tài liệu" } };
+  }
+
+  redirect("/documents");
 }
