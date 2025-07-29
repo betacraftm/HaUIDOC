@@ -13,21 +13,11 @@ async function checkAuthStatus() {
     const requestHeaders = await headers();
     const cookies = requestHeaders.get("cookie");
 
-    if (!cookies) {
+    if (!cookies && !cookies.includes("session")) {
       return false;
     }
 
-    const response = await fetch("http://localhost:3000/api/auth-status", {
-      headers: {
-        Cookie: cookies,
-      },
-    });
-
-    if (!response.ok) {
-      return false;
-    }
-    const data = await response.json();
-    return data?.isAuthenticated;
+    return true;
   } catch (error) {
     console.error("Failed to fetch authentication status:", error);
     return false;
@@ -37,7 +27,7 @@ async function checkAuthStatus() {
 export default async function RootLayout({ children }) {
   const isAuth = await checkAuthStatus();
   return (
-    <html lang="vn">
+    <html lang="vi">
       <body className={`${raleway.className} antialiased`}>
         <Header isAuth={isAuth} />
         <main>{children}</main>

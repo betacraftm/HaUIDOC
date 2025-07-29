@@ -3,7 +3,13 @@
 import Link from "next/link";
 import { anton } from "@/ui/fonts";
 import { useState, useRef } from "react";
-import { UploadCloud, XCircle, FileText, Image } from "lucide-react";
+import { UploadCloud, XCircle, FileText } from "lucide-react";
+
+const acceptedFileTypes = [
+  "application/pdf",
+  "application/msword", // .doc
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+];
 
 const UploadPage = () => {
   // State chỉ lưu trữ File object
@@ -11,12 +17,6 @@ const UploadPage = () => {
   const fileInputRef = useRef(null); // Ref cho input file ẩn
   const [isDragging, setIsDragging] = useState(false);
   const [fileError, setFileError] = useState("");
-
-  const acceptedFileTypes = [
-    "application/pdf",
-    "application/msword", // .doc
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
-  ];
 
   const handleFileValidation = (file) => {
     if (!file) return false;
@@ -122,7 +122,7 @@ const UploadPage = () => {
       </h1>
       <form
         className="space-y-5 rounded-lg bg-white p-8 shadow"
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit} // Will be replaced by server actions
       >
         {/* Trường Tiêu đề */}
         <div>
