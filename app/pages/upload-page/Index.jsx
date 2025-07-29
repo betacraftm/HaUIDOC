@@ -26,10 +26,10 @@ const UploadPage = () => {
       return false;
     }
 
-    // Kiểm tra kích thước tệp (ví dụ: tối đa 10MB)
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    // Kiểm tra kích thước tệp (ví dụ: tối đa 5MB)
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     if (file.size > MAX_FILE_SIZE) {
-      setFileError("Kích thước tệp không được vượt quá 10MB.");
+      setFileError("Kích thước tệp không được vượt quá 5MB.");
       return false;
     }
 
@@ -79,10 +79,11 @@ const UploadPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted!");
 
     const title = e.target.title.value;
     const description = e.target.description.value;
+
+    console.log(selectedFile);
 
     console.log("Title:", title);
     console.log("Description:", description);
@@ -97,18 +98,12 @@ const UploadPage = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("documentFile", selectedFile.file);
-
     // fetch('/api/upload', {
     //     method: 'POST',
     //     body: formData,
     // }).then(response => response.json())
     //   .then(data => console.log(data))
     //   .catch(error => console.error('Error:', error));
-    console.error("Vui lòng chọn một tệp để tải lên.");
   };
 
   return (

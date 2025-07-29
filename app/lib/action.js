@@ -2,7 +2,7 @@
 
 import { PrismaClient } from "../../generated/prisma";
 import bcrypt from "bcryptjs";
-import { registerSchema } from "./definition";
+import { loginSchema, registerSchema } from "./definition";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "./session";
 
@@ -10,18 +10,19 @@ const prisma = new PrismaClient();
 
 export async function registerUser(prevState, formData) {
   try {
-    const data = Object.fromEntries(formData.entries());
+    const name = formData.get("name");
+    const username = formData.get("username");
+    const password = formData.get("password");
+    const major_name = formData.get("major_name");
 
     const parsed = registerSchema.safeParse({
-      name: data.name,
-      username: data.username,
-      password: data.password,
+      name: name,
+      username: username,
+      password: password,
     });
     if (!parsed.success) {
       return { error: parsed.error.flatten().fieldErrors };
     }
-    const { name, username, password } = parsed.data;
-    const major_name = data.major_name;
 
     const existingUser = await prisma.users.findUnique({
       where: { username },
@@ -57,12 +58,15 @@ export async function registerUser(prevState, formData) {
 
 export async function loginUser(prevState, formData) {
   try {
-    const data = Object.fromEntries(formData.entries());
+    const username = formData.get("username");
+    const password = formData.get("password");
 
-    const { username, password } = data;
-
-    if (!username || !password) {
-      return { error: { message: "Tên đăng nhập và mật khẩu là bắt buộc" } };
+    const parsed = loginSchema.safeParse({
+      username: username,
+      password: password,
+    });
+    if (!parsed.success) {
+      return { error: parsed.error.flatten().fieldErrors };
     }
 
     const user = await prisma.users.findUnique({

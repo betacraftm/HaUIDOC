@@ -13,7 +13,7 @@ async function checkAuthStatus() {
     const requestHeaders = await headers();
     const cookies = requestHeaders.get("cookie");
 
-    if (!cookies && !cookies.includes("session")) {
+    if (!cookies || !cookies.includes("session")) {
       return false;
     }
 
