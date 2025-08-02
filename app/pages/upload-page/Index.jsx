@@ -2,14 +2,10 @@
 
 import Link from "next/link";
 import { anton } from "@/ui/fonts";
-import { useState, useRef } from "react";
+import { useState, useRef, useActionState } from "react";
 import { UploadCloud, XCircle, FileText } from "lucide-react";
-
-const acceptedFileTypes = [
-  "application/pdf",
-  "application/msword", // .doc
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
-];
+import { uploadDocument } from "@/lib/action";
+import { acceptedFileTypes } from "@/utils/filetype";
 
 const UploadPage = () => {
   // State chỉ lưu trữ File object
@@ -17,6 +13,7 @@ const UploadPage = () => {
   const fileInputRef = useRef(null); // Ref cho input file ẩn
   const [isDragging, setIsDragging] = useState(false);
   const [fileError, setFileError] = useState("");
+  const [state, action] = useActionState(uploadDocument, undefined);
 
   const handleFileValidation = (file) => {
     if (!file) return false;
@@ -83,12 +80,6 @@ const UploadPage = () => {
     const title = e.target.title.value;
     const description = e.target.description.value;
 
-    console.log(selectedFile);
-
-    console.log("Title:", title);
-    console.log("Description:", description);
-    console.log("Selected File:", selectedFile?.file);
-
     if (!selectedFile) {
       setFileError("Vui lòng chọn một tệp để tải lên.");
       return;
@@ -98,12 +89,11 @@ const UploadPage = () => {
       return;
     }
 
-    // fetch('/api/upload', {
-    //     method: 'POST',
-    //     body: formData,
-    // }).then(response => response.json())
-    //   .then(data => console.log(data))
-    //   .catch(error => console.error('Error:', error));
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("documentFile", selectedFile.file);
+    action(formData);
   };
 
   return (
@@ -117,7 +107,7 @@ const UploadPage = () => {
       </h1>
       <form
         className="space-y-5 rounded-lg bg-white p-8 shadow"
-        onSubmit={handleSubmit} // Will be replaced by server actions
+        onSubmit={handleSubmit}
       >
         {/* Trường Tiêu đề */}
         <div>
@@ -138,6 +128,10 @@ const UploadPage = () => {
           />
         </div>
 
+        {state?.error.title && (
+          <div className="text-sm text-red-600">{state.error.title}</div>
+        )}
+
         {/* Trường Mô tả */}
         <div>
           <label
@@ -154,6 +148,10 @@ const UploadPage = () => {
             placeholder="Nhập mô tả chi tiết về tài liệu"
           ></textarea>
         </div>
+
+        {state?.error.description && (
+          <div className="text-sm text-red-600">{state.error.description}</div>
+        )}
 
         {/* Input Tải file */}
         <div>

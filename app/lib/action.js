@@ -5,6 +5,10 @@ import bcrypt from "bcryptjs";
 import { loginSchema, registerSchema, uploadSchema } from "./definition";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "./session";
+import { acceptedFileTypes } from "@/utils/filetype";
+import { storage } from "./firebase/config";
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { getUserAuth } from "./auth";
 
 const prisma = new PrismaClient();
 
@@ -106,6 +110,8 @@ export async function uploadDocument(prevState, formData) {
     const description = formData.get("description");
     const documentFile = formData.get("documentFile");
 
+    //get subjectid field
+
     const parsed = uploadSchema.safeParse({
       title: title,
       description: description,
@@ -113,17 +119,41 @@ export async function uploadDocument(prevState, formData) {
     if (!parsed.success) {
       return { error: parsed.error.flatten().fieldErrors };
     }
+
     // Validate file type and size here if needed
+    if (!documentFile) {
+      return { error: { message: "Hãy chọn tài liệu để tải lên" } };
+    }
 
-    // Save the file to your storage (e.g., local filesystem, cloud storage)
-    // For example, using a library like multer for Node.js
+    if (!acceptedFileTypes.includes(documentFile.type)) {
+      return {
+        error: { message: "Chỉ chấp nhận các tệp PDF, DOC, hoặc DOCX." },
+      };
+    }
 
-    // Save document metadata to the database
+    // Kiểm tra kích thước tệp (ví dụ: tối đa 5MB)
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    if (documentFile.size > MAX_FILE_SIZE) {
+      return {
+        error: { message: "Kích thước tệp không được vượt quá 5MB." },
+      };
+    }
+
+    const storageRef = ref(storage, `documents/${documentFile.name}`);
+
+    const snapshot = await uploadBytes(storageRef, documentFile);
+
+    const { user } = await getUserAuth();
+
+    const dowloadURL = await getDownloadURL(snapshot.ref);
+
     await prisma.documents.create({
       data: {
         title,
-        description,
-        file_path: documentFile.name, // Adjust based on your storage solution
+        desc: description,
+        file_url: dowloadURL,
+        uploaded_by: user.id,
+        //still missing the subject_id
       },
     });
   } catch (error) {
@@ -131,5 +161,5 @@ export async function uploadDocument(prevState, formData) {
     return { error: { message: "Đã xảy ra lỗi khi tải lên tài liệu" } };
   }
 
-  redirect("/documents");
+  redirect("/dashboard");
 }

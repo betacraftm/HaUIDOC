@@ -27,7 +27,7 @@ model documents {
   id          String      @id @default(uuid())
   title       String      @db.VarChar(255)
   desc        String?     @db.Text
-  file_url    String?     @db.VarChar(255)
+  file_url    String?     @db.Text
   subject_id  String?
   uploaded_by String?
   created_at  DateTime?   @db.DateTime(0) @default(now())
