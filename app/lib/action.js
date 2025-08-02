@@ -35,11 +35,11 @@ export async function registerUser(prevState, formData) {
       return { error: { message: "Tên đăng nhập đã tồn tại" } };
     }
 
-    const major_id = (
+    const majorId = (
       await prisma.majors.findFirst({ where: { name: major_name } })
     )?.id;
 
-    if (!major_id) {
+    if (!majorId) {
       return { error: { message: "Ngành học không hợp lệ" } };
     }
 
@@ -49,7 +49,7 @@ export async function registerUser(prevState, formData) {
         name,
         username,
         password_hash: hashedPassword,
-        major_id,
+        major_id: majorId,
       },
     });
   } catch (error) {
@@ -109,15 +109,29 @@ export async function uploadDocument(prevState, formData) {
     const title = formData.get("title");
     const description = formData.get("description");
     const documentFile = formData.get("documentFile");
+    const subjectName = formData.get("subjectName");
 
-    //get subjectid field
-
+    // add subjectSchema later
     const parsed = uploadSchema.safeParse({
       title: title,
       description: description,
     });
     if (!parsed.success) {
       return { error: parsed.error.flatten().fieldErrors };
+    }
+
+    let subjectId = (
+      await prisma.majors.findFirst({ where: { name: subjectName } })
+    )?.id;
+
+    if (!subjectId) {
+      subjectId = await prisma.subjects
+        .create({
+          data: {
+            name: subjectName,
+          },
+        })
+        .then((subject) => subject.id);
     }
 
     // Validate file type and size here if needed
@@ -153,7 +167,7 @@ export async function uploadDocument(prevState, formData) {
         desc: description,
         file_url: dowloadURL,
         uploaded_by: user.id,
-        //still missing the subject_id
+        subject_id: subjectId,
       },
     });
   } catch (error) {

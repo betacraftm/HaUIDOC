@@ -7,13 +7,16 @@ import { UploadCloud, XCircle, FileText } from "lucide-react";
 import { uploadDocument } from "@/lib/action";
 import { acceptedFileTypes } from "@/utils/filetype";
 
-const UploadPage = () => {
+const UploadPage = ({ subjectsList }) => {
   // State chỉ lưu trữ File object
   const [selectedFile, setSelectedFile] = useState(null); // { file: File }
   const fileInputRef = useRef(null); // Ref cho input file ẩn
   const [isDragging, setIsDragging] = useState(false);
   const [fileError, setFileError] = useState("");
   const [state, action] = useActionState(uploadDocument, undefined);
+  const [subjectInput, setSubjectInput] = useState("");
+  const [filteredSubjects, setFilteredSubjects] = useState(subjectsList);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleFileValidation = (file) => {
     if (!file) return false;
@@ -79,6 +82,7 @@ const UploadPage = () => {
 
     const title = e.target.title.value;
     const description = e.target.description.value;
+    const subjectName = e.target.subject_name.value;
 
     if (!selectedFile) {
       setFileError("Vui lòng chọn một tệp để tải lên.");
@@ -93,7 +97,33 @@ const UploadPage = () => {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("documentFile", selectedFile.file);
+    formData.append("subjectName", subjectName);
     action(formData);
+  };
+
+  const handleSubjectChange = (e) => {
+    const value = e.target.value;
+    setSubjectInput(value);
+    setFilteredSubjects(
+      subjectsList.filter((subject) =>
+        subject.name.toLowerCase().includes(value.toLowerCase()),
+      ),
+    );
+    setDropdownOpen(true);
+  };
+
+  const handleSubjectSelect = (name) => {
+    setSubjectInput(name);
+    setDropdownOpen(false);
+  };
+
+  const handleSubjectFocus = () => {
+    setFilteredSubjects(subjectsList);
+    setDropdownOpen(true);
+  };
+
+  const handleSubjectBlur = () => {
+    setTimeout(() => setDropdownOpen(false), 100);
   };
 
   return (
@@ -153,6 +183,43 @@ const UploadPage = () => {
           <div className="text-sm text-red-600">{state.error.description}</div>
         )}
 
+        <div>
+          <label
+            htmlFor="subject_name"
+            className="mb-1 block text-base font-semibold text-gray-800"
+          >
+            Môn học
+          </label>
+          <div className="relative">
+            <input
+              id="subject_name"
+              name="subject_name"
+              type="text"
+              autoComplete="off"
+              required
+              value={subjectInput}
+              onChange={handleSubjectChange}
+              onFocus={handleSubjectFocus}
+              onBlur={handleSubjectBlur}
+              className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:outline-none"
+              placeholder="Nhập môn học"
+            />
+            {dropdownOpen && filteredSubjects.length > 0 && (
+              <ul className="absolute bottom-full z-10 mb-1 max-h-40 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg">
+                {filteredSubjects.map((subject) => (
+                  <li
+                    key={subject.id}
+                    className="hover:bg-primary/10 cursor-pointer px-3 py-1.5 text-sm"
+                    onMouseDown={() => handleSubjectSelect(subject.name)}
+                  >
+                    {subject.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
         {/* Input Tải file */}
         <div>
           <label
@@ -196,7 +263,6 @@ const UploadPage = () => {
               </p>
             </div>
           ) : (
-            // Hiển thị thông tin tệp đã chọn (không có preview)
             <div className="mt-4 rounded-lg border border-gray-300 bg-gray-50 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center overflow-hidden">
