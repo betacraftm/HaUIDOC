@@ -7,10 +7,11 @@ import Image from "next/image";
 import LanguageButton from "./LanguageButton";
 import { logoutUser } from "@/lib/action";
 
-const Header = ({ isAuth, username = "Đạt" }) => {
+const Header = ({ isAuth, userInfo }) => {
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = useRef(0);
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
+
   const userDropdownRef = useRef(null);
 
   useEffect(() => {
@@ -82,7 +83,7 @@ const Header = ({ isAuth, username = "Đạt" }) => {
                     role="none"
                     className="border-b border-gray-100 px-4 py-2 text-sm font-semibold text-black"
                   >
-                    Xin chào, {username}!
+                    Xin chào, {userInfo?.name.split(" ").pop() || ""}!
                   </li>
                   <li role="none">
                     <Link

@@ -1,4 +1,4 @@
-import DashBoard from "@/pages/dashboardpage/DashBoard";
+import DashBoard from "@/pages/dashboard-page/Index";
 
 const page = () => {
   return <DashBoard />;

@@ -7,14 +7,16 @@ const prisma = new PrismaClient();
 export const fetchMajors = async () => {
   try {
     const majors = await prisma.majors.findMany();
-    return majors.map((major) => ({
-      id: major.id,
-      name: major.name,
-    }));
+    return majors;
   } catch (error) {
     console.error("Error fetching majors:", error);
     return [];
   }
+};
+
+export const fetchSubjects = async () => {
+  const subjects = await prisma.subjects.findMany();
+  return subjects;
 };
 
 export const getUserById = async (userId) => {
