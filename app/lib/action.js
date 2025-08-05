@@ -5,14 +5,13 @@ import bcrypt from "bcryptjs";
 import { loginSchema, registerSchema, uploadSchema } from "./definition";
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "./session";
-import { acceptedFileTypes } from "@/utils/filetype";
 import { storage } from "./firebase/config";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { getUserAuth } from "./auth";
 
 const prisma = new PrismaClient();
 
-export async function registerUser(prevState, formData) {
+export const registerUser = async (prevState, formData) => {
   try {
     const name = formData.get("name");
     const username = formData.get("username");
@@ -58,9 +57,9 @@ export async function registerUser(prevState, formData) {
   }
 
   redirect("/login");
-}
+};
 
-export async function loginUser(prevState, formData) {
+export const loginUser = async (prevState, formData) => {
   try {
     const username = formData.get("username");
     const password = formData.get("password");
@@ -92,9 +91,9 @@ export async function loginUser(prevState, formData) {
   }
 
   redirect("/dashboard");
-}
+};
 
-export async function logoutUser() {
+export const logoutUser = async () => {
   try {
     await deleteSession();
   } catch (error) {
@@ -102,9 +101,9 @@ export async function logoutUser() {
   }
 
   redirect("/");
-}
+};
 
-export async function uploadDocument(prevState, formData) {
+export const uploadDocument = async (prevState, formData) => {
   try {
     const title = formData.get("title");
     const description = formData.get("description");
@@ -115,13 +114,16 @@ export async function uploadDocument(prevState, formData) {
     const parsed = uploadSchema.safeParse({
       title: title,
       description: description,
+      subject: subjectName,
     });
     if (!parsed.success) {
       return { error: parsed.error.flatten().fieldErrors };
     }
 
     let subjectId = (
-      await prisma.majors.findFirst({ where: { name: subjectName } })
+      await prisma.subjects.findFirst({
+        where: { name: subjectName },
+      })
     )?.id;
 
     if (!subjectId) {
@@ -132,25 +134,6 @@ export async function uploadDocument(prevState, formData) {
           },
         })
         .then((subject) => subject.id);
-    }
-
-    // Validate file type and size here if needed
-    if (!documentFile) {
-      return { error: { message: "Hãy chọn tài liệu để tải lên" } };
-    }
-
-    if (!acceptedFileTypes.includes(documentFile.type)) {
-      return {
-        error: { message: "Chỉ chấp nhận các tệp PDF, DOC, hoặc DOCX." },
-      };
-    }
-
-    // Kiểm tra kích thước tệp (ví dụ: tối đa 5MB)
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-    if (documentFile.size > MAX_FILE_SIZE) {
-      return {
-        error: { message: "Kích thước tệp không được vượt quá 5MB." },
-      };
     }
 
     const storageRef = ref(storage, `documents/${documentFile.name}`);
@@ -174,6 +157,4 @@ export async function uploadDocument(prevState, formData) {
     console.error("Error uploading document:", error);
     return { error: { message: "Đã xảy ra lỗi khi tải lên tài liệu" } };
   }
-
-  redirect("/dashboard");
-}
+};

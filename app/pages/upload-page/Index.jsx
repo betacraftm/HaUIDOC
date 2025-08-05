@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { anton } from "@/ui/fonts";
-import { useState, useRef, useActionState } from "react";
+import { useState, useRef, useActionState, startTransition } from "react";
 import { UploadCloud, XCircle, FileText } from "lucide-react";
 import { uploadDocument } from "@/lib/action";
 import { acceptedFileTypes } from "@/utils/filetype";
@@ -10,11 +10,13 @@ import DropDown from "@/ui/DropDown";
 
 const UploadPage = ({ subjectsList }) => {
   // State chỉ lưu trữ File object
-  const [selectedFile, setSelectedFile] = useState(null); // { file: File }
-  const fileInputRef = useRef(null); // Ref cho input file ẩn
-  const [isDragging, setIsDragging] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
   const [fileError, setFileError] = useState("");
-  const [state, action] = useActionState(uploadDocument, undefined);
+  const fileInputRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [state, action, isPending] = useActionState(uploadDocument, undefined);
 
   const handleFileValidation = (file) => {
     if (!file) return false;
@@ -78,10 +80,6 @@ const UploadPage = ({ subjectsList }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const title = e.target.title.value;
-    const description = e.target.description.value;
-    const subjectName = e.target.subject_name.value;
-
     if (!selectedFile) {
       setFileError("Vui lòng chọn một tệp để tải lên.");
       return;
@@ -90,13 +88,18 @@ const UploadPage = ({ subjectsList }) => {
     if (!handleFileValidation(selectedFile.file)) {
       return;
     }
-
+    const subjectName = e.target.subject_name.value;
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
     formData.append("documentFile", selectedFile.file);
     formData.append("subjectName", subjectName);
-    action(formData);
+
+    startTransition(async () => {
+      action(formData);
+    });
+
+    window.location.reload();
   };
 
   return (
@@ -124,6 +127,10 @@ const UploadPage = ({ subjectsList }) => {
             id="title"
             name="title"
             type="text"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
             required
             className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:outline-none"
             placeholder="Nhập tiêu đề tài liệu"
@@ -146,6 +153,10 @@ const UploadPage = ({ subjectsList }) => {
           <textarea
             id="description"
             name="description"
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
             rows="4"
             className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:outline-none"
             placeholder="Nhập mô tả chi tiết về tài liệu"
@@ -163,6 +174,10 @@ const UploadPage = ({ subjectsList }) => {
           id={"subject_name"}
           placeholder={"Nhập môn học"}
         />
+
+        {state?.error.subject && (
+          <div className="text-sm text-red-600">{state.error.subject}</div>
+        )}
 
         {/* Input Tải file */}
         <div>
@@ -188,10 +203,9 @@ const UploadPage = ({ subjectsList }) => {
                 id="documentFile"
                 name="documentFile"
                 type="file"
-                required
                 onChange={handleFileChange}
                 ref={fileInputRef}
-                className="hidden"
+                className="sr-only"
               />
               <UploadCloud
                 className={`mx-auto mb-2 h-12 w-12 ${
@@ -238,9 +252,34 @@ const UploadPage = ({ subjectsList }) => {
         {/* Nút Tải lên */}
         <button
           type="submit"
-          className="bg-primary hover:bg-primary/90 w-full rounded-md px-4 py-2 text-base font-bold text-white transition"
+          className="bg-primary hover:bg-primary/90 flex w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-base font-bold text-white transition disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-50"
+          disabled={isPending}
         >
-          Tải lên
+          {isPending ? (
+            <>
+              <svg
+                className="h-5 w-5 animate-spin text-white"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Đang tải lên...
+            </>
+          ) : (
+            "Tải lên"
+          )}
         </button>
       </form>
       <p className="mt-6 text-center text-base text-gray-700">
@@ -256,3 +295,6 @@ const UploadPage = ({ subjectsList }) => {
 };
 
 export default UploadPage;
+
+// TODO: Write api for fetch document in database
+// TODO: Find solution for document preview

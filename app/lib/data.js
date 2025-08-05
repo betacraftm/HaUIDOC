@@ -36,3 +36,16 @@ export const getUserById = async (userId) => {
     return null;
   }
 };
+
+export const fetchAllDocument = async (userId) => {
+  try {
+    const newestDocuments = await prisma.documents.findMany({
+      take: 16,
+      orderBy: { created_at: "desc" },
+    });
+
+    const viewedRecentlyDocuments = await prisma.documents.findMany({
+      take: 8,
+    });
+  } catch (error) {}
+};

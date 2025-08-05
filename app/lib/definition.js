@@ -31,4 +31,5 @@ export const loginSchema = z.object({
 export const uploadSchema = z.object({
   title: z.string().min(1, "Tiêu đề là bắt buộc"),
   description: z.string().optional(),
+  subject: z.string().min(1, "Môn học là bắt buộc"),
 });
