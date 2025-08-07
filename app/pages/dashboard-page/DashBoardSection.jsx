@@ -1,19 +1,20 @@
 import DocumentCard from "@/ui/DocumentCard";
 import Link from "next/link";
+import { formatDate } from "@/utils/utils";
 
 const DashBoardSection = ({ title, data = [], viewAllString }) => {
   return (
     <section className="mb-10">
       <h2 className="mb-6 text-2xl font-bold text-gray-800">{title}</h2>
       {data.length != 0 ? (
-        <div className="hide-scrollbar flex gap-6 overflow-x-auto">
+        <div className="hide-scrollbar grid grid-cols-1 overflow-x-auto">
           {data.map((doc) => (
-            <div key={doc.id} className="flex-none">
+            <div key={doc.id}>
               <DocumentCard
                 title={doc.title}
-                description={doc.description}
-                type={doc.type}
-                imageUrl={doc.imageUrl}
+                //date={doc?.created_at}
+                subject={doc?.subjects.name}
+                date={formatDate(doc?.created_at?.toString())}
               />
             </div>
           ))}
@@ -22,7 +23,7 @@ const DashBoardSection = ({ title, data = [], viewAllString }) => {
         <p>Chưa có tài liệu nào</p>
       )}
 
-      {data.length > 6 && (
+      {data.length >= 5 && (
         <div className="mt-8 text-center">
           <Link
             href="/latest-documents"

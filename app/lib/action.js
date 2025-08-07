@@ -8,6 +8,7 @@ import { createSession, deleteSession } from "./session";
 import { storage } from "./firebase/config";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { getUserAuth } from "./auth";
+import { revalidatePath } from "next/cache";
 
 const prisma = new PrismaClient();
 
@@ -157,4 +158,6 @@ export const uploadDocument = async (prevState, formData) => {
     console.error("Error uploading document:", error);
     return { error: { message: "Đã xảy ra lỗi khi tải lên tài liệu" } };
   }
+
+  revalidatePath("/dashboard");
 };

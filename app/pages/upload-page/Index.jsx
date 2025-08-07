@@ -5,7 +5,7 @@ import { anton } from "@/ui/fonts";
 import { useState, useRef, useActionState, startTransition } from "react";
 import { UploadCloud, XCircle, FileText } from "lucide-react";
 import { uploadDocument } from "@/lib/action";
-import { acceptedFileTypes } from "@/utils/filetype";
+import { acceptedFileTypes } from "@/utils/utils";
 import DropDown from "@/ui/DropDown";
 
 const UploadPage = ({ subjectsList }) => {
@@ -98,8 +98,6 @@ const UploadPage = ({ subjectsList }) => {
     startTransition(async () => {
       action(formData);
     });
-
-    window.location.reload();
   };
 
   return (
@@ -295,6 +293,3 @@ const UploadPage = ({ subjectsList }) => {
 };
 
 export default UploadPage;
-
-// TODO: Write api for fetch document in database
-// TODO: Find solution for document preview

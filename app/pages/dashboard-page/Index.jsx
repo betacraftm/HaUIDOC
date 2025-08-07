@@ -6,8 +6,11 @@ import {
   myDocuments,
 } from "@/lib/seeded-data";
 import DashBoardSection from "./DashBoardSection";
+import { fetchAllDocument } from "@/lib/data";
 
-const DashBoard = () => {
+const DashBoard = async () => {
+  const { newestDocuments } = await fetchAllDocument();
+
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
       <div className="relative mb-8 overflow-hidden rounded-full bg-white shadow-md">
@@ -23,10 +26,10 @@ const DashBoard = () => {
 
       <DashBoardSection
         title={"Tài liệu mới nhất"}
-        data={latestDocuments}
+        data={newestDocuments}
         viewAllString={"Xem tất cả các tài liệu mới nhất"}
       />
-      <DashBoardSection
+      {/* <DashBoardSection
         title={"Tài liệu bạn đã xem gần đây"}
         data={recentlyViewed}
         viewAllString={"Xem tất cả các tài liệu đã xem gần đây"}
@@ -40,7 +43,7 @@ const DashBoard = () => {
         title={"Tài liệu của tôi"}
         data={myDocuments}
         viewAllString={"Xem tất cả các tài liệu của tôi"}
-      />
+      /> */}
     </div>
   );
 };
