@@ -9,7 +9,7 @@ import DashBoardSection from "./DashBoardSection";
 import { fetchAllDocument } from "@/lib/data";
 
 const DashBoard = async () => {
-  const { newestDocuments } = await fetchAllDocument();
+  const { recentlyDocuments } = await fetchAllDocument();
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
@@ -26,7 +26,7 @@ const DashBoard = async () => {
 
       <DashBoardSection
         title={"Tài liệu mới nhất"}
-        data={newestDocuments}
+        data={recentlyDocuments}
         viewAllString={"Xem tất cả các tài liệu mới nhất"}
       />
       {/* <DashBoardSection

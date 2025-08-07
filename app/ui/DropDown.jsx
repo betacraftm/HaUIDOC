@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const DropDown = ({ title, list, id, placeholder }) => {
+const DropDown = ({ title, list, id, placeholder, isSubmit }) => {
   const [inputValue, setInputValue] = useState("");
   const [filteredList, setFilteredList] = useState(list);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -29,6 +29,10 @@ const DropDown = ({ title, list, id, placeholder }) => {
   const handleInputBlur = () => {
     setTimeout(() => setDropdownOpen(false), 100);
   };
+
+  useEffect(() => {
+    setInputValue("");
+  }, [isSubmit]);
 
   return (
     <div>

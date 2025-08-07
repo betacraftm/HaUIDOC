@@ -39,7 +39,7 @@ export const getUserById = async (userId) => {
 
 export const fetchAllDocument = async (userId) => {
   try {
-    const newestDocuments = await prisma.documents.findMany({
+    const recentlyDocuments = await prisma.documents.findMany({
       take: 5,
       orderBy: { created_at: "desc" },
       include: {
@@ -55,7 +55,7 @@ export const fetchAllDocument = async (userId) => {
     //   take: 8,
     // });
 
-    return { newestDocuments };
+    return { recentlyDocuments };
   } catch (error) {
     console.error("Error fetching document:", error);
     return null;

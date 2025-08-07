@@ -17,6 +17,7 @@ const UploadPage = ({ subjectsList }) => {
   const fileInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [state, action, isPending] = useActionState(uploadDocument, undefined);
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const handleFileValidation = (file) => {
     if (!file) return false;
@@ -97,6 +98,10 @@ const UploadPage = ({ subjectsList }) => {
 
     startTransition(async () => {
       action(formData);
+      setSelectedFile(null);
+      setTitle("");
+      setDescription("");
+      setIsSubmit(!isSubmit);
     });
   };
 
@@ -171,6 +176,7 @@ const UploadPage = ({ subjectsList }) => {
           list={subjectsList}
           id={"subject_name"}
           placeholder={"Nhập môn học"}
+          isSubmit={isSubmit}
         />
 
         {state?.error.subject && (
@@ -293,3 +299,9 @@ const UploadPage = ({ subjectsList }) => {
 };
 
 export default UploadPage;
+
+// TODO: Build documents/id route
+
+// TODO: Build recently view part
+
+// TODO: Build documents/recently-document
