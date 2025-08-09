@@ -15,6 +15,7 @@ const DashBoardSection = ({ title, data = [], viewAllString }) => {
                 //date={doc?.created_at}
                 subject={doc?.subjects.name}
                 date={formatDate(doc?.created_at?.toString())}
+                linkUrl={`/documents/${doc.id}`}
               />
             </div>
           ))}

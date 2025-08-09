@@ -1,7 +1,7 @@
 // components/DocumentCard.jsx
 import Link from "next/link";
 
-const DocumentCard = ({ title, date = "test", subject, linkUrl = "#" }) => {
+const DocumentCard = ({ title, date, subject, linkUrl }) => {
   return (
     <Link
       href={linkUrl}

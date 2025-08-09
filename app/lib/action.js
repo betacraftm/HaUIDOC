@@ -161,3 +161,32 @@ export const uploadDocument = async (prevState, formData) => {
 
   revalidatePath("/dashboard");
 };
+
+export const viewedDocument = async (userId, docId) => {
+  try {
+    // TODO: Check doc if it excist in db first, if not redirect 404 page
+
+    const isViewed = await prisma.userViewedDocument.findFirst({
+      where: {
+        document_id: docId,
+        user_id: userId,
+      },
+    });
+
+    if (isViewed) return;
+
+    await prisma.userViewedDocument.create({
+      data: {
+        user_id: userId,
+        document_id: docId,
+      },
+    });
+  } catch (error) {
+    console.error("Error viewed document:", error);
+    return {
+      error: {
+        message: "Đã xảy ra lỗi khi cập nhật trạng thái xem tài liệu.",
+      },
+    };
+  }
+};
