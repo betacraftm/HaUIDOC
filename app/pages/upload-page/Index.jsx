@@ -300,8 +300,4 @@ const UploadPage = ({ subjectsList }) => {
 
 export default UploadPage;
 
-// TODO: Build documents/id route
-
-// TODO: Build recently view part
-
 // TODO: Build documents/recently-document
