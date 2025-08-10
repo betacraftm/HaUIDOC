@@ -3,12 +3,12 @@
 import { PrismaClient } from "../../generated/prisma";
 import bcrypt from "bcryptjs";
 import { loginSchema, registerSchema, uploadSchema } from "./definition";
-import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "./session";
 import { storage } from "./firebase/config";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { getUserAuth } from "./auth";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 const prisma = new PrismaClient();
 
@@ -165,6 +165,12 @@ export const uploadDocument = async (prevState, formData) => {
 export const viewedDocument = async (userId, docId) => {
   try {
     // TODO: Check doc if it excist in db first, if not redirect 404 page
+    const isDocExcist = await prisma.documents.findFirst({
+      where: { id: docId },
+    });
+    if (!isDocExcist) {
+      return null;
+    }
 
     const isViewed = await prisma.userViewedDocument.findFirst({
       where: {

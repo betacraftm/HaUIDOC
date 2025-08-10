@@ -300,6 +300,4 @@ const UploadPage = ({ subjectsList }) => {
 
 export default UploadPage;
 
-// TODO: Build recently view part
-
 // TODO: Build documents/recently-document
