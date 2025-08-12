@@ -36,7 +36,6 @@ model documents {
   users       users?      @relation(fields: [uploaded_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_2")
 
   liked_by    UserLikedDocument[]
-
   viewed_by   UserViewedDocument[]
 
   @@index([subject_id], map: "subject_id")

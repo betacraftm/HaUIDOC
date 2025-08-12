@@ -164,25 +164,18 @@ export const uploadDocument = async (prevState, formData) => {
 
 export const viewedDocument = async (userId, docId) => {
   try {
-    // TODO: Check doc if it excist in db first, if not redirect 404 page
-    const isDocExcist = await prisma.documents.findFirst({
-      where: { id: docId },
-    });
-    if (!isDocExcist) {
-      return null;
-    }
-
-    const isViewed = await prisma.userViewedDocument.findFirst({
+    const now = new Date();
+    await prisma.userViewedDocument.upsert({
       where: {
-        document_id: docId,
-        user_id: userId,
+        user_id_document_id: {
+          user_id: userId,
+          document_id: docId,
+        },
       },
-    });
-
-    if (isViewed) return;
-
-    await prisma.userViewedDocument.create({
-      data: {
+      update: {
+        viewed_at: now,
+      },
+      create: {
         user_id: userId,
         document_id: docId,
       },
@@ -195,4 +188,5 @@ export const viewedDocument = async (userId, docId) => {
       },
     };
   }
+  revalidatePath("/dashboard");
 };

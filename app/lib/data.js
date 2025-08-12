@@ -1,6 +1,8 @@
 "use server";
 
 import { PrismaClient } from "../../generated/prisma";
+import { viewedDocument } from "./action";
+import { getUserAuth } from "./auth";
 
 const prisma = new PrismaClient();
 
@@ -37,7 +39,7 @@ export const getUserById = async (userId) => {
   }
 };
 
-export const fetchAllDocument = async (userId) => {
+export const getDashboardDocument = async (userId) => {
   try {
     const recentlyDocuments = await prisma.documents.findMany({
       take: 5,
@@ -51,13 +53,36 @@ export const fetchAllDocument = async (userId) => {
       },
     });
 
-    // const viewedRecentlyDocuments = await prisma.documents.findMany({
-    //   take: 8,
-    // });
+    const viewedDocument = (
+      await prisma.userViewedDocument.findMany({
+        take: 5,
+        orderBy: { viewed_at: "desc" },
+        where: { user_id: userId },
+        include: {
+          document: { include: { subjects: { select: { name: true } } } },
+        },
+      })
+    ).map((doc) => doc?.document);
 
-    return { recentlyDocuments };
+    return { recentlyDocuments, viewedDocument };
   } catch (error) {
     console.error("Error fetching document:", error);
+    return null;
+  }
+};
+
+export const checkDocumentExcist = async (docId) => {
+  try {
+    const isDocExcist = await prisma.documents.findFirst({
+      where: { id: docId },
+    });
+    if (!isDocExcist) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error get document:", error);
     return null;
   }
 };

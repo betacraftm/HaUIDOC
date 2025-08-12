@@ -299,5 +299,3 @@ const UploadPage = ({ subjectsList }) => {
 };
 
 export default UploadPage;
-
-// TODO: Build documents/recently-document

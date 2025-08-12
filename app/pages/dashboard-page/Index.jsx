@@ -6,10 +6,10 @@ import {
   myDocuments,
 } from "@/lib/seeded-data";
 import DashBoardSection from "./DashBoardSection";
-import { fetchAllDocument } from "@/lib/data";
+import { getDashboardDocument } from "@/lib/data";
 
 const DashBoard = async () => {
-  const { recentlyDocuments } = await fetchAllDocument();
+  const { recentlyDocuments, viewedDocument } = await getDashboardDocument();
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
@@ -29,12 +29,12 @@ const DashBoard = async () => {
         data={recentlyDocuments}
         viewAllString={"Xem tất cả các tài liệu mới nhất"}
       />
-      {/* <DashBoardSection
+      <DashBoardSection
         title={"Tài liệu bạn đã xem gần đây"}
-        data={recentlyViewed}
+        data={viewedDocument}
         viewAllString={"Xem tất cả các tài liệu đã xem gần đây"}
       />
-      <DashBoardSection
+      {/* <DashBoardSection
         title={"Tài liệu đã thích"}
         data={likedDocuments}
         viewAllString={"Xem tất cả các tài liệu đã thích"}
@@ -49,3 +49,7 @@ const DashBoard = async () => {
 };
 
 export default DashBoard;
+
+// TODO: refactor DashboardSection to custom ui for each dashboard section, like viewed 4s ago etc..
+
+// TODO: build document detail page, find solution for view file, like, comment etc...
