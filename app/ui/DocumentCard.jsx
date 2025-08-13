@@ -1,7 +1,33 @@
 // components/DocumentCard.jsx
+import { formatDate } from "@/utils/utils";
 import Link from "next/link";
 
-const DocumentCard = ({ title, date, subject, linkUrl }) => {
+const DocumentCard = ({ title, subject, linkUrl, metaData, doc }) => {
+  let customTimeData = undefined;
+
+  if (metaData.createdAtShow) {
+    customTimeData = `Ngày đăng: ${formatDate(doc?.created_at?.toString())}`;
+  }
+
+  if (metaData.viewedAtShow) {
+    const createdAt = new Date(doc.viewed_at);
+    const now = new Date();
+    const diffInMilliseconds = now.getTime() - createdAt.getTime();
+    const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInMinutes < 1) {
+      customTimeData = `Đã xem ${diffInSeconds} giây trước`;
+    } else if (diffInMinutes < 60) {
+      customTimeData = `Đã xem ${diffInMinutes} phút trước`;
+    } else if (diffInHours < 24) {
+      customTimeData = `Đã xem ${diffInHours} giờ trước`;
+    } else {
+      customTimeData = `Đã xem ${diffInDays} ngày trước`;
+    }
+  }
   return (
     <Link
       href={linkUrl}
@@ -23,9 +49,7 @@ const DocumentCard = ({ title, date, subject, linkUrl }) => {
         <div className="border-primary text-secondary inline-block rounded-full border p-2 text-sm sm:mt-2">
           {subject && <span>{subject}</span>}
         </div>
-        <div className="text-secondary">
-          {date && <span>Ngày đăng: {date}</span>}
-        </div>
+        <div className="text-secondary">{<span>{customTimeData}</span>}</div>
       </div>
     </Link>
   );

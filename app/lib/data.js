@@ -1,8 +1,6 @@
 "use server";
 
 import { PrismaClient } from "../../generated/prisma";
-import { viewedDocument } from "./action";
-import { getUserAuth } from "./auth";
 
 const prisma = new PrismaClient();
 
@@ -62,7 +60,7 @@ export const getDashboardDocument = async (userId) => {
           document: { include: { subjects: { select: { name: true } } } },
         },
       })
-    ).map((doc) => doc?.document);
+    ).map((doc) => ({ ...doc.document, viewed_at: doc.viewed_at }));
 
     return { recentlyDocuments, viewedDocument };
   } catch (error) {

@@ -1,8 +1,13 @@
 import DocumentCard from "@/ui/DocumentCard";
 import Link from "next/link";
-import { formatDate } from "@/utils/utils";
 
-const DashBoardSection = ({ title, data = [], viewAllString }) => {
+const DashBoardSection = ({
+  title,
+  data = [],
+  viewAllString,
+  metaData,
+  href,
+}) => {
   return (
     <section className="mb-10">
       <h2 className="mb-6 text-2xl font-bold text-gray-800">{title}</h2>
@@ -12,10 +17,10 @@ const DashBoardSection = ({ title, data = [], viewAllString }) => {
             <div key={doc.id}>
               <DocumentCard
                 title={doc.title}
-                //date={doc?.created_at}
                 subject={doc?.subjects.name}
-                date={formatDate(doc?.created_at?.toString())}
                 linkUrl={`/documents/${doc.id}`}
+                metaData={metaData}
+                doc={doc}
               />
             </div>
           ))}
@@ -27,7 +32,7 @@ const DashBoardSection = ({ title, data = [], viewAllString }) => {
       {data.length >= 5 && (
         <div className="mt-8 text-center">
           <Link
-            href="/latest-documents"
+            href={href}
             className="text-primary font-semibold hover:underline"
           >
             {viewAllString} &rarr;

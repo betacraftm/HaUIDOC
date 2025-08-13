@@ -1,15 +1,29 @@
 import { Search } from "lucide-react";
-import {
-  recentlyViewed,
-  latestDocuments,
-  likedDocuments,
-  myDocuments,
-} from "@/lib/seeded-data";
 import DashBoardSection from "./DashBoardSection";
 import { getDashboardDocument } from "@/lib/data";
 
 const DashBoard = async () => {
   const { recentlyDocuments, viewedDocument } = await getDashboardDocument();
+  const dashboardSection = {
+    recently: {
+      title: "Tài liệu mới nhất",
+      data: recentlyDocuments,
+      viewAllString: "Xem tất cả tài liệu mới nhất",
+      metaData: {
+        createdAtShow: true,
+      },
+      href: "/latest-documents",
+    },
+    viewed: {
+      title: "Tài liệu bạn đã xem gần đây",
+      data: viewedDocument,
+      viewAllString: "Xem tất cả các tài liệu đã xem gần đây",
+      metaData: {
+        viewedAtShow: true,
+      },
+      href: "/viewed-documents",
+    },
+  };
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
@@ -25,14 +39,18 @@ const DashBoard = async () => {
       </div>
 
       <DashBoardSection
-        title={"Tài liệu mới nhất"}
-        data={recentlyDocuments}
-        viewAllString={"Xem tất cả các tài liệu mới nhất"}
+        title={dashboardSection.recently.title}
+        data={dashboardSection.recently.data}
+        viewAllString={dashboardSection.recently.viewAllString}
+        href={dashboardSection.recently.href}
+        metaData={dashboardSection.recently.metaData}
       />
       <DashBoardSection
-        title={"Tài liệu bạn đã xem gần đây"}
-        data={viewedDocument}
-        viewAllString={"Xem tất cả các tài liệu đã xem gần đây"}
+        title={dashboardSection.viewed.title}
+        data={dashboardSection.viewed.data}
+        viewAllString={dashboardSection.viewed.viewAllString}
+        href={dashboardSection.viewed.href}
+        metaData={dashboardSection.viewed.metaData}
       />
       {/* <DashBoardSection
         title={"Tài liệu đã thích"}
@@ -49,7 +67,5 @@ const DashBoard = async () => {
 };
 
 export default DashBoard;
-
-// TODO: refactor DashboardSection to custom ui for each dashboard section, like viewed 4s ago etc..
 
 // TODO: build document detail page, find solution for view file, like, comment etc...
