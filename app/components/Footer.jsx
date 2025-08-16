@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="mt-12 w-full border-t border-gray-100 px-4 pt-10 shadow-[0_-4px_16px_-4px_rgba(0,0,0,0.18)]">
+    <footer className="w-full border-t border-gray-100 px-4 pt-10 shadow-[0_-4px_16px_-4px_rgba(0,0,0,0.18)]">
       <div className="mx-auto grid max-w-6xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {/* Logo & Brand */}
         <div className="hidden flex-col items-start justify-start sm:inline-block lg:items-center lg:justify-center">

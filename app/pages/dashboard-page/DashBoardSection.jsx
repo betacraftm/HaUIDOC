@@ -1,4 +1,4 @@
-import DocumentCard from "@/ui/DocumentCard";
+import DocumentCard from "@/components/DocumentCard";
 import Link from "next/link";
 
 const DashBoardSection = ({

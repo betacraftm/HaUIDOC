@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { anton } from "@/ui/fonts";
+import { anton } from "@/components/fonts";
 import { loginUser } from "@/lib/action";
 import { useActionState } from "react";
 

@@ -67,5 +67,3 @@ const DashBoard = async () => {
 };
 
 export default DashBoard;
-
-// TODO: build document detail page, find solution for view file, like, comment etc...

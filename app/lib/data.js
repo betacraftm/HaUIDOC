@@ -1,5 +1,6 @@
 "use server";
 
+import { doc } from "prettier";
 import { PrismaClient } from "../../generated/prisma";
 
 const prisma = new PrismaClient();
@@ -83,4 +84,17 @@ export const checkDocumentExcist = async (docId) => {
     console.error("Error get document:", error);
     return null;
   }
+};
+
+export const getDocumentById = async (docId) => {
+  const document = await prisma.documents.findFirst({
+    where: { id: docId },
+    include: {
+      comments: true,
+      users: { select: { id: true, name: true, image_url: true } },
+    },
+    omit: { uploaded_by: true, subject_id: true },
+  });
+
+  return document;
 };

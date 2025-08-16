@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import { anton } from "../../ui/fonts";
+import { anton } from "../../components/fonts";
 
 const HeroSection = () => {
   return (

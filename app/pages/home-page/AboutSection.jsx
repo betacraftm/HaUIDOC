@@ -1,4 +1,4 @@
-import { anton } from "@/ui/fonts";
+import { anton } from "@/components/fonts";
 
 const AboutSection = () => {
   return (
