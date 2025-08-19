@@ -52,9 +52,7 @@ export default function PDFViewerClient({ file }) {
                 renderAnnotationLayer={false}
                 width={width - 32}
               />
-              {index + 1 < numPages && (
-                <div className="my-8 w-full border-b border-gray-300" />
-              )}
+              {index + 1 < numPages && <div className="my-8 w-full" />}
             </div>
           ))
         ) : (

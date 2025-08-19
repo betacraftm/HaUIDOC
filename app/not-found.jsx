@@ -16,7 +16,7 @@ const NotFoundPage = () => {
 
         {/* Nút quay lại trang chủ */}
         <Link href="/">
-          <p className="hover:bg-primary text-secondary border-primary mt-6 inline-block transform rounded-full border bg-white px-6 py-3 text-sm font-semibold transition-all duration-300 hover:text-white">
+          <p className="bg-primary mt-6 inline-block transform rounded-full px-6 py-3 text-sm font-semibold text-white transition duration-100 hover:opacity-90">
             Quay lại trang chủ
           </p>
         </Link>

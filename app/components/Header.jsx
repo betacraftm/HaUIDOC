@@ -137,7 +137,7 @@ const Header = ({ isAuth, userInfo }) => {
               </Link>
               <Link
                 href="/login"
-                className="text-primary hover:bg-primary border-primary hidden h-9 items-center justify-center rounded-md border bg-white px-4 py-2 text-sm font-semibold transition-colors hover:text-white md:inline-flex"
+                className="bg-primary hidden h-9 items-center justify-center rounded-xl border px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 md:inline-flex"
               >
                 Đăng nhập
               </Link>

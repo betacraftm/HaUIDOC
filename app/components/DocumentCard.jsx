@@ -40,7 +40,7 @@ const DocumentCard = ({ title, subject, linkUrl, metaData, doc }) => {
           </h3>
         </div>
 
-        <button className="group-hover:bg-primary mt-2 hidden w-full rounded border px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 group-hover:text-white sm:mt-0 sm:block sm:w-auto">
+        <button className="group-hover:bg-primary mt-2 hidden w-full rounded-xl border px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 group-hover:text-white sm:mt-0 sm:block sm:w-auto">
           READ MORE
         </button>
       </div>
