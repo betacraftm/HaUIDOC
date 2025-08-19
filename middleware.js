@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 import { decrypt } from "@/lib/session";
 
 // 1. Specify protected and public routes
-const protectedRoutes = ["/dashboard"];
-const publicRoutes = ["/login", "/register", "/", "/upload"];
+const protectedRoutes = ["/dashboard", "/profile", "/upload"];
+const publicRoutes = ["/login", "/register", "/", "/donate"];
 
 export default async function middleware(req) {
   // 2. Check if the current route is protected or public

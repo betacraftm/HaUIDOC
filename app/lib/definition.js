@@ -22,3 +22,14 @@ export const registerSchema = z.object({
       "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
     ),
 });
+
+export const loginSchema = z.object({
+  username: z.string().min(1, "Tên đăng nhập là bắt buộc"),
+  password: z.string().min(1, "Mật khẩu là bắt buộc"),
+});
+
+export const uploadSchema = z.object({
+  title: z.string().min(1, "Tiêu đề là bắt buộc"),
+  description: z.string().optional(),
+  subject: z.string().min(1, "Môn học là bắt buộc"),
+});

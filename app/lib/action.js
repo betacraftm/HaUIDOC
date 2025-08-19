@@ -2,27 +2,31 @@
 
 import { PrismaClient } from "../../generated/prisma";
 import bcrypt from "bcryptjs";
-import { registerSchema } from "./definition";
-import { redirect } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
+import { loginSchema, registerSchema, uploadSchema } from "./definition";
 import { createSession, deleteSession } from "./session";
+import { storage } from "./firebase/config";
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { getUserAuth } from "./auth";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 const prisma = new PrismaClient();
 
-export async function registerUser(prevState, formData) {
+export const registerUser = async (prevState, formData) => {
   try {
-    const data = Object.fromEntries(formData.entries());
+    const name = formData.get("name");
+    const username = formData.get("username");
+    const password = formData.get("password");
+    const major_name = formData.get("major_name");
 
     const parsed = registerSchema.safeParse({
-      name: data.name,
-      username: data.username,
-      password: data.password,
+      name: name,
+      username: username,
+      password: password,
     });
     if (!parsed.success) {
       return { error: parsed.error.flatten().fieldErrors };
     }
-    const { name, username, password } = parsed.data;
-    const major_name = data.major_name;
 
     const existingUser = await prisma.users.findUnique({
       where: { username },
@@ -31,23 +35,21 @@ export async function registerUser(prevState, formData) {
       return { error: { message: "Tên đăng nhập đã tồn tại" } };
     }
 
-    const major_id = (
+    const majorId = (
       await prisma.majors.findFirst({ where: { name: major_name } })
     )?.id;
 
-    if (!major_id) {
+    if (!majorId) {
       return { error: { message: "Ngành học không hợp lệ" } };
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const majorIdInt = parseInt(major_id);
     await prisma.users.create({
       data: {
-        id: uuidv4(),
         name,
         username,
         password_hash: hashedPassword,
-        major_id: majorIdInt,
+        major_id: majorId,
       },
     });
   } catch (error) {
@@ -56,16 +58,19 @@ export async function registerUser(prevState, formData) {
   }
 
   redirect("/login");
-}
+};
 
-export async function loginUser(prevState, formData) {
+export const loginUser = async (prevState, formData) => {
   try {
-    const data = Object.fromEntries(formData.entries());
+    const username = formData.get("username");
+    const password = formData.get("password");
 
-    const { username, password } = data;
-
-    if (!username || !password) {
-      return { error: { message: "Tên đăng nhập và mật khẩu là bắt buộc" } };
+    const parsed = loginSchema.safeParse({
+      username: username,
+      password: password,
+    });
+    if (!parsed.success) {
+      return { error: parsed.error.flatten().fieldErrors };
     }
 
     const user = await prisma.users.findUnique({
@@ -87,9 +92,9 @@ export async function loginUser(prevState, formData) {
   }
 
   redirect("/dashboard");
-}
+};
 
-export async function logoutUser() {
+export const logoutUser = async () => {
   try {
     await deleteSession();
   } catch (error) {
@@ -97,4 +102,91 @@ export async function logoutUser() {
   }
 
   redirect("/");
-}
+};
+
+export const uploadDocument = async (prevState, formData) => {
+  try {
+    const title = formData.get("title");
+    const description = formData.get("description");
+    const documentFile = formData.get("documentFile");
+    const subjectName = formData.get("subjectName");
+
+    // add subjectSchema later
+    const parsed = uploadSchema.safeParse({
+      title: title,
+      description: description,
+      subject: subjectName,
+    });
+    if (!parsed.success) {
+      return { error: parsed.error.flatten().fieldErrors };
+    }
+
+    let subjectId = (
+      await prisma.subjects.findFirst({
+        where: { name: subjectName },
+      })
+    )?.id;
+
+    if (!subjectId) {
+      subjectId = await prisma.subjects
+        .create({
+          data: {
+            name: subjectName,
+          },
+        })
+        .then((subject) => subject.id);
+    }
+
+    const storageRef = ref(storage, `documents/${documentFile.name}`);
+
+    const snapshot = await uploadBytes(storageRef, documentFile);
+
+    const { user } = await getUserAuth();
+
+    const dowloadURL = await getDownloadURL(snapshot.ref);
+
+    await prisma.documents.create({
+      data: {
+        title,
+        desc: description,
+        file_url: dowloadURL,
+        uploaded_by: user.id,
+        subject_id: subjectId,
+      },
+    });
+  } catch (error) {
+    console.error("Error uploading document:", error);
+    return { error: { message: "Đã xảy ra lỗi khi tải lên tài liệu" } };
+  }
+
+  revalidatePath("/dashboard");
+};
+
+export const viewedDocument = async (userId, docId) => {
+  try {
+    const now = new Date();
+    await prisma.userViewedDocument.upsert({
+      where: {
+        user_id_document_id: {
+          user_id: userId,
+          document_id: docId,
+        },
+      },
+      update: {
+        viewed_at: now,
+      },
+      create: {
+        user_id: userId,
+        document_id: docId,
+      },
+    });
+  } catch (error) {
+    console.error("Error viewed document:", error);
+    return {
+      error: {
+        message: "Đã xảy ra lỗi khi cập nhật trạng thái xem tài liệu.",
+      },
+    };
+  }
+  revalidatePath("/dashboard");
+};

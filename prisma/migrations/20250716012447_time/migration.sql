@@ -1,8 +1,0 @@
--- AlterTable
-ALTER TABLE `comments` MODIFY `created_at` DATETIME(0) NULL DEFAULT CURRENT_TIMESTAMP(0);
-
--- AlterTable
-ALTER TABLE `documents` MODIFY `created_at` DATETIME(0) NULL DEFAULT CURRENT_TIMESTAMP(0);
-
--- AlterTable
-ALTER TABLE `oauth_accounts` MODIFY `created_at` DATETIME(0) NULL DEFAULT CURRENT_TIMESTAMP(0);
