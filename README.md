@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# HaUIDOC 📚
 
-## Getting Started
+**HaUIDOC** là một nền tảng chia sẻ tài liệu học tập dành riêng cho sinh viên Trường Đại học Công nghiệp Hà Nội (HaUI).  
+Dự án được xây dựng với mục tiêu tạo ra một **cộng đồng học tập trực tuyến**, nơi sinh viên có thể dễ dàng truy cập, tra cứu và tham khảo tài liệu phục vụ cho học tập và nghiên cứu.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🎯 Mục tiêu dự án
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Giúp sinh viên HaUI có **nguồn tài liệu tập trung** và **dễ dàng tiếp cận**.
+- Giảm thiểu tình trạng tài liệu bị phân tán trên nhiều nền tảng (Facebook, Drive, Zalo...).
+- Khuyến khích sinh viên **chia sẻ kiến thức** và hỗ trợ lẫn nhau trong học tập.
+- Xây dựng một **hệ thống thân thiện, nhanh chóng, và trực quan**.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Giải pháp
 
-## Learn More
+HaUIDOC cung cấp:
 
-To learn more about Next.js, take a look at the following resources:
+- Giao diện web hiện đại, dễ sử dụng.
+- Phân loại tài liệu theo môn học, khoa, ngành.
+- Chức năng tìm kiếm tài liệu nhanh chóng.
+- Hệ thống hiển thị trực tiếp PDF ngay trên website (preview trước khi tải).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌟 Tính năng chính
 
-## Deploy on Vercel
+- 📑 **Xem và tải tài liệu** học tập trực tuyến.
+- 🔍 **Tìm kiếm tài liệu** theo tên môn học hoặc từ khóa.
+- 🏷️ **Phân loại khoa học**: dễ dàng tìm đúng tài liệu theo ngành/khoa.
+- 📱 **Giao diện responsive**: hỗ trợ cả máy tính và điện thoại.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Công nghệ sử dụng
+
+- **Frontend**: Next.js (React framework)
+- **Database**: MySQL
+- **Styling**: Tailwind CSS
+- **Triển khai**: Vercel
+
+---
+
+## 📈 Định hướng phát triển
+
+Trong tương lai, HaUIDOC sẽ bổ sung thêm:
+
+- 👥 Hệ thống tài khoản người dùng và đăng nhập.
+- ❤️ Tính năng like/save tài liệu để sử dụng sau.
+- 💬 Bình luận và đánh giá chất lượng tài liệu.
+- 🤝 Mở rộng thành một **cộng đồng học tập trực tuyến**.
+
+---
+
+## 📬 Liên hệ
+
+- GitHub: [betacraftm](https://github.com/betacraftm)
+- Facebook: [link](https://www.facebook.com/ngocdat204)
