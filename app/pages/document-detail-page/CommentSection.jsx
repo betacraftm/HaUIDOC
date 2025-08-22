@@ -1,6 +1,7 @@
 "use client";
 
 import { getComments } from "@/lib/data";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const CommentSection = ({ docId, userId }) => {
@@ -44,6 +45,26 @@ const CommentSection = ({ docId, userId }) => {
     }
   };
 
+  const displayTime = (timeStamp) => {
+    const createdAt = new Date(timeStamp);
+    const now = new Date();
+    const diffInMilliseconds = now.getTime() - createdAt.getTime();
+    const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInMinutes < 1) {
+      return `${diffInSeconds} giây trước`;
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes} phút trước`;
+    } else if (diffInHours < 24) {
+      return `${diffInHours} giờ trước`;
+    } else {
+      return `${diffInDays} ngày trước`;
+    }
+  };
+
   return (
     <div className="border-t border-gray-200 p-6">
       <h2 className="mb-4 text-xl font-bold text-gray-800">Bình luận</h2>
@@ -77,11 +98,30 @@ const CommentSection = ({ docId, userId }) => {
       ) : (
         <div className="space-y-4">
           {comments.map((c, idx) => (
-            <div key={idx} className="rounded-xl bg-gray-50 p-4 shadow-sm">
-              <p className="text-sm text-gray-700">{c.content}</p>
-              <span className="mt-1 block text-xs text-gray-400">
-                — {c?.users?.name}
-              </span>
+            <div
+              key={idx}
+              className="flex flex-col gap-2 rounded-xl bg-gray-50 p-4 shadow-sm sm:flex-row sm:gap-5"
+            >
+              <div className="shrink-0">
+                <Image
+                  src="https://ui-avatars.com/api?size=40" // ?.users.image_url
+                  alt="User avt"
+                  height={40}
+                  width={40}
+                  className="h-10 w-10 rounded-full object-cover"
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-primary my-1 flex flex-col gap-1 text-sm font-extrabold sm:mt-0 sm:flex-row sm:gap-2">
+                  <span>{c?.users?.name}</span>
+                  <span className="text-secondary text-xs sm:text-sm">
+                    {displayTime(c?.created_at)}
+                  </span>
+                </div>
+                <p className="overflow-hidden text-sm break-words text-gray-700">
+                  {c.content}
+                </p>
+              </div>
             </div>
           ))}
         </div>
