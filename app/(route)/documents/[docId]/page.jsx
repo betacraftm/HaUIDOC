@@ -1,6 +1,6 @@
 import { getUserAuth } from "@/lib/auth";
 import { checkDocumentExcist, getDocumentById } from "@/lib/data";
-import DocumentDetail from "@/pages/document-detail-page/DocumentDetail";
+import DocumentDetail from "@/pages/document-detail-page";
 import { notFound } from "next/navigation";
 
 const page = async ({ params }) => {

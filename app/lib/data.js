@@ -1,6 +1,5 @@
 "use server";
 
-import { doc } from "prettier";
 import { PrismaClient } from "../../generated/prisma";
 
 const prisma = new PrismaClient();
@@ -90,11 +89,21 @@ export const getDocumentById = async (docId) => {
   const document = await prisma.documents.findFirst({
     where: { id: docId },
     include: {
-      comments: true,
       users: { select: { id: true, name: true, image_url: true } },
     },
     omit: { uploaded_by: true, subject_id: true },
   });
 
   return document;
+};
+
+export const getComments = async (docId) => {
+  const comments = await prisma.comments.findMany({
+    where: { document_id: docId },
+    include: { users: { select: { name: true, image_url: true } } },
+    omit: { document_id: true, user_id: true },
+    orderBy: { created_at: "desc" },
+  });
+
+  return comments;
 };

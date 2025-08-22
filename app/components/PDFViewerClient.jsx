@@ -36,7 +36,7 @@ export default function PDFViewerClient({ file }) {
   return (
     <div
       ref={containerRef}
-      className="border-primary mb-6 max-h-screen w-full overflow-y-auto rounded-lg border shadow-lg"
+      className="border-primary max-h-screen w-full overflow-y-auto rounded-lg border shadow-lg"
     >
       <Document
         file={file}

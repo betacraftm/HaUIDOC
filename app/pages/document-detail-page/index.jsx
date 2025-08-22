@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { MoveLeft, User, Download } from "lucide-react";
 import PDFViewer from "@/components/PDFViewer";
+import CommentSection from "./CommentSection";
 
 const DocumentDetail = ({ docId, userId, doc }) => {
   useEffect(() => {
@@ -80,50 +81,8 @@ const DocumentDetail = ({ docId, userId, doc }) => {
             </div>
           </div>
         </div>
-
         {/* Comments */}
-        <div className="border-t border-gray-200 p-6">
-          <h2 className="mb-4 text-xl font-bold text-gray-800">Bình luận</h2>
-
-          {/* Comment form */}
-          <form
-            action={"PLACEHOLDER_COMMENT_ACTION"} // TODO: thay bằng server action thật
-            className="mb-6"
-          >
-            <textarea
-              name="comment"
-              rows={3}
-              placeholder="Nhập bình luận của bạn..."
-              className="focus:border-primary focus:ring-primary/30 w-full resize-none rounded-xl border border-gray-300 p-3 text-sm text-gray-700 shadow-sm focus:ring-2 focus:outline-none"
-            />
-            <div className="mt-3 flex justify-end">
-              <button
-                type="submit"
-                className="bg-primary rounded-xl px-5 py-2 font-semibold text-white shadow-md transition hover:opacity-90"
-              >
-                Gửi bình luận
-              </button>
-            </div>
-          </form>
-
-          {/* Render comments */}
-          {doc.comments.length === 0 ? (
-            <p className="text-gray-500 italic">
-              Chưa có bình luận nào. Hãy là người đầu tiên bình luận!
-            </p>
-          ) : (
-            <div className="space-y-4">
-              {doc.comments.map((c, idx) => (
-                <div key={idx} className="rounded-xl bg-gray-50 p-4 shadow-sm">
-                  <p className="text-sm text-gray-700">{c.content}</p>
-                  <span className="mt-1 block text-xs text-gray-400">
-                    — {c.user?.name ?? "Người dùng ẩn danh"}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <CommentSection docId={doc.id} userId={doc?.users.id} />
       </div>
     </div>
   );
@@ -131,6 +90,5 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: Build comment server action
 // TODO: Find solution with word file, convert to pdf while uploading
 // TODO: Fix avt header style
