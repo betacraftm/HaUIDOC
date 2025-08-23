@@ -3,10 +3,11 @@
 import { getComments } from "@/lib/data";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import CommentSkeleton from "@/components/skeletons/CommentSkeleton";
 
 const CommentSection = ({ docId, userId }) => {
   const [comments, setComments] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [comment, setComment] = useState("");
 
   useEffect(() => {
@@ -91,7 +92,9 @@ const CommentSection = ({ docId, userId }) => {
       </form>
 
       {/* Render comments */}
-      {comments.length === 0 ? (
+      {isLoading ? (
+        <CommentSkeleton />
+      ) : comments.length === 0 ? (
         <p className="text-gray-500 italic">
           Chưa có bình luận nào. Hãy là người đầu tiên bình luận!
         </p>

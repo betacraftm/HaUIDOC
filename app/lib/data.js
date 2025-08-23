@@ -105,7 +105,5 @@ export const getComments = async (docId) => {
     orderBy: { created_at: "desc" },
   });
 
-  console.log(comments);
-
   return comments;
 };

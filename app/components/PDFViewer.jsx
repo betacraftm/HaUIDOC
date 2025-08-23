@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import PdfSkeleton from "./PdfSkeleton";
+import PdfSkeleton from "./skeletons/PdfSkeleton";
 
 const PDFViewerClient = dynamic(() => import("./PDFViewerClient"), {
   ssr: false,
