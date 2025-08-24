@@ -11,7 +11,6 @@ const page = async ({ params }) => {
   }
   const { user } = await getUserAuth();
   const userId = user.id;
-
   const doc = await getDocumentById(docId);
 
   return <DocumentDetail docId={docId} userId={userId} doc={doc} />;

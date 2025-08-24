@@ -43,23 +43,17 @@ export default function PDFViewerClient({ file }) {
         onLoadSuccess={onDocumentLoadSuccess}
         loading={<PdfSkeleton />}
       >
-        {numPages ? (
-          Array.from({ length: numPages }, (_, index) => (
-            <div key={`page_${index + 1}`} className="flex justify-center">
-              <Page
-                pageNumber={index + 1}
-                renderTextLayer={false}
-                renderAnnotationLayer={false}
-                width={width - 32}
-              />
-              {index + 1 < numPages && <div className="my-8 w-full" />}
-            </div>
-          ))
-        ) : (
-          <div className="flex justify-center py-20">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500" />
+        {Array.from({ length: numPages }, (_, index) => (
+          <div key={`page_${index + 1}`} className="flex justify-center">
+            <Page
+              pageNumber={index + 1}
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+              width={width - 32}
+            />
+            {index + 1 < numPages && <div className="my-8 w-full" />}
           </div>
-        )}
+        ))}
       </Document>
     </div>
   );

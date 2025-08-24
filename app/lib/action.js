@@ -227,4 +227,32 @@ export const likeDocument = async (userId, docId) => {
       },
     };
   }
+
+  revalidatePath("/dashboard");
+};
+
+export const getLikedState = async (userId, docId) => {
+  try {
+    const likeRecord = await prisma.userLikedDocument.findUnique({
+      where: {
+        user_id_document_id: {
+          user_id: userId,
+          document_id: docId,
+        },
+      },
+    });
+
+    if (likeRecord) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error get liked state:", error);
+    return {
+      error: {
+        message: "Đã xảy ra lỗi khi lấy trạng thái thích tài liệu.",
+      },
+    };
+  }
 };

@@ -1,14 +1,21 @@
 "use client";
 
-import { viewedDocument } from "@/lib/action";
+import { getLikedState, likeDocument, viewedDocument } from "@/lib/action";
 import { generateDateString } from "@/utils/utils";
 import Link from "next/link";
-import { useEffect } from "react";
-import { MoveLeft, User, Download } from "lucide-react";
+import { useEffect, useState } from "react";
+import { MoveLeft, User, Download, Star } from "lucide-react";
 import PDFViewer from "@/components/PDFViewer";
 import CommentSection from "./CommentSection";
 
 const DocumentDetail = ({ docId, userId, doc }) => {
+  const [isLiked, setIsLiked] = useState(false);
+
+  const toggleLike = async () => {
+    await likeDocument(userId, docId);
+    setIsLiked((prev) => !prev);
+  };
+
   useEffect(() => {
     const updateView = async () => {
       try {
@@ -19,6 +26,19 @@ const DocumentDetail = ({ docId, userId, doc }) => {
     };
 
     updateView();
+  }, [userId, docId]);
+
+  useEffect(() => {
+    const getState = async () => {
+      const response = await getLikedState(userId, docId);
+      if (response) {
+        setIsLiked(true);
+      } else {
+        setIsLiked(false);
+      }
+    };
+
+    getState();
   }, [userId, docId]);
 
   return (
@@ -40,9 +60,22 @@ const DocumentDetail = ({ docId, userId, doc }) => {
         <div className="flex flex-col lg:flex-row">
           {/* Left side: Info */}
           <div className="w-full border-b border-gray-200 p-6 lg:w-1/3 lg:border-r lg:border-b-0">
-            <h1 className="mb-4 text-3xl font-extrabold text-gray-900">
-              {doc.title}
-            </h1>
+            <div className="mb-4 flex items-center justify-between">
+              <h1 className="text-3xl font-extrabold text-gray-900">
+                {doc.title}
+              </h1>
+
+              <Star
+                size={30}
+                strokeWidth={1.5}
+                style={{
+                  color: "var(--color-primary)",
+                }}
+                onClick={toggleLike}
+                fill={isLiked ? "var(--color-primary)" : "white"}
+                className="cursor-pointer"
+              />
+            </div>
 
             <div className="mb-6 flex flex-col gap-2 text-sm text-gray-500">
               <div className="flex items-center gap-1">
@@ -89,6 +122,10 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 };
 
 export default DocumentDetail;
+
+// TODO: Fix border or pdf client
+
+// TODO: Add document detail skeleton for loadling state
 
 // TODO: Add like document feature
 
