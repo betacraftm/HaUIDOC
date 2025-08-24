@@ -90,8 +90,6 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: Add comment skeleton loading
-
 // TODO: Add like document feature
 
 // TODO: Find solution with word file, convert to pdf while uploading

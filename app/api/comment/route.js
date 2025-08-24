@@ -15,7 +15,7 @@ export async function POST(request) {
       );
     }
 
-    const newComment = await prisma.comments.create({
+    const newComment = await prisma.comment.create({
       data: { user_id: userId, document_id: docId, content: comment },
       include: { users: { select: { name: true, image_url: true } } },
       omit: { document_id: true, user_id: true },

@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export const fetchMajors = async () => {
   try {
-    const majors = await prisma.majors.findMany();
+    const majors = await prisma.major.findMany();
     return majors;
   } catch (error) {
     console.error("Error fetching majors:", error);
@@ -15,13 +15,13 @@ export const fetchMajors = async () => {
 };
 
 export const fetchSubjects = async () => {
-  const subjects = await prisma.subjects.findMany();
+  const subjects = await prisma.subject.findMany();
   return subjects;
 };
 
 export const getUserById = async (userId) => {
   try {
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
         id: true,
@@ -39,7 +39,7 @@ export const getUserById = async (userId) => {
 
 export const getDashboardDocument = async (userId) => {
   try {
-    const recentlyDocuments = await prisma.documents.findMany({
+    const recentlyDocuments = await prisma.document.findMany({
       take: 5,
       orderBy: { created_at: "desc" },
       include: {
@@ -71,7 +71,7 @@ export const getDashboardDocument = async (userId) => {
 
 export const checkDocumentExcist = async (docId) => {
   try {
-    const isDocExcist = await prisma.documents.findFirst({
+    const isDocExcist = await prisma.document.findFirst({
       where: { id: docId },
     });
     if (!isDocExcist) {
@@ -86,7 +86,7 @@ export const checkDocumentExcist = async (docId) => {
 };
 
 export const getDocumentById = async (docId) => {
-  const document = await prisma.documents.findFirst({
+  const document = await prisma.document.findFirst({
     where: { id: docId },
     include: {
       users: { select: { id: true, name: true, image_url: true } },
@@ -98,7 +98,7 @@ export const getDocumentById = async (docId) => {
 };
 
 export const getComments = async (docId) => {
-  const comments = await prisma.comments.findMany({
+  const comments = await prisma.comment.findMany({
     where: { document_id: docId },
     include: { users: { select: { name: true, image_url: true } } },
     omit: { document_id: true, user_id: true },

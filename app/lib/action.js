@@ -28,7 +28,7 @@ export const registerUser = async (prevState, formData) => {
       return { error: parsed.error.flatten().fieldErrors };
     }
 
-    const existingUser = await prisma.users.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { username },
     });
     if (existingUser) {
@@ -36,7 +36,7 @@ export const registerUser = async (prevState, formData) => {
     }
 
     const majorId = (
-      await prisma.majors.findFirst({ where: { name: major_name } })
+      await prisma.major.findFirst({ where: { name: major_name } })
     )?.id;
 
     if (!majorId) {
@@ -44,7 +44,7 @@ export const registerUser = async (prevState, formData) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await prisma.users.create({
+    await prisma.user.create({
       data: {
         name,
         username,
@@ -73,7 +73,7 @@ export const loginUser = async (prevState, formData) => {
       return { error: parsed.error.flatten().fieldErrors };
     }
 
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: { username },
     });
     if (!user) {
@@ -122,13 +122,13 @@ export const uploadDocument = async (prevState, formData) => {
     }
 
     let subjectId = (
-      await prisma.subjects.findFirst({
+      await prisma.subject.findFirst({
         where: { name: subjectName },
       })
     )?.id;
 
     if (!subjectId) {
-      subjectId = await prisma.subjects
+      subjectId = await prisma.subject
         .create({
           data: {
             name: subjectName,
@@ -145,7 +145,7 @@ export const uploadDocument = async (prevState, formData) => {
 
     const dowloadURL = await getDownloadURL(snapshot.ref);
 
-    await prisma.documents.create({
+    await prisma.document.create({
       data: {
         title,
         desc: description,

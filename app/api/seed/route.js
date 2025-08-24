@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    await prisma.majors.createMany({
+    await prisma.major.createMany({
       data: [
         ...majors.map((major) => ({
           name: major,
@@ -13,7 +13,7 @@ export async function GET() {
       ],
     });
 
-    await prisma.subjects.createMany({
+    await prisma.subject.createMany({
       data: [
         ...subjects.map((subject) => ({
           name: subject,
