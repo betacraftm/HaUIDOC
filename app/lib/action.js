@@ -190,3 +190,41 @@ export const viewedDocument = async (userId, docId) => {
   }
   revalidatePath("/dashboard");
 };
+
+export const likeDocument = async (userId, docId) => {
+  try {
+    // Check if like or not
+    const likeRecord = await prisma.userLikedDocument.findUnique({
+      where: {
+        user_id_document_id: {
+          user_id: userId,
+          document_id: docId,
+        },
+      },
+    });
+
+    // If liked already, delete the record
+    if (likeRecord) {
+      await prisma.userLikedDocument.delete({
+        where: {
+          user_id_document_id: {
+            user_id: userId,
+            document_id: docId,
+          },
+        },
+      });
+    } else {
+      // else create new record
+      await prisma.userLikedDocument.create({
+        data: { user_id: userId, document_id: docId },
+      });
+    }
+  } catch (error) {
+    console.error("Error liked document:", error);
+    return {
+      error: {
+        message: "Đã xảy ra lỗi khi cập nhật trạng thái thích tài liệu.",
+      },
+    };
+  }
+};
