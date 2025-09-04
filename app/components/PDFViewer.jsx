@@ -4,7 +4,7 @@ import PdfSkeleton from "./skeletons/PdfSkeleton";
 
 const PDFViewerClient = dynamic(() => import("./PDFViewerClient"), {
   ssr: false,
-  loading: () => <PdfSkeleton border={"border border-primary"} />,
+  loading: () => <PdfSkeleton />,
 });
 
 export default function PDFViewer({ file }) {
