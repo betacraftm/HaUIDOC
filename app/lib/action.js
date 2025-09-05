@@ -9,6 +9,7 @@ import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { getUserAuth } from "./auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getAuth, signInAnonymously } from "firebase/auth";
 
 const prisma = new PrismaClient();
 
@@ -111,7 +112,6 @@ export const uploadDocument = async (prevState, formData) => {
     const documentFile = formData.get("documentFile");
     const subjectName = formData.get("subjectName");
 
-    // add subjectSchema later
     const parsed = uploadSchema.safeParse({
       title: title,
       description: description,
@@ -136,6 +136,13 @@ export const uploadDocument = async (prevState, formData) => {
         })
         .then((subject) => subject.id);
     }
+
+    const auth = getAuth();
+    await signInAnonymously(auth);
+
+    // TODO: change word file to pdf
+
+    // console.log(documentFile.type);
 
     const storageRef = ref(storage, `documents/${documentFile.name}`);
 
