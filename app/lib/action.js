@@ -10,13 +10,11 @@ import { getUserAuth } from "./auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getAuth, signInAnonymously } from "firebase/auth";
-import { exec } from "child_process";
-import fs from "fs";
-import path from "path";
 import { promisify } from "util";
+import libre from "libreoffice-convert";
 
 const prisma = new PrismaClient();
-const execAsync = promisify(exec);
+const convertAsync = promisify(libre.convert);
 
 export const registerUser = async (prevState, formData) => {
   try {
@@ -153,32 +151,16 @@ export const uploadDocument = async (prevState, formData) => {
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
       documentFile.type === "application/msword"
     ) {
-      // Save temp file
-      const tempDir = "/tmp"; // works in most Linux servers
-      const inputPath = path.join(tempDir, fileName);
-      const outputPath = inputPath.replace(path.extname(fileName), ".pdf");
-
-      // Write file to disk
       const buffer = Buffer.from(await documentFile.arrayBuffer());
-      fs.writeFileSync(inputPath, buffer);
 
-      // Convert using LibreOffice
-      await execAsync(
-        `soffice --headless --convert-to pdf --outdir "${tempDir}" "${inputPath}"`,
-      );
-
-      // Read back converted PDF
-      const pdfBuffer = fs.readFileSync(outputPath);
+      // Convert DOC/DOCX → PDF
+      const pdfBuffer = await convertAsync(buffer, ".pdf", undefined);
 
       // Replace file with PDF
       fileName = fileName.replace(/\.(docx|doc)$/i, ".pdf");
       fileToUpload = new File([pdfBuffer], fileName, {
         type: "application/pdf",
       });
-
-      // Cleanup
-      fs.unlinkSync(inputPath);
-      fs.unlinkSync(outputPath);
     }
 
     const storageRef = ref(storage, `documents/${fileName}`);
