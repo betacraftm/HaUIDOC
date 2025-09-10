@@ -10,8 +10,13 @@ import { getUserAuth } from "./auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getAuth, signInAnonymously } from "firebase/auth";
+import { exec } from "child_process";
+import fs from "fs";
+import path from "path";
+import { promisify } from "util";
 
 const prisma = new PrismaClient();
+const execAsync = promisify(exec);
 
 export const registerUser = async (prevState, formData) => {
   try {
@@ -140,13 +145,45 @@ export const uploadDocument = async (prevState, formData) => {
     const auth = getAuth();
     await signInAnonymously(auth);
 
-    // TODO: change word file to pdf
+    let fileToUpload = documentFile;
+    let fileName = documentFile.name;
 
-    // console.log(documentFile.type);
+    if (
+      documentFile.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      documentFile.type === "application/msword"
+    ) {
+      // Save temp file
+      const tempDir = "/tmp"; // works in most Linux servers
+      const inputPath = path.join(tempDir, fileName);
+      const outputPath = inputPath.replace(path.extname(fileName), ".pdf");
 
-    const storageRef = ref(storage, `documents/${documentFile.name}`);
+      // Write file to disk
+      const buffer = Buffer.from(await documentFile.arrayBuffer());
+      fs.writeFileSync(inputPath, buffer);
 
-    const snapshot = await uploadBytes(storageRef, documentFile);
+      // Convert using LibreOffice
+      await execAsync(
+        `soffice --headless --convert-to pdf --outdir "${tempDir}" "${inputPath}"`,
+      );
+
+      // Read back converted PDF
+      const pdfBuffer = fs.readFileSync(outputPath);
+
+      // Replace file with PDF
+      fileName = fileName.replace(/\.(docx|doc)$/i, ".pdf");
+      fileToUpload = new File([pdfBuffer], fileName, {
+        type: "application/pdf",
+      });
+
+      // Cleanup
+      fs.unlinkSync(inputPath);
+      fs.unlinkSync(outputPath);
+    }
+
+    const storageRef = ref(storage, `documents/${fileName}`);
+
+    const snapshot = await uploadBytes(storageRef, fileToUpload);
 
     const { user } = await getUserAuth();
 
