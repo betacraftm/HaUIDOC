@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import PdfSkeleton from "./PdfSkeleton";
+import PdfSkeleton from "./skeletons/PdfSkeleton";
 
 // Cấu hình worker của PDF.js
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -34,32 +34,23 @@ export default function PDFViewerClient({ file }) {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="border-primary mb-6 max-h-screen w-full overflow-y-auto rounded-lg border shadow-lg"
-    >
+    <div ref={containerRef} className="max-h-screen w-full overflow-y-auto">
       <Document
         file={file}
         onLoadSuccess={onDocumentLoadSuccess}
         loading={<PdfSkeleton />}
       >
-        {numPages ? (
-          Array.from({ length: numPages }, (_, index) => (
-            <div key={`page_${index + 1}`} className="flex justify-center">
-              <Page
-                pageNumber={index + 1}
-                renderTextLayer={false}
-                renderAnnotationLayer={false}
-                width={width - 32}
-              />
-              {index + 1 < numPages && <div className="my-8 w-full" />}
-            </div>
-          ))
-        ) : (
-          <div className="flex justify-center py-20">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500" />
+        {Array.from({ length: numPages }, (_, index) => (
+          <div key={`page_${index + 1}`} className="flex justify-center">
+            <Page
+              pageNumber={index + 1}
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+              width={width - 32}
+            />
+            {index + 1 < numPages && <div className="my-8 w-full" />}
           </div>
-        )}
+        ))}
       </Document>
     </div>
   );

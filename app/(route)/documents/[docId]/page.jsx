@@ -1,6 +1,6 @@
 import { getUserAuth } from "@/lib/auth";
 import { checkDocumentExcist, getDocumentById } from "@/lib/data";
-import DocumentDetail from "@/pages/document-detail-page/DocumentDetail";
+import DocumentDetail from "@/pages/document-detail-page";
 import { notFound } from "next/navigation";
 
 const page = async ({ params }) => {
@@ -11,7 +11,6 @@ const page = async ({ params }) => {
   }
   const { user } = await getUserAuth();
   const userId = user.id;
-
   const doc = await getDocumentById(docId);
 
   return <DocumentDetail docId={docId} userId={userId} doc={doc} />;

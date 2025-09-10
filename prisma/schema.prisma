@@ -1,5 +1,3 @@
-// schema.prisma
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -10,20 +8,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model comments {
+model Comment {
   id          String    @id @default(uuid())
   user_id     String?
   document_id String?
   content     String?   @db.Text
   created_at  DateTime? @db.DateTime(0) @default(now())
-  users       users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_1")
-  documents   documents? @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_2")
+  users       User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_1")
+  documents   Document? @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_2")
 
   @@index([document_id], map: "document_id")
   @@index([user_id], map: "user_id")
+  @@map("comments")
 }
 
-model documents {
+model Document {
   id          String      @id @default(uuid())
   title       String      @db.VarChar(255)
   desc        String?     @db.Text
@@ -31,9 +30,9 @@ model documents {
   subject_id  String?
   uploaded_by String?
   created_at  DateTime?   @db.DateTime(0) @default(now())
-  comments    comments[]
-  subjects    subjects?   @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_1")
-  users       users?      @relation(fields: [uploaded_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_2")
+  comments    Comment[]
+  subjects    Subject?    @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_1")
+  users       User?       @relation(fields: [uploaded_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_2")
 
   liked_by    UserLikedDocument[]
   viewed_by   UserViewedDocument[]
@@ -41,22 +40,25 @@ model documents {
   @@index([subject_id], map: "subject_id")
   @@index([uploaded_by], map: "uploaded_by")
   @@index([title])
+  @@map("documents")
 }
 
-model majors {
-  id          String     @id @default(uuid())
-  name        String     @db.VarChar(255)
-  users       users[]
+model Major {
+  id    String @id @default(uuid())
+  name  String @db.VarChar(255)
+  users User[]
 
   @@index([name])
+  @@map("majors")
 }
 
-model subjects {
-  id          String      @id @default(uuid())
-  name        String      @db.VarChar(255)
-  documents   documents[]
+model Subject {
+  id        String     @id @default(uuid())
+  name      String     @db.VarChar(255)
+  documents Document[]
 
   @@index([name])
+  @@map("subjects")
 }
 
 enum UserRole {
@@ -64,39 +66,40 @@ enum UserRole {
   admin
 }
 
-model users {
-  id             String                @id @default(uuid())
-  name           String                @db.VarChar(255)
-  username       String                @db.VarChar(255) @unique
-  password_hash  String?               @db.VarChar(255)
-  role           UserRole?             @default(client)
-  created_at     DateTime?             @db.DateTime(0) @default(now())
-  image_url      String?               @db.VarChar(255)
-  major_id       String?
-  comments       comments[]
-  documents      documents[] // Documents uploaded by this user
-  majors         majors?               @relation(fields: [major_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_1")
+model User {
+  id               String               @id @default(uuid())
+  name             String               @db.VarChar(255)
+  username         String               @db.VarChar(255) @unique
+  password_hash    String?              @db.VarChar(255)
+  role             UserRole?            @default(client)
+  created_at       DateTime?            @db.DateTime(0) @default(now())
+  image_url        String?              @db.VarChar(255)
+  major_id         String?
+  comments         Comment[]
+  documents        Document[]
+  majors           Major?               @relation(fields: [major_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_1")
 
-  liked_documents UserLikedDocument[]
+  liked_documents  UserLikedDocument[]
 
   viewed_documents UserViewedDocument[]
 
   @@index([major_id], map: "major_id")
   @@index([username])
   @@index([role])
+  @@map("users")
 }
 
 model UserLikedDocument {
   user_id     String
   document_id String
-  liked_at    DateTime @db.DateTime(0) @default(now()) // Thời gian người dùng thích tài liệu
 
-  user      users     @relation(fields: [user_id], references: [id])
-  document  documents @relation(fields: [document_id], references: [id])
+  user      User     @relation(fields: [user_id], references: [id])
+  document  Document @relation(fields: [document_id], references: [id])
 
   @@id([user_id, document_id])
   @@index([user_id])
   @@index([document_id])
+  @@map("UserLikedDocument")
 }
 
 model UserViewedDocument {
@@ -104,10 +107,11 @@ model UserViewedDocument {
   document_id String
   viewed_at   DateTime @db.DateTime(0) @default(now())
 
-  user      users     @relation(fields: [user_id], references: [id])
-  document  documents @relation(fields: [document_id], references: [id])
+  user      User     @relation(fields: [user_id], references: [id])
+  document  Document @relation(fields: [document_id], references: [id])
 
   @@id([user_id, document_id])
   @@index([user_id])
   @@index([document_id])
+  @@map("UserViewedDocument")
 }

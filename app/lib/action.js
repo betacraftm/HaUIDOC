@@ -9,8 +9,12 @@ import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { getUserAuth } from "./auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getAuth, signInAnonymously } from "firebase/auth";
+import { promisify } from "util";
+import libre from "libreoffice-convert";
 
 const prisma = new PrismaClient();
+const convertAsync = promisify(libre.convert);
 
 export const registerUser = async (prevState, formData) => {
   try {
@@ -28,7 +32,7 @@ export const registerUser = async (prevState, formData) => {
       return { error: parsed.error.flatten().fieldErrors };
     }
 
-    const existingUser = await prisma.users.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { username },
     });
     if (existingUser) {
@@ -36,7 +40,7 @@ export const registerUser = async (prevState, formData) => {
     }
 
     const majorId = (
-      await prisma.majors.findFirst({ where: { name: major_name } })
+      await prisma.major.findFirst({ where: { name: major_name } })
     )?.id;
 
     if (!majorId) {
@@ -44,7 +48,7 @@ export const registerUser = async (prevState, formData) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await prisma.users.create({
+    await prisma.user.create({
       data: {
         name,
         username,
@@ -73,7 +77,7 @@ export const loginUser = async (prevState, formData) => {
       return { error: parsed.error.flatten().fieldErrors };
     }
 
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: { username },
     });
     if (!user) {
@@ -111,7 +115,6 @@ export const uploadDocument = async (prevState, formData) => {
     const documentFile = formData.get("documentFile");
     const subjectName = formData.get("subjectName");
 
-    // add subjectSchema later
     const parsed = uploadSchema.safeParse({
       title: title,
       description: description,
@@ -122,13 +125,13 @@ export const uploadDocument = async (prevState, formData) => {
     }
 
     let subjectId = (
-      await prisma.subjects.findFirst({
+      await prisma.subject.findFirst({
         where: { name: subjectName },
       })
     )?.id;
 
     if (!subjectId) {
-      subjectId = await prisma.subjects
+      subjectId = await prisma.subject
         .create({
           data: {
             name: subjectName,
@@ -137,15 +140,38 @@ export const uploadDocument = async (prevState, formData) => {
         .then((subject) => subject.id);
     }
 
-    const storageRef = ref(storage, `documents/${documentFile.name}`);
+    const auth = getAuth();
+    await signInAnonymously(auth);
 
-    const snapshot = await uploadBytes(storageRef, documentFile);
+    let fileToUpload = documentFile;
+    let fileName = documentFile.name;
+
+    if (
+      documentFile.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      documentFile.type === "application/msword"
+    ) {
+      const buffer = Buffer.from(await documentFile.arrayBuffer());
+
+      // Convert DOC/DOCX → PDF
+      const pdfBuffer = await convertAsync(buffer, ".pdf", undefined);
+
+      // Replace file with PDF
+      fileName = fileName.replace(/\.(docx|doc)$/i, ".pdf");
+      fileToUpload = new File([pdfBuffer], fileName, {
+        type: "application/pdf",
+      });
+    }
+
+    const storageRef = ref(storage, `documents/${fileName}`);
+
+    const snapshot = await uploadBytes(storageRef, fileToUpload);
 
     const { user } = await getUserAuth();
 
     const dowloadURL = await getDownloadURL(snapshot.ref);
 
-    await prisma.documents.create({
+    await prisma.document.create({
       data: {
         title,
         desc: description,
@@ -189,4 +215,70 @@ export const viewedDocument = async (userId, docId) => {
     };
   }
   revalidatePath("/dashboard");
+};
+
+export const likeDocument = async (userId, docId) => {
+  try {
+    // Check if like or not
+    const likeRecord = await prisma.userLikedDocument.findUnique({
+      where: {
+        user_id_document_id: {
+          user_id: userId,
+          document_id: docId,
+        },
+      },
+    });
+
+    // If liked already, delete the record
+    if (likeRecord) {
+      await prisma.userLikedDocument.delete({
+        where: {
+          user_id_document_id: {
+            user_id: userId,
+            document_id: docId,
+          },
+        },
+      });
+    } else {
+      // else create new record
+      await prisma.userLikedDocument.create({
+        data: { user_id: userId, document_id: docId },
+      });
+    }
+  } catch (error) {
+    console.error("Error liked document:", error);
+    return {
+      error: {
+        message: "Đã xảy ra lỗi khi cập nhật trạng thái thích tài liệu.",
+      },
+    };
+  }
+
+  revalidatePath("/dashboard");
+};
+
+export const getLikedState = async (userId, docId) => {
+  try {
+    const likeRecord = await prisma.userLikedDocument.findUnique({
+      where: {
+        user_id_document_id: {
+          user_id: userId,
+          document_id: docId,
+        },
+      },
+    });
+
+    if (likeRecord) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error get liked state:", error);
+    return {
+      error: {
+        message: "Đã xảy ra lỗi khi lấy trạng thái thích tài liệu.",
+      },
+    };
+  }
 };
