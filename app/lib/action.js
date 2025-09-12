@@ -109,6 +109,8 @@ export const logoutUser = async () => {
 };
 
 export const uploadDocument = async (prevState, formData) => {
+  let newDocument = null;
+
   try {
     const title = formData.get("title");
     const description = formData.get("description");
@@ -171,7 +173,7 @@ export const uploadDocument = async (prevState, formData) => {
 
     const dowloadURL = await getDownloadURL(snapshot.ref);
 
-    await prisma.document.create({
+    newDocument = await prisma.document.create({
       data: {
         title,
         desc: description,
@@ -184,8 +186,8 @@ export const uploadDocument = async (prevState, formData) => {
     console.error("Error uploading document:", error);
     return { error: { message: "Đã xảy ra lỗi khi tải lên tài liệu" } };
   }
-
   revalidatePath("/dashboard");
+  redirect(`/upload/complete/${newDocument.id}`);
 };
 
 export const viewedDocument = async (userId, docId) => {

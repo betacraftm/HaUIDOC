@@ -131,6 +131,4 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: Fix avt header style
-
 // TODO: Build likeed document section
