@@ -59,20 +59,16 @@ const Header = ({ isAuth, userInfo }) => {
         {isAuth ? (
           <div className="flex items-center space-x-4">
             <div className="relative" ref={userDropdownRef}>
-              <button
+              <Image
+                src={userInfo?.image_url || "/user.png"}
+                alt="User Avatar"
+                height={28}
+                width={28}
                 onClick={() => setUserDropdownOpen(!isUserDropdownOpen)}
-                className="border-primary hover:ring-primary focus:ring-primary flex items-center justify-center rounded-full border p-0.5 transition-all duration-200 hover:ring-2 focus:ring-2 focus:outline-none"
+                className="ring-primary h-7 w-7 rounded-full p-0.5 ring-2"
                 aria-haspopup="true"
                 aria-expanded={isUserDropdownOpen}
-              >
-                <Image
-                  src="/user.png"
-                  alt="User Avatar"
-                  height={32}
-                  width={32}
-                  className="rounded-full object-cover"
-                />
-              </button>
+              />
               {isUserDropdownOpen && (
                 <ul
                   className="ring-opacity-5 absolute right-0 z-50 mt-5 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black focus:outline-none"

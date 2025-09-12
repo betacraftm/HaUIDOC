@@ -28,6 +28,7 @@ export const getUserById = async (userId) => {
         name: true,
         username: true,
         major_id: true,
+        image_url: true,
       },
     });
     return user;
