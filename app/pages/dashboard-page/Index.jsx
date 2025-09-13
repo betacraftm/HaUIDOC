@@ -3,7 +3,7 @@ import DashBoardSection from "./DashBoardSection";
 import { getDashboardDocument } from "@/lib/data";
 
 const DashBoard = async () => {
-  const { recentlyDocuments, viewedDocument, likedDocument } =
+  const { recentlyDocuments, viewedDocument, likedDocument, userDocument } =
     await getDashboardDocument();
   const dashboardSection = {
     recently: {
@@ -13,7 +13,7 @@ const DashBoard = async () => {
       metaData: {
         createdAtShow: true,
       },
-      href: "/latest-documents",
+      href: "/documents?section=recently&page=1",
     },
     viewed: {
       title: "Tài liệu bạn đã xem gần đây",
@@ -22,13 +22,22 @@ const DashBoard = async () => {
       metaData: {
         viewedAtShow: true,
       },
-      href: "/viewed-documents",
+      href: "/documents?section=viewed&page=1",
     },
     liked: {
       title: "Tài liệu bạn đã thích gần đây",
       data: likedDocument,
       viewAllString: "Xem tất cả các tài liệu đã thích",
-      href: "/liked-documents",
+      href: "/documents?section=liked&page=1",
+    },
+    user: {
+      title: "Tài liệu của bạn",
+      data: userDocument,
+      viewAllString: "Xem tất cả tài liệu của bạn",
+      metaData: {
+        createdAtShow: true,
+      },
+      href: "/documents?section=user-doc&page=1",
     },
   };
 
@@ -66,11 +75,13 @@ const DashBoard = async () => {
           viewAllString={dashboardSection.liked.viewAllString}
           href={dashboardSection.liked.href}
         />
-        {/* <DashBoardSection
-        title={"Tài liệu của tôi"}
-        data={myDocuments}
-        viewAllString={"Xem tất cả các tài liệu của tôi"}
-      /> */}
+        <DashBoardSection
+          title={dashboardSection.user.title}
+          data={dashboardSection.user.data}
+          viewAllString={dashboardSection.user.viewAllString}
+          href={dashboardSection.user.href}
+          metaData={dashboardSection.user.metaData}
+        />
       </div>
     </div>
   );

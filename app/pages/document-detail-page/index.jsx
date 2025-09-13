@@ -131,7 +131,7 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: build document route
+// TODO: build documents route (check chatgpt)
 
 // TODO: Change dashboard layout
 

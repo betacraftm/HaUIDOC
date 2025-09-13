@@ -31,7 +31,7 @@ const DocumentCard = ({ title, subject, linkUrl, metaData, doc }) => {
   return (
     <Link
       href={linkUrl}
-      className="group block w-full border-b py-6 transition-colors duration-200 hover:bg-gray-50"
+      className="group block w-full border-b border-b-gray-300 py-6 transition-colors duration-200 hover:bg-gray-50"
     >
       <div className="flex flex-col px-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="mb-4 sm:mb-0 sm:w-2/3">

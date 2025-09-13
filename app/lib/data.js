@@ -74,7 +74,14 @@ export const getDashboardDocument = async (userId) => {
       })
     ).map((doc) => ({ ...doc.document }));
 
-    return { recentlyDocuments, viewedDocument, likedDocument };
+    const userDocument = await prisma.document.findMany({
+      take: 5,
+      orderBy: { created_at: "desc" },
+      where: { uploaded_by: userId },
+      include: { subjects: { select: { name: true } } },
+    });
+
+    return { recentlyDocuments, viewedDocument, likedDocument, userDocument };
   } catch (error) {
     console.error("Error fetching document:", error);
     return null;
