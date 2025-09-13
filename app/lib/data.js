@@ -1,5 +1,6 @@
 "use server";
 
+import { doc } from "prettier";
 import { PrismaClient } from "../../generated/prisma";
 
 const prisma = new PrismaClient();
@@ -63,7 +64,17 @@ export const getDashboardDocument = async (userId) => {
       })
     ).map((doc) => ({ ...doc.document, viewed_at: doc.viewed_at }));
 
-    return { recentlyDocuments, viewedDocument };
+    const likedDocument = (
+      await prisma.userLikedDocument.findMany({
+        take: 5,
+        where: { user_id: userId },
+        include: {
+          document: { include: { subjects: { select: { name: true } } } },
+        },
+      })
+    ).map((doc) => ({ ...doc.document }));
+
+    return { recentlyDocuments, viewedDocument, likedDocument };
   } catch (error) {
     console.error("Error fetching document:", error);
     return null;

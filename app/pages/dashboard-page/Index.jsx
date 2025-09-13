@@ -3,7 +3,8 @@ import DashBoardSection from "./DashBoardSection";
 import { getDashboardDocument } from "@/lib/data";
 
 const DashBoard = async () => {
-  const { recentlyDocuments, viewedDocument } = await getDashboardDocument();
+  const { recentlyDocuments, viewedDocument, likedDocument } =
+    await getDashboardDocument();
   const dashboardSection = {
     recently: {
       title: "Tài liệu mới nhất",
@@ -22,6 +23,12 @@ const DashBoard = async () => {
         viewedAtShow: true,
       },
       href: "/viewed-documents",
+    },
+    liked: {
+      title: "Tài liệu bạn đã thích gần đây",
+      data: likedDocument,
+      viewAllString: "Xem tất cả các tài liệu đã thích",
+      href: "/liked-documents",
     },
   };
 
@@ -53,12 +60,13 @@ const DashBoard = async () => {
           href={dashboardSection.viewed.href}
           metaData={dashboardSection.viewed.metaData}
         />
+        <DashBoardSection
+          title={dashboardSection.liked.title}
+          data={dashboardSection.liked.data}
+          viewAllString={dashboardSection.liked.viewAllString}
+          href={dashboardSection.liked.href}
+        />
         {/* <DashBoardSection
-        title={"Tài liệu đã thích"}
-        data={likedDocuments}
-        viewAllString={"Xem tất cả các tài liệu đã thích"}
-      />
-      <DashBoardSection
         title={"Tài liệu của tôi"}
         data={myDocuments}
         viewAllString={"Xem tất cả các tài liệu của tôi"}

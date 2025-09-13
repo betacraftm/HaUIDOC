@@ -5,11 +5,11 @@ import Link from "next/link";
 const DocumentCard = ({ title, subject, linkUrl, metaData, doc }) => {
   let customTimeData = undefined;
 
-  if (metaData.createdAtShow) {
+  if (metaData?.createdAtShow) {
     customTimeData = `Ngày đăng: ${formatDate(doc?.created_at?.toString())}`;
   }
 
-  if (metaData.viewedAtShow) {
+  if (metaData?.viewedAtShow) {
     const createdAt = new Date(doc.viewed_at);
     const now = new Date();
     const diffInMilliseconds = now.getTime() - createdAt.getTime();

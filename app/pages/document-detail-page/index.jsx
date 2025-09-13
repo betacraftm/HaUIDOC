@@ -131,4 +131,18 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: Build likeed document section
+// TODO: build document route
+
+// TODO: Change dashboard layout
+
+// TODO: Build search query section
+
+// TODO: add student id and gender in database
+
+// TODO: build profile section
+
+// TODO: build in-site crop image
+
+// TODO: build donate api
+
+// **: Build group chat section, video call etc...
