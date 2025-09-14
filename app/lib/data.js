@@ -1,9 +1,9 @@
 "use server";
 
-import { doc } from "prettier";
 import { PrismaClient } from "../../generated/prisma";
 
 const prisma = new PrismaClient();
+const PAGE_SIZE = 10;
 
 export const fetchMajors = async () => {
   try {
@@ -125,4 +125,81 @@ export const getComments = async (docId) => {
   });
 
   return comments;
+};
+
+export const getDocuments = async (section, page, userId) => {
+  const query = {
+    orderBy: {},
+    where: {},
+  };
+
+  switch (section) {
+    case "recently":
+      query.orderBy = { created_at: "desc" };
+      break;
+    case "user-doc":
+      query.where = { uploaded_by: userId };
+    case "viewed":
+      return await getViewedDocuments(page, userId);
+    case "liked":
+      return await getLikedDocuments(page, userId);
+  }
+
+  const documents = await prisma.document.findMany({
+    skip: (page - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
+    where: query.where,
+    orderBy: query.orderBy,
+    include: { subjects: { select: { name: true } } },
+  });
+
+  const total = await prisma.document.count(query.where);
+
+  return { documents, total };
+};
+
+const getViewedDocuments = async (page, userId) => {
+  const documents = await prisma.userViewedDocument.findMany({
+    skip: (page - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
+    orderBy: { viewed_at: "desc" },
+    where: { user_id: userId },
+    include: {
+      document: { include: { subjects: { select: { name: true } } } },
+    },
+  });
+
+  const total = await prisma.userViewedDocument.count({
+    where: { user_id: userId },
+  });
+
+  return {
+    documents: documents.map((doc) => ({
+      ...doc.document,
+      viewed_at: doc.viewed_at,
+    })),
+    total,
+  };
+};
+
+const getLikedDocuments = async (page, userId) => {
+  const documents = await prisma.userLikedDocument.findMany({
+    skip: (page - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
+    where: { user_id: userId },
+    include: {
+      document: { include: { subjects: { select: { name: true } } } },
+    },
+  });
+
+  const total = await prisma.userLikedDocument.count({
+    where: { user_id: userId },
+  });
+
+  return {
+    documents: documents.map((doc) => ({
+      ...doc.document,
+    })),
+    total,
+  };
 };
