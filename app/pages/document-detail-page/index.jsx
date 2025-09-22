@@ -131,7 +131,9 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: add try catch in getDocuments and other functions
+// TODO: Change pagination style
+
+// TODO: Fix pagination ui state
 
 // TODO: Change dashboard layout
 
