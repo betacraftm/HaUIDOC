@@ -131,15 +131,11 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: Change pagination style
-
-// TODO: Fix pagination ui state
-
-// TODO: Change dashboard layout
+// TODO: Add skeleton loading
 
 // TODO: Build search query section
 
-// TODO: add student id and gender in database
+// TODO: add gender in database
 
 // TODO: build profile section
 

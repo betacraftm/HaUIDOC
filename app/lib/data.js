@@ -149,6 +149,7 @@ export const getDocuments = async (section, page, userId) => {
       break;
     case "user-doc":
       query.where = { uploaded_by: userId };
+      break;
     case "viewed":
       return await getViewedDocuments(page, userId);
     case "liked":

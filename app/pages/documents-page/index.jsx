@@ -36,7 +36,7 @@ const DocumentsPage = ({ section, page: initialPage, userId }) => {
       break;
 
     case "user-doc":
-      sectionDefenition.title = "Tài liệu bạn đã xem gần đây";
+      sectionDefenition.title = "Tài liệu bạn đã đăng";
       sectionDefenition.metadata = {
         createdAtShow: true,
       };
@@ -53,6 +53,13 @@ const DocumentsPage = ({ section, page: initialPage, userId }) => {
     };
     fetchData();
   }, [section, page, userId]);
+
+  useEffect(() => {
+    const paramPage = parseInt(searchParams.get("page")) || 1;
+    if (paramPage !== page) {
+      setPage(paramPage);
+    }
+  }, [searchParams]);
 
   const goToPage = (newPage) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -119,7 +126,7 @@ const DocumentsPage = ({ section, page: initialPage, userId }) => {
               <button
                 onClick={() => goToPage(page - 1)}
                 disabled={page === 1}
-                className="rounded border px-3 py-1 disabled:opacity-50"
+                className="hover:bg-primary hover:border-primary cursor-pointer rounded-xl border px-3 py-1 transition-all duration-75 hover:text-white disabled:opacity-50 disabled:transition-none disabled:hover:border-black disabled:hover:bg-white disabled:hover:text-black"
               >
                 Trước
               </button>
@@ -133,8 +140,8 @@ const DocumentsPage = ({ section, page: initialPage, userId }) => {
                   <button
                     key={p}
                     onClick={() => goToPage(p)}
-                    className={`rounded border px-3 py-1 ${
-                      p === page ? "bg-gray-300 font-bold" : ""
+                    className={`hover:bg-primary hover:border-primary cursor-pointer rounded-full border px-3 py-1 transition-all duration-75 hover:text-white ${
+                      p === page ? "bg-primary border-primary text-white" : ""
                     }`}
                   >
                     {p}
@@ -145,7 +152,7 @@ const DocumentsPage = ({ section, page: initialPage, userId }) => {
               <button
                 onClick={() => goToPage(page + 1)}
                 disabled={page === totalPages}
-                className="rounded border px-3 py-1 disabled:opacity-50"
+                className="hover:bg-primary hover:border-primary cursor-pointer rounded-xl border px-3 py-1 transition-all duration-75 hover:text-white disabled:opacity-50 disabled:transition-none disabled:hover:border-black disabled:hover:bg-white disabled:hover:text-black"
               >
                 Sau
               </button>
