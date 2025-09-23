@@ -131,13 +131,13 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: build documents route (check chatgpt)
+// TODO: Fix page out of range bug
 
-// TODO: Change dashboard layout
+// TODO: Add skeleton loading
 
 // TODO: Build search query section
 
-// TODO: add student id and gender in database
+// TODO: add gender in database
 
 // TODO: build profile section
 
