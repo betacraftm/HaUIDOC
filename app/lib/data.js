@@ -229,3 +229,60 @@ const getLikedDocuments = async (page, userId) => {
     return null;
   }
 };
+
+export const searchDocuments = async (query, page = 1) => {
+  try {
+    if (!query || query.trim() === "") {
+      return { documents: [], total: 0 };
+    }
+
+    const documents = await prisma.document.findMany({
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+      where: {
+        OR: [
+          {
+            title: {
+              contains: query,
+            },
+          },
+          {
+            subjects: {
+              name: {
+                contains: query,
+              },
+            },
+          },
+        ],
+      },
+      orderBy: { created_at: "desc" },
+      include: {
+        subjects: { select: { name: true } },
+      },
+    });
+
+    const total = await prisma.document.count({
+      where: {
+        OR: [
+          {
+            title: {
+              contains: query,
+            },
+          },
+          {
+            subjects: {
+              name: {
+                contains: query,
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    return { documents, total };
+  } catch (error) {
+    console.error("Error search documents:", error);
+    return { documents: [], total: 0 };
+  }
+};
