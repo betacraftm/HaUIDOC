@@ -131,8 +131,6 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: Fix page out of range bug
-
 // TODO: Add skeleton loading
 
 // TODO: Build search query section

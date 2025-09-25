@@ -2,8 +2,9 @@
 
 import { getDocuments } from "@/lib/data";
 import { useEffect, useState } from "react";
-import { notFound, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import DocumentCard from "@/components/DocumentCard";
+import DocumentSkeleton from "@/components/skeletons/DocumentSkeleton";
 
 const DocumentsPage = ({ section, userId }) => {
   const router = useRouter();
@@ -99,7 +100,9 @@ const DocumentsPage = ({ section, userId }) => {
         </h2>
 
         {isLoading ? (
-          <p>Đang tải...</p>
+          Array.from({ length: 7 }).map((_, idx) => {
+            return <DocumentSkeleton key={idx} />;
+          })
         ) : (
           <>
             <div className="hide-scrollbar grid grid-cols-1 overflow-x-auto">
