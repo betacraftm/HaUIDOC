@@ -19,12 +19,12 @@ const SearchResult = async ({ query, page = 1 }) => {
           </p>
         </div>
       ) : (
-        <div className="min-h-screen">
+        <div>
           <h2 className="mb-6 text-2xl font-bold text-gray-800">
             Kết quả tìm kiếm
           </h2>
 
-          <div className="hide-scrollbar grid grid-cols-1 overflow-x-auto">
+          <div className="hide-scrollbar grid min-h-screen grid-cols-1 overflow-x-auto">
             {documents.map((doc) => (
               <div key={doc.id}>
                 <DocumentCard
