@@ -70,6 +70,7 @@ model User {
   id               String               @id @default(uuid())
   name             String               @db.VarChar(255)
   username         String               @db.VarChar(255) @unique
+  email            String?              @db.VarChar(255) @unique
   password_hash    String?              @db.VarChar(255)
   role             UserRole?            @default(client)
   created_at       DateTime?            @db.DateTime(0) @default(now())
@@ -80,11 +81,11 @@ model User {
   majors           Major?               @relation(fields: [major_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_1")
 
   liked_documents  UserLikedDocument[]
-
   viewed_documents UserViewedDocument[]
 
   @@index([major_id], map: "major_id")
   @@index([username])
+  @@index([email]) // Add index for email
   @@index([role])
   @@map("users")
 }
