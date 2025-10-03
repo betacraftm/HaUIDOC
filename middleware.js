@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { decrypt } from "@/lib/session";
+import { decrypt } from "./app/lib/session";
 
 // 1. Specify protected and public routes
 const protectedRoutes = ["/dashboard", "/profile", "/upload"];

@@ -1,6 +1,5 @@
 "use server";
 
-import { PrismaClient } from "../../generated/prisma";
 import bcrypt from "bcryptjs";
 import { loginSchema, registerSchema, uploadSchema } from "./definition";
 import { createSession, deleteSession } from "./session";
@@ -12,6 +11,7 @@ import { redirect } from "next/navigation";
 import { getAuth, signInAnonymously } from "firebase/auth";
 import { promisify } from "util";
 import libre from "libreoffice-convert";
+import { PrismaClient } from "generated/prisma";
 
 const prisma = new PrismaClient();
 const convertAsync = promisify(libre.convert);

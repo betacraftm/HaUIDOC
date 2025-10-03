@@ -1,5 +1,5 @@
-import { PrismaClient } from "../../../generated/prisma";
-import { subjects, majors } from "@/lib/seeded-data";
+import { majors, subjects } from "@/lib/seeded-data";
+import { PrismaClient } from "generated/prisma";
 
 const prisma = new PrismaClient();
 

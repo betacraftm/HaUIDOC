@@ -1,6 +1,5 @@
+import { PrismaClient } from "generated/prisma";
 import { NextResponse } from "next/server";
-import { PrismaClient } from "../../../generated/prisma";
-import { includes } from "zod";
 
 const prisma = new PrismaClient();
 
