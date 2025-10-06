@@ -13,7 +13,7 @@ model Comment {
   user_id     String?
   document_id String?
   content     String?   @db.Text
-  created_at  DateTime? @db.DateTime(0) @default(now())
+  created_at  DateTime? @default(now()) @db.DateTime(0)
   users       User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_1")
   documents   Document? @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_2")
 
@@ -23,19 +23,19 @@ model Comment {
 }
 
 model Document {
-  id          String      @id @default(uuid())
-  title       String      @db.VarChar(255)
-  desc        String?     @db.Text
-  file_url    String?     @db.Text
+  id          String    @id @default(uuid())
+  title       String    @db.VarChar(255)
+  desc        String?   @db.Text
+  file_url    String?   @db.Text
   subject_id  String?
   uploaded_by String?
-  created_at  DateTime?   @db.DateTime(0) @default(now())
+  created_at  DateTime? @default(now()) @db.DateTime(0)
   comments    Comment[]
-  subjects    Subject?    @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_1")
-  users       User?       @relation(fields: [uploaded_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_2")
+  subjects    Subject?  @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_1")
+  users       User?     @relation(fields: [uploaded_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_2")
 
-  liked_by    UserLikedDocument[]
-  viewed_by   UserViewedDocument[]
+  liked_by  UserLikedDocument[]
+  viewed_by UserViewedDocument[]
 
   @@index([subject_id], map: "subject_id")
   @@index([uploaded_by], map: "uploaded_by")
@@ -67,21 +67,22 @@ enum UserRole {
 }
 
 model User {
-  id               String               @id @default(uuid())
-  name             String               @db.VarChar(255)
-  username         String               @db.VarChar(255) @unique
-  email            String?              @db.VarChar(255) @unique
-  password_hash    String?              @db.VarChar(255)
-  role             UserRole?            @default(client)
-  created_at       DateTime?            @db.DateTime(0) @default(now())
-  image_url        String?              @db.VarChar(255)
-  major_id         String?
-  comments         Comment[]
-  documents        Document[]
-  majors           Major?               @relation(fields: [major_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_1")
+  id            String     @id @default(uuid())
+  name          String     @db.VarChar(255)
+  username      String     @unique @db.VarChar(255)
+  email         String     @unique @db.VarChar(255)
+  password_hash String     @db.VarChar(255)
+  role          UserRole   @default(client)
+  created_at    DateTime   @default(now()) @db.DateTime(0)
+  image_url     String?    @db.VarChar(255)
+  major_id      String
+  comments      Comment[]
+  documents     Document[]
+  majors        Major?     @relation(fields: [major_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_1")
 
   liked_documents  UserLikedDocument[]
   viewed_documents UserViewedDocument[]
+  resetTokens      PasswordResetToken[]
 
   @@index([major_id], map: "major_id")
   @@index([username])
@@ -94,8 +95,8 @@ model UserLikedDocument {
   user_id     String
   document_id String
 
-  user      User     @relation(fields: [user_id], references: [id])
-  document  Document @relation(fields: [document_id], references: [id])
+  user     User     @relation(fields: [user_id], references: [id])
+  document Document @relation(fields: [document_id], references: [id])
 
   @@id([user_id, document_id])
   @@index([user_id])
@@ -106,13 +107,22 @@ model UserLikedDocument {
 model UserViewedDocument {
   user_id     String
   document_id String
-  viewed_at   DateTime @db.DateTime(0) @default(now())
+  viewed_at   DateTime @default(now()) @db.DateTime(0)
 
-  user      User     @relation(fields: [user_id], references: [id])
-  document  Document @relation(fields: [document_id], references: [id])
+  user     User     @relation(fields: [user_id], references: [id])
+  document Document @relation(fields: [document_id], references: [id])
 
   @@id([user_id, document_id])
   @@index([user_id])
   @@index([document_id])
   @@map("UserViewedDocument")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  expires   DateTime
+  createdAt DateTime @default(now())
 }

@@ -15,6 +15,8 @@ export const registerSchema = z.object({
       "Tên đăng nhập phải có ít nhất 8 ký tự, chỉ được chứa chữ cái, số và gạch dưới",
     ),
 
+  email: z.email("Email không hợp lệ"),
+
   password: z
     .string()
     .regex(

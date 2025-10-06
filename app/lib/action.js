@@ -12,6 +12,8 @@ import { getAuth, signInAnonymously } from "firebase/auth";
 import { promisify } from "util";
 import libre from "libreoffice-convert";
 import { PrismaClient } from "generated/prisma";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
 
 const prisma = new PrismaClient();
 const convertAsync = promisify(libre.convert);
@@ -19,12 +21,14 @@ const convertAsync = promisify(libre.convert);
 export const registerUser = async (prevState, formData) => {
   try {
     const name = formData.get("name");
+    const email = formData.get("email");
     const username = formData.get("username");
     const password = formData.get("password");
     const major_name = formData.get("major_name");
 
     const parsed = registerSchema.safeParse({
       name: name,
+      email: email,
       username: username,
       password: password,
     });
@@ -32,11 +36,14 @@ export const registerUser = async (prevState, formData) => {
       return { error: parsed.error.flatten().fieldErrors };
     }
 
-    const existingUser = await prisma.user.findUnique({
-      where: { username },
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ username }, { email }],
+      },
     });
+
     if (existingUser) {
-      return { error: { message: "Tên đăng nhập đã tồn tại" } };
+      return { error: { message: "Tên đăng nhập hoặc email đã được sử dụng" } };
     }
 
     const majorId = (
@@ -52,6 +59,7 @@ export const registerUser = async (prevState, formData) => {
       data: {
         name,
         username,
+        email,
         password_hash: hashedPassword,
         major_id: majorId,
       },
@@ -66,19 +74,21 @@ export const registerUser = async (prevState, formData) => {
 
 export const loginUser = async (prevState, formData) => {
   try {
-    const username = formData.get("username");
+    const identifier = formData.get("username");
     const password = formData.get("password");
 
     const parsed = loginSchema.safeParse({
-      username: username,
+      username: identifier,
       password: password,
     });
     if (!parsed.success) {
       return { error: parsed.error.flatten().fieldErrors };
     }
 
-    const user = await prisma.user.findUnique({
-      where: { username },
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [{ username: identifier }, { email: identifier }],
+      },
     });
     if (!user) {
       return { error: { message: "Tên đăng nhập hoặc mật khẩu không đúng" } };
@@ -107,6 +117,94 @@ export const logoutUser = async () => {
 
   redirect("/");
 };
+
+export const sendResetPasswordEmail = async (prevState, formData) => {
+  const email = formData.get("email");
+
+  // check user
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    return { error: "Email không tồn tại" };
+  }
+
+  // generate token
+  const token = crypto.randomBytes(32).toString("hex");
+  const expires = new Date(Date.now() + 1000 * 60 * 15); // 15 phút
+
+  await prisma.passwordResetToken.create({
+    data: {
+      token,
+      userId: user.id,
+      expires,
+    },
+  });
+
+  // send email
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Khôi phục mật khẩu",
+    html: `
+  <div style="font-family: Arial, sans-serif; background-color: #f9fafb; padding: 30px; text-align: center;">
+    <div style="max-width: 480px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 30px;">
+      <h2 style="color: #2d3748;">Khôi phục mật khẩu</h2>
+      <p style="font-size: 16px; color: #4a5568; margin-bottom: 24px;">
+        Xin chào,<br>
+        Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn trên <strong>HaUIDOC</strong>.
+      </p>
+      <a href="${resetUrl}"
+        style="display: inline-block; background-color: #2563eb; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+        Đặt lại mật khẩu
+      </a>
+      <p style="font-size: 14px; color: #718096; margin-top: 24px;">
+        Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.<br>
+        Liên kết có hiệu lực trong vòng <strong>15 phút</strong>.
+      </p>
+      <hr style="margin: 30px 0; border: none; border-top: 1px solid #e2e8f0;">
+      <p style="font-size: 12px; color: #a0aec0;">
+        © 2025 HaUIDOC. Mọi quyền được bảo lưu.<br>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}" style="color: #2563eb; text-decoration: none;">Truy cập HaUIDOC</a>
+      </p>
+    </div>
+  </div>
+  `,
+  });
+
+  return { success: "Email khôi phục đã được gửi!" };
+};
+
+export async function resetPassword(prevState, formData) {
+  const token = formData.get("token");
+  const newPassword = formData.get("password");
+
+  const resetToken = await prisma.passwordResetToken.findUnique({
+    where: { token },
+  });
+  if (!resetToken || resetToken.expires < new Date()) {
+    return { error: "Token không hợp lệ hoặc đã hết hạn" };
+  }
+
+  const hashed = await bcrypt.hash(newPassword, 10);
+
+  await prisma.user.update({
+    where: { id: resetToken.userId },
+    data: { password_hash: hashed },
+  });
+
+  await prisma.passwordResetToken.delete({ where: { token } });
+
+  return { success: "Mật khẩu đã được đổi thành công!" };
+}
 
 export const uploadDocument = async (prevState, formData) => {
   let newDocument = null;

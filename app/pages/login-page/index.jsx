@@ -30,10 +30,10 @@ export default function LoginPage() {
               type="text"
               required
               className="focus:ring-primary focus:border-primary w-full rounded-md border border-gray-300 px-4 py-3 text-base shadow-sm transition focus:ring-2 focus:outline-none"
-              placeholder="Nhập tên đăng nhập"
+              placeholder="Nhập tên đăng nhập hoặc email"
             />
           </div>
-          <div className="mb-6">
+          <div className="">
             <label
               className="mb-2 block text-base font-semibold text-gray-700"
               htmlFor="password"
@@ -54,6 +54,16 @@ export default function LoginPage() {
               {state.error.message}
             </div>
           )}
+
+          <div className="flex items-center justify-end py-2">
+            <Link
+              href="/forgot-password"
+              className="text-secondary hover:text-secondary/80 text-sm hover:underline"
+            >
+              Quên mật khẩu?
+            </Link>
+          </div>
+
           <button
             type="submit"
             disabled={pending}
@@ -65,7 +75,7 @@ export default function LoginPage() {
             Chưa có tài khoản?{" "}
             <Link
               href="/register"
-              className="text-secondary hover:text-secondary/80 underline"
+              className="text-secondary hover:text-secondary/80 hover:underline"
             >
               Đăng ký
             </Link>

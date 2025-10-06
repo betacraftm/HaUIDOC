@@ -63,6 +63,25 @@ const RegisterPage = ({ majorsList }) => {
           </div>
           <div>
             <label
+              htmlFor="email"
+              className="mb-1 block text-base font-semibold text-gray-800"
+            >
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="text"
+              required
+              className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:outline-none"
+              placeholder="Nhập email"
+            />
+            {state?.error.email && (
+              <div className="text-sm text-red-600">{state.error.email}</div>
+            )}
+          </div>
+          <div>
+            <label
               htmlFor="password"
               className="mb-1 block text-base font-semibold text-gray-800"
             >
