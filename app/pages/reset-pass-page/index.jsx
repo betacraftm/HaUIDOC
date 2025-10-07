@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { resetPassword } from "@/lib/action";
 import { useActionState } from "react";
+import { anton } from "@/components/fonts";
 
 export default function ResetPassword() {
   const searchParams = useSearchParams();
@@ -10,9 +11,11 @@ export default function ResetPassword() {
   const [state, formAction, pending] = useActionState(resetPassword, undefined);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-[70vh] items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-        <h1 className="text-primary mb-6 text-center text-3xl font-extrabold">
+        <h1
+          className={`text-primary ${anton.className} mb-6 text-center text-3xl font-extrabold`}
+        >
           Đặt lại mật khẩu
         </h1>
         <p className="mb-6 text-center text-sm text-gray-600">

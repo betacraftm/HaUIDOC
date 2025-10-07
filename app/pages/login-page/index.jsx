@@ -71,6 +71,7 @@ export default function LoginPage() {
           >
             Đăng nhập
           </button>
+
           <div className="mt-4 text-center text-sm text-gray-600">
             Chưa có tài khoản?{" "}
             <Link
