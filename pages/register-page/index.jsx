@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { anton } from "@/components/fonts";
+import { anton } from "components/fonts";
 import { useActionState, useState } from "react";
 import { registerUser } from "@/lib/action";
-import DropDown from "@/components/DropDown";
+import DropDown from "components/DropDown";
 
 const RegisterPage = ({ majorsList }) => {
   const [state, action, pending] = useActionState(registerUser, undefined);

@@ -1,9 +1,9 @@
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "components/SearchBar";
 import { getDashboardDocument } from "@/lib/data";
-import DashBoard from "@/pages/dashboard-page";
+import DashBoard from "pages/dashboard-page";
 import { Suspense } from "react";
-import SearchResult from "@/pages/dashboard-page/SearchResult";
-import SearchSkeleton from "@/components/skeletons/SearchSkeleton";
+import SearchResult from "pages/dashboard-page/SearchResult";
+import SearchSkeleton from "components/skeletons/SearchSkeleton";
 
 const page = async ({ searchParams }) => {
   const params = await searchParams;

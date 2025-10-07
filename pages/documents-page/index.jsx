@@ -3,8 +3,8 @@
 import { getDocuments } from "@/lib/data";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import DocumentCard from "@/components/DocumentCard";
-import DocumentSkeleton from "@/components/skeletons/DocumentSkeleton";
+import DocumentCard from "components/DocumentCard";
+import DocumentSkeleton from "components/skeletons/DocumentSkeleton";
 
 const DocumentsPage = ({ section, userId }) => {
   const router = useRouter();

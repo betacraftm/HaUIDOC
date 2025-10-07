@@ -1,4 +1,4 @@
-import ForgotPassword from "@/pages/forgot-pass-page";
+import ForgotPassword from "pages/forgot-pass-page";
 
 const Page = () => {
   return <ForgotPassword />;

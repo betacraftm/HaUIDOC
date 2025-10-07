@@ -3,7 +3,7 @@
 import { getComments } from "@/lib/data";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import CommentSkeleton from "@/components/skeletons/CommentSkeleton";
+import CommentSkeleton from "components/skeletons/CommentSkeleton";
 
 const CommentSection = ({ docId, userId }) => {
   const [comments, setComments] = useState([]);

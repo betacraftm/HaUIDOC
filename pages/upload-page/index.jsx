@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { anton } from "@/components/fonts";
+import { anton } from "components/fonts";
 import { useState, useRef, useActionState, startTransition } from "react";
 import { UploadCloud, XCircle, FileText } from "lucide-react";
 import { uploadDocument } from "@/lib/action";
 import { acceptedFileTypes } from "@/utils/utils";
-import DropDown from "@/components/DropDown";
+import DropDown from "components/DropDown";
 
 const UploadPage = ({ subjectsList }) => {
   // State chỉ lưu trữ File object

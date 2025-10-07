@@ -1,14 +1,14 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { resetPassword } from "@/lib/action";
+import { sendResetPasswordEmail } from "@/lib/action";
 import { useActionState } from "react";
-import { anton } from "@/components/fonts";
+import { anton } from "components/fonts";
 
-export default function ResetPassword() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-  const [state, formAction, pending] = useActionState(resetPassword, undefined);
+const ForgotPassword = () => {
+  const [state, formAction, pending] = useActionState(
+    sendResetPasswordEmail,
+    undefined,
+  );
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center bg-gray-50 px-4">
@@ -16,55 +16,28 @@ export default function ResetPassword() {
         <h1
           className={`text-primary ${anton.className} mb-6 text-center text-3xl font-extrabold`}
         >
-          Đặt lại mật khẩu
+          Quên mật khẩu
         </h1>
         <p className="mb-6 text-center text-sm text-gray-600">
-          Nhập mật khẩu mới cho tài khoản của bạn
+          Nhập email của bạn để nhận liên kết đặt lại mật khẩu
         </p>
 
         <form action={formAction} className="space-y-5">
-          <input type="hidden" name="token" value={token || ""} />
-
           <div>
-            <label
-              htmlFor="password"
-              className="mb-2 block text-base font-semibold text-gray-700"
-            >
-              Mật khẩu mới
-            </label>
             <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Nhập mật khẩu mới"
+              type="email"
+              name="email"
+              placeholder="Nhập email của bạn"
               required
               className="focus:border-primary focus:ring-primary w-full rounded-xl border border-gray-300 px-4 py-3 text-base shadow-sm transition focus:ring-2 focus:outline-none"
             />
+            {state?.error && (
+              <p className="mt-2 text-sm text-red-600">{state.error}</p>
+            )}
+            {state?.success && (
+              <p className="mt-2 text-sm text-green-600">{state.success}</p>
+            )}
           </div>
-
-          <div>
-            <label
-              htmlFor="confirmPassword"
-              className="mb-2 block text-base font-semibold text-gray-700"
-            >
-              Xác nhận mật khẩu
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              placeholder="Nhập lại mật khẩu mới"
-              required
-              className="focus:border-primary focus:ring-primary w-full rounded-xl border border-gray-300 px-4 py-3 text-base shadow-sm transition focus:ring-2 focus:outline-none"
-            />
-          </div>
-
-          {state?.error && (
-            <p className="text-sm text-red-600">{state.error}</p>
-          )}
-          {state?.success && (
-            <p className="text-sm text-green-600">{state.success}</p>
-          )}
 
           <button
             type="submit"
@@ -91,14 +64,16 @@ export default function ResetPassword() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                Đang xử lý...
+                Đang gửi...
               </>
             ) : (
-              "Xác nhận đặt lại mật khẩu"
+              "Gửi email khôi phục"
             )}
           </button>
         </form>
       </div>
     </div>
   );
-}
+};
+
+export default ForgotPassword;

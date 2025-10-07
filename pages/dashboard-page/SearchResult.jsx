@@ -1,4 +1,4 @@
-import DocumentCard from "@/components/DocumentCard";
+import DocumentCard from "components/DocumentCard";
 import { searchDocuments } from "@/lib/data";
 import { FileSearch } from "lucide-react";
 import Pagination from "./Pagination";

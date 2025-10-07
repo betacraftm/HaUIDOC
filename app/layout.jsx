@@ -1,7 +1,7 @@
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { raleway } from "@/components/fonts";
+import Header from "components/Header";
+import Footer from "components/Footer";
+import { raleway } from "components/fonts";
 import { getUserAuth } from "./lib/auth";
 
 export const metadata = {

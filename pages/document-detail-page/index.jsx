@@ -5,9 +5,9 @@ import { generateDateString } from "@/utils/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MoveLeft, User, Download, Star } from "lucide-react";
-import PDFViewer from "@/components/PDFViewer";
+import PDFViewer from "components/PDFViewer";
 import CommentSection from "./CommentSection";
-import TitleSkeleton from "@/components/skeletons/TitleSkeleton";
+import TitleSkeleton from "components/skeletons/TitleSkeleton";
 
 const DocumentDetail = ({ docId, userId, doc }) => {
   const [isLiked, setIsLiked] = useState(false);

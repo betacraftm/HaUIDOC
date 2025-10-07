@@ -1,6 +1,6 @@
 import { getUserAuth } from "@/lib/auth";
 import { getDocuments } from "@/lib/data";
-import DocumentsPage from "@/pages/documents-page";
+import DocumentsPage from "pages/documents-page";
 
 const page = async ({ searchParams }) => {
   const query = await searchParams;

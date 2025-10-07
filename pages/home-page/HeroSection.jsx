@@ -1,4 +1,4 @@
-import { anton } from "@/components/fonts";
+import { anton } from "components/fonts";
 
 const HeroSection = () => {
   return (
