@@ -131,9 +131,7 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: Build search query section
-
-// TODO: add gender in database
+// TODO: add oauth
 
 // TODO: build profile section
 
