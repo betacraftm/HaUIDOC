@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/getSession";
 import { checkDocumentExcist, getDocumentById } from "@/lib/data";
 import DocumentDetail from "pages/document-detail-page";
 import { notFound } from "next/navigation";

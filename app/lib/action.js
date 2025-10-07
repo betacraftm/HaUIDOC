@@ -1,11 +1,10 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { loginSchema, registerSchema, uploadSchema } from "./definition";
-import { createSession, deleteSession } from "./session";
+import { registerSchema, uploadSchema } from "./definition";
 import { storage } from "./firebase/config";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
-import { getSession } from "./auth";
+import { getSession } from "./getSession";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getAuth, signInAnonymously } from "firebase/auth";
@@ -72,51 +71,51 @@ export const registerUser = async (prevState, formData) => {
   redirect("/login");
 };
 
-export const loginUser = async (prevState, formData) => {
-  try {
-    const identifier = formData.get("username");
-    const password = formData.get("password");
+// export const loginUser = async (prevState, formData) => {
+//   try {
+//     const identifier = formData.get("username");
+//     const password = formData.get("password");
 
-    const parsed = loginSchema.safeParse({
-      username: identifier,
-      password: password,
-    });
-    if (!parsed.success) {
-      return { error: parsed.error.flatten().fieldErrors };
-    }
+//     const parsed = loginSchema.safeParse({
+//       username: identifier,
+//       password: password,
+//     });
+//     if (!parsed.success) {
+//       return { error: parsed.error.flatten().fieldErrors };
+//     }
 
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [{ username: identifier }, { email: identifier }],
-      },
-    });
-    if (!user) {
-      return { error: { message: "Tên đăng nhập hoặc mật khẩu không đúng" } };
-    }
+//     const user = await prisma.user.findFirst({
+//       where: {
+//         OR: [{ username: identifier }, { email: identifier }],
+//       },
+//     });
+//     if (!user) {
+//       return { error: { message: "Tên đăng nhập hoặc mật khẩu không đúng" } };
+//     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
-    if (!isPasswordValid) {
-      return { error: { message: "Tên đăng nhập hoặc mật khẩu không đúng" } };
-    }
+//     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+//     if (!isPasswordValid) {
+//       return { error: { message: "Tên đăng nhập hoặc mật khẩu không đúng" } };
+//     }
 
-    await createSession(user.id);
-  } catch (error) {
-    console.error("Error logging in user:", error);
-    return { error: { message: "Đã xảy ra lỗi khi đăng nhập" } };
-  }
+//     await createSession(user.id);
+//   } catch (error) {
+//     console.error("Error logging in user:", error);
+//     return { error: { message: "Đã xảy ra lỗi khi đăng nhập" } };
+//   }
 
-  redirect("/dashboard");
-};
+//   redirect("/dashboard");
+// };
 
-export const logoutUser = async () => {
-  try {
-    await deleteSession();
-  } catch (error) {
-    console.error("Error logging out user:", error);
-  }
+// export const logoutUser = async () => {
+//   try {
+//     await deleteSession();
+//   } catch (error) {
+//     console.error("Error logging out user:", error);
+//   }
 
-  redirect("/");
-};
+//   redirect("/");
+// };
 
 export const sendResetPasswordEmail = async (prevState, formData) => {
   const email = formData.get("email");

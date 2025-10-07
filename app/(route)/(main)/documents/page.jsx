@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/auth";
+import { getSession } from "@/lib/getSession";
 import { getDocuments } from "@/lib/data";
 import DocumentsPage from "pages/documents-page";
 

@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { decrypt } from "./app/lib/session";
+import { auth } from "./auth"; // <-- import từ file auth.js
 
-// 1. Specify protected and public routes
+// Các route yêu cầu đăng nhập
 const protectedRoutes = ["/dashboard", "/profile", "/upload"];
+
+// Các route công khai
 const publicRoutes = [
   "/login",
   "/register",
@@ -14,32 +15,34 @@ const publicRoutes = [
 ];
 
 export default async function middleware(req) {
-  // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
 
-  // 3. Decrypt the session from the cookie
-  const cookie = (await cookies()).get("session")?.value;
-  const session = await decrypt(cookie);
+  // ✅ Lấy session từ NextAuth (tự đọc cookie, giải mã JWT)
+  const session = await auth();
 
-  // 5. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !session?.userId) {
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
+  // ⛔ Nếu là route cần đăng nhập mà chưa có session → về /login
+  if (isProtectedRoute && !session?.user) {
+    const loginUrl = new URL("/login", req.nextUrl.origin);
+    loginUrl.searchParams.set("callbackUrl", path); // tùy chọn: quay lại sau đăng nhập
+    return NextResponse.redirect(loginUrl);
   }
 
-  // 6. Redirect to /dashboard if the user is authenticated
+  // ✅ Nếu là route public mà user đã đăng nhập → về /dashboard
   if (
     isPublicRoute &&
-    session?.userId &&
+    session?.user &&
     !req.nextUrl.pathname.startsWith("/dashboard")
   ) {
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin));
   }
 
+  // Cho phép truy cập bình thường
   return NextResponse.next();
 }
 
+// ✅ Cấu hình: áp dụng cho tất cả route trừ static & api
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };
