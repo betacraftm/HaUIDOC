@@ -1,4 +1,4 @@
-import { getUserAuth } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import { checkDocumentExcist, getDocumentById } from "@/lib/data";
 import DocumentDetail from "pages/document-detail-page";
 import { notFound } from "next/navigation";
@@ -9,7 +9,7 @@ const page = async ({ params }) => {
   if (!docExcist) {
     notFound();
   }
-  const { user } = await getUserAuth();
+  const { user } = await getSession();
   const userId = user.id;
   const doc = await getDocumentById(docId);
 

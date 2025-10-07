@@ -5,7 +5,7 @@ import { loginSchema, registerSchema, uploadSchema } from "./definition";
 import { createSession, deleteSession } from "./session";
 import { storage } from "./firebase/config";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
-import { getUserAuth } from "./auth";
+import { getSession } from "./auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getAuth, signInAnonymously } from "firebase/auth";
@@ -267,7 +267,7 @@ export const uploadDocument = async (prevState, formData) => {
 
     const snapshot = await uploadBytes(storageRef, fileToUpload);
 
-    const { user } = await getUserAuth();
+    const { user } = await getSession();
 
     const dowloadURL = await getDownloadURL(snapshot.ref);
 

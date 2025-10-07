@@ -2,14 +2,14 @@ import "./globals.css";
 import Header from "components/Header";
 import Footer from "components/Footer";
 import { raleway } from "components/fonts";
-import { getUserAuth } from "./lib/auth";
+import { getSession } from "./lib/auth";
 
 export const metadata = {
   title: "HaUIDOC",
 };
 
 export default async function RootLayout({ children }) {
-  const { isAuth, user } = await getUserAuth();
+  const { isAuth, user } = await getSession();
 
   return (
     <html lang="vi">
