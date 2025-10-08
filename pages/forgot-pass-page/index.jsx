@@ -2,7 +2,7 @@
 
 import { sendResetPasswordEmail } from "@/lib/action";
 import { useActionState } from "react";
-import { anton } from "components/fonts";
+import { anton } from "public/fonts";
 
 const ForgotPassword = () => {
   const [state, formAction, pending] = useActionState(

@@ -20,25 +20,6 @@ export const fetchSubjects = async () => {
   return subjects;
 };
 
-// export const getUserById = async (userId) => {
-//   try {
-//     const user = await prisma.user.findUnique({
-//       where: { id: userId },
-//       select: {
-//         id: true,
-//         name: true,
-//         username: true,
-//         major_id: true,
-//         image_url: true,
-//       },
-//     });
-//     return user;
-//   } catch (error) {
-//     console.error("Error fetching user:", error);
-//     return null;
-//   }
-// };
-
 export const getDashboardDocument = async (userId) => {
   try {
     const recentlyDocuments = await prisma.document.findMany({

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { anton } from "components/fonts";
+import { anton } from "public/fonts";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";

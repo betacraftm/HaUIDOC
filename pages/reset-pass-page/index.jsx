@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { resetPassword } from "@/lib/action";
 import { useActionState } from "react";
-import { anton } from "components/fonts";
+import { anton } from "public/fonts";
 
 export default function ResetPassword() {
   const searchParams = useSearchParams();

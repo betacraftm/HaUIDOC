@@ -71,52 +71,6 @@ export const registerUser = async (prevState, formData) => {
   redirect("/login");
 };
 
-// export const loginUser = async (prevState, formData) => {
-//   try {
-//     const identifier = formData.get("username");
-//     const password = formData.get("password");
-
-//     const parsed = loginSchema.safeParse({
-//       username: identifier,
-//       password: password,
-//     });
-//     if (!parsed.success) {
-//       return { error: parsed.error.flatten().fieldErrors };
-//     }
-
-//     const user = await prisma.user.findFirst({
-//       where: {
-//         OR: [{ username: identifier }, { email: identifier }],
-//       },
-//     });
-//     if (!user) {
-//       return { error: { message: "Tên đăng nhập hoặc mật khẩu không đúng" } };
-//     }
-
-//     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
-//     if (!isPasswordValid) {
-//       return { error: { message: "Tên đăng nhập hoặc mật khẩu không đúng" } };
-//     }
-
-//     await createSession(user.id);
-//   } catch (error) {
-//     console.error("Error logging in user:", error);
-//     return { error: { message: "Đã xảy ra lỗi khi đăng nhập" } };
-//   }
-
-//   redirect("/dashboard");
-// };
-
-// export const logoutUser = async () => {
-//   try {
-//     await deleteSession();
-//   } catch (error) {
-//     console.error("Error logging out user:", error);
-//   }
-
-//   redirect("/");
-// };
-
 export const sendResetPasswordEmail = async (prevState, formData) => {
   const email = formData.get("email");
 

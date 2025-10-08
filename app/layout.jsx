@@ -1,7 +1,7 @@
 import "./globals.css";
 import Header from "components/Header";
 import Footer from "components/Footer";
-import { raleway } from "components/fonts";
+import { raleway } from "public/fonts";
 import { SessionProvider } from "next-auth/react";
 
 export const metadata = {

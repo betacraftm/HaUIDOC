@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { anton } from "components/fonts";
+import { anton } from "public/fonts";
 import { useActionState, useState } from "react";
 import { registerUser } from "@/lib/action";
 import DropDown from "components/DropDown";

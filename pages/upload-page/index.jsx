@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { anton } from "components/fonts";
+import { anton } from "public/fonts";
 import { useState, useRef, useActionState, startTransition } from "react";
 import { UploadCloud, XCircle, FileText } from "lucide-react";
 import { uploadDocument } from "@/lib/action";
