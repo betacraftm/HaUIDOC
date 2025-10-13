@@ -16,7 +16,6 @@ const Header = () => {
   const userDropdownRef = useRef(null);
   const router = useRouter();
 
-  // Ẩn hiện header khi scroll
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -31,7 +30,6 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Đóng dropdown khi click ra ngoài
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -45,7 +43,6 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 🔹 Quan trọng: Đừng render gì khi session chưa xác định (đang loading)
   if (status === "loading") return null;
 
   const userInfo = session?.user;

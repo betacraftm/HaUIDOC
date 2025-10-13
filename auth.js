@@ -1,10 +1,9 @@
-//auth.js
-
 import { loginSchema } from "@/lib/definition";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "generated/prisma";
+import Google from "next-auth/providers/google";
 
 const prisma = new PrismaClient();
 
@@ -32,17 +31,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             OR: [{ username: identifier }, { email: identifier }],
           },
         });
-        if (!user) {
-          throw new Error("Tên đăng nhập hoặc mật khẩu không đúng");
-        }
+        if (!user) throw new Error("Tên đăng nhập hoặc mật khẩu không đúng");
 
         const isPasswordValid = await bcrypt.compare(
           password,
           user.password_hash,
         );
-        if (!isPasswordValid) {
+        if (!isPasswordValid)
           throw new Error("Tên đăng nhập hoặc mật khẩu không đúng");
-        }
 
         return {
           id: user.id,
@@ -54,15 +50,68 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         };
       },
     }),
+    Google,
   ],
+
   session: {
     strategy: "jwt",
     maxAge: 7 * 24 * 60 * 60,
   },
 
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
+    async signIn({ user, account, profile }) {
+      if (account?.provider === "google" && user?.email) {
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+
+        if (!existingUser) {
+          const defaultMajor = await prisma.major.findFirst();
+          await prisma.user.create({
+            data: {
+              name: user.name ?? profile?.name ?? "Người dùng Google",
+              username:
+                (user.email?.split("@")[0] ?? "googleuser") +
+                Math.floor(Math.random() * 10000),
+              email: user.email,
+              image_url: user.image ?? profile?.picture ?? null,
+              password_hash: "",
+              major_id: defaultMajor ? defaultMajor.id : "",
+            },
+          });
+        } else {
+          await prisma.user.update({
+            where: { email: user.email },
+            data: {
+              image_url:
+                user.image ?? profile?.picture ?? existingUser.image_url,
+              name: user.name ?? profile?.name ?? existingUser.name,
+            },
+          });
+        }
+      }
+      return true;
+    },
+
+    async jwt({ token, user, account }) {
+      // Attach user info when signing in
+      if (account?.provider === "google" && user?.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+
+        if (dbUser) {
+          token.user = {
+            id: dbUser.id,
+            name: dbUser.name,
+            username: dbUser.username,
+            email: dbUser.email,
+            major_id: dbUser.major_id,
+            image_url: dbUser.image_url,
+          };
+        }
+      } else if (user) {
+        // Credential login
         token.user = {
           id: user.id,
           name: user.name,
@@ -79,10 +128,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token.user) {
         session.user = token.user;
       }
-
       return session;
     },
   },
+
   pages: {
     signIn: "/login",
   },

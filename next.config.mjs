@@ -7,7 +7,10 @@ const nextConfig = {
   },
   images: {
     dangerouslyAllowSVG: true,
-    remotePatterns: [new URL("https://ui-avatars.com/api?size=40")],
+    remotePatterns: [
+      new URL("https://ui-avatars.com/api?size=40"),
+      new URL("https://lh3.googleusercontent.com/**"),
+    ],
   },
 };
 
