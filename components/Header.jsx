@@ -1,30 +1,31 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
-import { LogOut, Upload, User, UserCog } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { LogOut, Upload, User, UserCog } from "lucide-react";
 import LanguageButton from "./LanguageButton";
-import { logoutUser } from "@/lib/action";
 
-const Header = ({ isAuth, userInfo }) => {
+const Header = () => {
+  const { data: session, status } = useSession();
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = useRef(0);
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
-
   const userDropdownRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       if (currentScrollY > lastScrollY.current && currentScrollY > 60) {
-        setShowHeader(false); // Scroll down, hide header
+        setShowHeader(false);
       } else {
-        setShowHeader(true); // Scroll up, show header
+        setShowHeader(true);
       }
       lastScrollY.current = currentScrollY;
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -38,13 +39,13 @@ const Header = ({ isAuth, userInfo }) => {
         setUserDropdownOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  if (status === "loading") return null;
+
+  const userInfo = session?.user;
 
   return (
     <header
@@ -56,7 +57,8 @@ const Header = ({ isAuth, userInfo }) => {
         <Link href="/" className="text-primary text-2xl font-extrabold">
           <Image src="/logo.svg" alt="HaUIDOC Logo" width={128} height={28} />
         </Link>
-        {isAuth ? (
+
+        {session ? (
           <div className="flex items-center space-x-4">
             <div className="relative" ref={userDropdownRef}>
               <Image
@@ -65,52 +67,41 @@ const Header = ({ isAuth, userInfo }) => {
                 height={28}
                 width={28}
                 onClick={() => setUserDropdownOpen(!isUserDropdownOpen)}
-                className="ring-primary h-7 w-7 rounded-full p-0.5 ring-2"
-                aria-haspopup="true"
-                aria-expanded={isUserDropdownOpen}
+                className="ring-primary h-7 w-7 cursor-pointer rounded-full p-0.5 ring-2"
               />
               {isUserDropdownOpen && (
-                <ul
-                  className="ring-opacity-5 absolute right-0 z-50 mt-5 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black focus:outline-none"
-                  role="menu"
-                  aria-orientation="vertical"
-                >
-                  <li
-                    role="none"
-                    className="border-b border-gray-100 px-4 py-2 text-sm font-semibold text-black"
-                  >
+                <ul className="ring-opacity-5 absolute right-0 z-50 mt-5 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black">
+                  <li className="border-b border-gray-100 px-4 py-2 text-sm font-semibold text-black">
                     Xin chào, {userInfo?.name.split(" ").pop() || ""}!
                   </li>
-                  <li role="none">
+                  <li>
                     <Link
                       href="/profile"
-                      className="text-secondary flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100"
-                      role="menuitem"
-                      onClick={() => setUserDropdownOpen(false)} // Đóng menu khi click
+                      className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100"
+                      onClick={() => setUserDropdownOpen(false)}
                     >
                       <UserCog className="h-4 w-4" />
                       <span>Profile</span>
                     </Link>
                   </li>
-                  <li role="none">
+                  <li>
                     <Link
                       href="/upload"
-                      className="text-secondary flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100"
-                      role="menuitem"
-                      onClick={() => setUserDropdownOpen(false)} // Đóng menu khi click
+                      className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100"
+                      onClick={() => setUserDropdownOpen(false)}
                     >
                       <Upload className="h-4 w-4" />
                       <span>Upload tài liệu</span>
                     </Link>
                   </li>
-                  <li role="none">
+                  <li>
                     <button
                       onClick={async () => {
                         setUserDropdownOpen(false);
-                        await logoutUser();
+                        await signOut({ redirect: false });
+                        router.push("/");
                       }}
-                      className="text-secondary flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100"
-                      role="menuitem"
+                      className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100"
                     >
                       <LogOut className="h-4 w-4" />
                       <span>Đăng xuất</span>
@@ -119,7 +110,6 @@ const Header = ({ isAuth, userInfo }) => {
                 </ul>
               )}
             </div>
-
             <LanguageButton />
           </div>
         ) : (

@@ -1,17 +1,20 @@
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "components/SearchBar";
 import { getDashboardDocument } from "@/lib/data";
-import DashBoard from "@/pages/dashboard-page";
+import DashBoard from "pages/dashboard-page";
 import { Suspense } from "react";
-import SearchResult from "@/pages/dashboard-page/SearchResult";
-import SearchSkeleton from "@/components/skeletons/SearchSkeleton";
+import SearchResult from "pages/dashboard-page/SearchResult";
+import SearchSkeleton from "components/skeletons/SearchSkeleton";
+import { auth } from "auth";
 
 const page = async ({ searchParams }) => {
+  const session = await auth();
+  const userId = session?.user?.id;
   const params = await searchParams;
   const query = params?.query || "";
   const page = Number(params?.page) || 1;
 
   const { recentlyDocuments, viewedDocument, likedDocument, userDocument } =
-    await getDashboardDocument();
+    await getDashboardDocument(userId);
   const dashboardSection = {
     recently: {
       title: "Tài liệu mới nhất",

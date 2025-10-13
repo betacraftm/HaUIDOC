@@ -1,4 +1,4 @@
-import RegisterPage from "@/pages/register-page";
+import RegisterPage from "pages/register-page";
 import { fetchMajors } from "@/lib/data";
 
 const Page = async () => {

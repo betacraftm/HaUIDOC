@@ -1,33 +1,36 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { decrypt } from "./app/lib/session";
+import { auth } from "./auth";
 
-// 1. Specify protected and public routes
 const protectedRoutes = ["/dashboard", "/profile", "/upload"];
-const publicRoutes = ["/login", "/register", "/", "/donate"];
+
+const publicRoutes = [
+  "/login",
+  "/register",
+  "/",
+  "/donate",
+  "/forgot-password",
+  "/reset-password",
+];
 
 export default async function middleware(req) {
-  // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
 
-  // 3. Decrypt the session from the cookie
-  const cookie = (await cookies()).get("session")?.value;
-  const session = await decrypt(cookie);
+  const session = await auth();
 
-  // 5. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !session?.userId) {
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
+  if (isProtectedRoute && !session?.user) {
+    const loginUrl = new URL("/login", req.nextUrl.origin);
+    loginUrl.searchParams.set("callbackUrl", path);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // 6. Redirect to /dashboard if the user is authenticated
   if (
     isPublicRoute &&
-    session?.userId &&
+    session?.user &&
     !req.nextUrl.pathname.startsWith("/dashboard")
   ) {
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin));
   }
 
   return NextResponse.next();

@@ -2,6 +2,7 @@
 
 import { sendResetPasswordEmail } from "@/lib/action";
 import { useActionState } from "react";
+import { anton } from "public/fonts";
 
 const ForgotPassword = () => {
   const [state, formAction, pending] = useActionState(
@@ -10,9 +11,11 @@ const ForgotPassword = () => {
   );
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-[70vh] items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-        <h1 className="text-primary mb-6 text-center text-3xl font-extrabold">
+        <h1
+          className={`text-primary ${anton.className} mb-6 text-center text-3xl font-extrabold`}
+        >
           Quên mật khẩu
         </h1>
         <p className="mb-6 text-center text-sm text-gray-600">

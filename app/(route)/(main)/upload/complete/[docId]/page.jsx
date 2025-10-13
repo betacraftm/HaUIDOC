@@ -1,4 +1,4 @@
-import CompletePage from "@/pages/upload-page/complete-page";
+import CompletePage from "pages/upload-page/complete-page";
 
 const page = async ({ params }) => {
   const { docId } = await params;
