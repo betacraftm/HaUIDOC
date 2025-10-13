@@ -123,7 +123,7 @@ const DocumentDetail = ({ docId, userId, doc }) => {
           </div>
         </div>
         {/* Comments */}
-        <CommentSection docId={doc.id} userId={doc?.users.id} />
+        <CommentSection docId={doc.id} userId={userId} />
       </div>
     </div>
   );
@@ -131,11 +131,11 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: add oauth
-
 // TODO: build profile section
 
 // TODO: build in-site crop image
+
+// TODO: build admin page
 
 // TODO: build donate api
 

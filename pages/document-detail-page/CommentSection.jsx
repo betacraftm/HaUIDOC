@@ -107,7 +107,7 @@ const CommentSection = ({ docId, userId }) => {
             >
               <div className="shrink-0">
                 <Image
-                  src="https://ui-avatars.com/api?size=40" // ?.users.image_url
+                  src={c?.users.image_url || "/user.png"} // ?.users.image_url
                   alt="User avt"
                   height={40}
                   width={40}
