@@ -335,3 +335,49 @@ export const getLikedState = async (userId, docId) => {
     };
   }
 };
+
+export const updateUserProfile = async (prevState, formData) => {
+  try {
+    const { user } = await getSession();
+    if (!user?.id) {
+      return { error: "Chưa đăng nhập." };
+    }
+
+    const userId = user.id;
+    const majorId = formData.get("majorId");
+    const avatar = formData.get("avatar");
+
+    if (!majorId && !avatar) {
+      return { error: "Không có thay đổi nào được gửi." };
+    }
+
+    let imageUrl;
+
+    if (avatar && avatar.size) {
+      const file = avatar;
+      const ext = file.name.split(".").pop() || "jpg";
+      const fileName = `avatars/${userId}_${Date.now()}.${ext}`;
+      const storageRef = ref(storage, fileName);
+
+      const auth = getAuth();
+      await signInAnonymously(auth);
+
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      imageUrl = downloadURL;
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        ...(majorId ? { major_id: majorId } : {}),
+        ...(imageUrl ? { image_url: imageUrl } : {}),
+      },
+    });
+
+    revalidatePath("/dashboard");
+  } catch (error) {
+    console.error("Update profile error:", error);
+    return { error: "Đã xảy ra lỗi khi cập nhật hồ sơ." };
+  }
+};
