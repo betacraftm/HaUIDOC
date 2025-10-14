@@ -345,37 +345,19 @@ export const updateUserProfile = async (prevState, formData) => {
 
     const userId = user.id;
     const majorId = formData.get("majorId");
-    const avatar = formData.get("avatar");
 
-    if (!majorId && !avatar) {
+    if (!majorId) {
       return { error: "Không có thay đổi nào được gửi." };
-    }
-
-    let imageUrl;
-
-    if (avatar && avatar.size) {
-      const file = avatar;
-      const ext = file.name.split(".").pop() || "jpg";
-      const fileName = `avatars/${userId}_${Date.now()}.${ext}`;
-      const storageRef = ref(storage, fileName);
-
-      const auth = getAuth();
-      await signInAnonymously(auth);
-
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      imageUrl = downloadURL;
     }
 
     await prisma.user.update({
       where: { id: userId },
       data: {
         ...(majorId ? { major_id: majorId } : {}),
-        ...(imageUrl ? { image_url: imageUrl } : {}),
       },
     });
 
-    revalidatePath("/dashboard");
+    revalidatePath("/profile");
   } catch (error) {
     console.error("Update profile error:", error);
     return { error: "Đã xảy ra lỗi khi cập nhật hồ sơ." };
