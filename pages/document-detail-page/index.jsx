@@ -131,10 +131,6 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 
 export default DocumentDetail;
 
-// TODO: build profile section
-
-// TODO: build in-site crop image
-
 // TODO: build admin page
 
 // TODO: build donate api

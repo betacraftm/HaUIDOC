@@ -335,3 +335,31 @@ export const getLikedState = async (userId, docId) => {
     };
   }
 };
+
+export const updateUserProfile = async (prevState, formData) => {
+  try {
+    const { user } = await getSession();
+    if (!user?.id) {
+      return { error: "Chưa đăng nhập." };
+    }
+
+    const userId = user.id;
+    const majorId = formData.get("majorId");
+
+    if (!majorId) {
+      return { error: "Không có thay đổi nào được gửi." };
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        ...(majorId ? { major_id: majorId } : {}),
+      },
+    });
+
+    revalidatePath("/profile");
+  } catch (error) {
+    console.error("Update profile error:", error);
+    return { error: "Đã xảy ra lỗi khi cập nhật hồ sơ." };
+  }
+};

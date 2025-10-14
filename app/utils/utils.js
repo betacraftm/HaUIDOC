@@ -22,3 +22,12 @@ export const generateDateString = (dateString) => {
   const minutes = String(date.getMinutes()).padStart(2, "0");
   return `${hours}:${minutes} ngày ${day}/${month}/${year}`;
 };
+
+export const createImage = (url) =>
+  new Promise((resolve, reject) => {
+    const img = new Image();
+    img.addEventListener("load", () => resolve(img));
+    img.addEventListener("error", (err) => reject(err));
+    img.setAttribute("crossOrigin", "anonymous"); // tránh CORS
+    img.src = url;
+  });
