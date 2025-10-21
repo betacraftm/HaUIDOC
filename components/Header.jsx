@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { LogOut, Upload, User, UserCog } from "lucide-react";
-import LanguageButton from "./LanguageButton";
 
 const Header = () => {
   const { data: session, status } = useSession();
@@ -110,7 +109,6 @@ const Header = () => {
                 </ul>
               )}
             </div>
-            <LanguageButton />
           </div>
         ) : (
           <div className="flex items-center space-x-2">
@@ -128,7 +126,6 @@ const Header = () => {
                 Đăng nhập
               </Link>
             </div>
-            <LanguageButton />
           </div>
         )}
       </div>

@@ -1,6 +1,11 @@
 "use client";
 
-import { getLikedState, likeDocument, viewedDocument, downloadDocument } from "@/lib/action";
+import {
+  getLikedState,
+  likeDocument,
+  viewedDocument,
+  downloadDocument,
+} from "@/lib/action";
 import { generateDateString } from "@/utils/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -117,10 +122,10 @@ const DocumentDetail = ({ docId, userId, doc }) => {
               )}
 
               <button
-              onClick={handleDownload}
-              className="bg-primary inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white shadow-md transition hover:opacity-90"
+                onClick={handleDownload}
+                className="bg-primary inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white shadow-md transition hover:opacity-90"
               >
-              <Download size={22} strokeWidth={2.5} />
+                <Download size={22} strokeWidth={2.5} />
                 Tải xuống tài liệu
               </button>
             </div>
@@ -143,8 +148,6 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 };
 
 export default DocumentDetail;
-
-// TODO: build admin page
 
 // TODO: build donate api
 
