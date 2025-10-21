@@ -23,21 +23,23 @@ model Comment {
 }
 
 model Document {
-  id          String               @id @default(uuid())
-  title       String               @db.VarChar(255)
-  desc        String?              @db.Text
-  file_url    String?              @db.Text
-  subject_id  String?
-  uploaded_by String?
-  created_at  DateTime?            @default(now()) @db.DateTime(0)
-  comments    Comment[]
-  subjects    Subject?             @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_1")
-  users       User?                @relation(fields: [uploaded_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_2")
-  liked_by    UserLikedDocument[]
-  viewed_by   UserViewedDocument[]
+id             String               @id @default(uuid())
+title          String               @db.VarChar(255)
+desc           String?              @db.Text
+file_url       String?              @db.Text
+subject_id     String?
+uploaded_by    String?
+created_at     DateTime?            @default(now()) @db.DateTime(0)
+view_count     Int                  @default(0)
+download_count Int                  @default(0)
+comments       Comment[]
+subjects       Subject?             @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_1")
+users          User?                @relation(fields: [uploaded_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "documents_ibfk_2")
+  liked_by       UserLikedDocument[]
+viewed_by      UserViewedDocument[]
 
-  @@index([subject_id], map: "subject_id")
-  @@index([uploaded_by], map: "uploaded_by")
+@@index([subject_id], map: "subject_id")
+@@index([uploaded_by], map: "uploaded_by")
   @@index([title])
   @@map("documents")
 }
@@ -61,26 +63,27 @@ model Subject {
 }
 
 model User {
-  id               String               @id @default(uuid())
-  name             String               @db.VarChar(255)
-  username         String               @unique @db.VarChar(255)
-  password_hash    String               @db.VarChar(255)
-  role             UserRole             @default(client)
-  created_at       DateTime             @default(now()) @db.DateTime(0)
-  image_url        String?              @db.VarChar(255)
-  major_id         String
-  email            String               @unique @db.VarChar(255)
-  comments         Comment[]
-  documents        Document[]
-  resetTokens      PasswordResetToken[]
-  liked_documents  UserLikedDocument[]
-  viewed_documents UserViewedDocument[]
+id               String               @id @default(uuid())
+name             String               @db.VarChar(255)
+username         String               @unique @db.VarChar(255)
+password_hash    String               @db.VarChar(255)
+role             UserRole             @default(client)
+created_at       DateTime             @default(now()) @db.DateTime(0)
+image_url        String?              @db.VarChar(255)
+major_id         String
+email            String               @unique @db.VarChar(255)
+is_banned        Boolean              @default(false)
+comments         Comment[]
+documents        Document[]
+resetTokens      PasswordResetToken[]
+liked_documents  UserLikedDocument[]
+viewed_documents UserViewedDocument[]
   majors           Major                @relation(fields: [major_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_1")
 
-  @@index([major_id], map: "major_id")
-  @@index([username])
-  @@index([email])
-  @@index([role])
+@@index([major_id], map: "major_id")
+@@index([username])
+@@index([email])
+@@index([role])
   @@map("users")
 }
 

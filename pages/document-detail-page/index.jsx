@@ -1,6 +1,6 @@
 "use client";
 
-import { getLikedState, likeDocument, viewedDocument } from "@/lib/action";
+import { getLikedState, likeDocument, viewedDocument, downloadDocument } from "@/lib/action";
 import { generateDateString } from "@/utils/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -16,6 +16,21 @@ const DocumentDetail = ({ docId, userId, doc }) => {
   const toggleLike = async () => {
     await likeDocument(userId, docId);
     setIsLiked((prev) => !prev);
+  };
+
+  const handleDownload = async () => {
+    try {
+      const result = await downloadDocument(userId, docId);
+      if (result?.error) {
+        console.error("Download tracking failed:", result.error);
+      }
+      // Open the file in a new tab/window
+      window.open(doc.file_url, "_blank");
+    } catch (error) {
+      console.error("Download error:", error);
+      // Still allow download even if tracking fails
+      window.open(doc.file_url, "_blank");
+    }
   };
 
   useEffect(() => {
@@ -101,15 +116,13 @@ const DocumentDetail = ({ docId, userId, doc }) => {
                 </div>
               )}
 
-              <Link
-                href={doc.file_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-primary inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white shadow-md transition hover:opacity-90"
+              <button
+              onClick={handleDownload}
+              className="bg-primary inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white shadow-md transition hover:opacity-90"
               >
-                <Download size={22} strokeWidth={2.5} />
+              <Download size={22} strokeWidth={2.5} />
                 Tải xuống tài liệu
-              </Link>
+              </button>
             </div>
           )}
 

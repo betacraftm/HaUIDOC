@@ -47,6 +47,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           username: user.username,
           major_id: user.major_id,
           image_url: user.image_url,
+          role: user.role,
         };
       },
     }),
@@ -108,6 +109,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             email: dbUser.email,
             major_id: dbUser.major_id,
             image_url: dbUser.image_url,
+            role: dbUser.role,
           };
         }
       } else if (user) {
@@ -119,6 +121,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email: user.email,
           major_id: user.major_id,
           image_url: user.image_url,
+          role: user.role,
         };
       }
       return token;

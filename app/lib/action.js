@@ -160,13 +160,13 @@ export async function resetPassword(prevState, formData) {
 }
 
 export const uploadDocument = async (prevState, formData) => {
-  let newDocument = null;
+let newDocument = null;
 
-  try {
-    const title = formData.get("title");
-    const description = formData.get("description");
-    const documentFile = formData.get("documentFile");
-    const subjectName = formData.get("subjectName");
+try {
+const title = formData.get("title");
+const description = formData.get("description");
+const documentFile = formData.get("documentFile");
+const subjectName = formData.get("subjectName");
 
     const parsed = uploadSchema.safeParse({
       title: title,
@@ -244,6 +244,8 @@ export const uploadDocument = async (prevState, formData) => {
 export const viewedDocument = async (userId, docId) => {
   try {
     const now = new Date();
+
+    // Track user view history
     await prisma.userViewedDocument.upsert({
       where: {
         user_id_document_id: {
@@ -259,6 +261,16 @@ export const viewedDocument = async (userId, docId) => {
         document_id: docId,
       },
     });
+
+    // Increment document view count
+    await prisma.document.update({
+      where: { id: docId },
+      data: {
+        view_count: {
+          increment: 1,
+        },
+      },
+    });
   } catch (error) {
     console.error("Error viewed document:", error);
     return {
@@ -268,6 +280,32 @@ export const viewedDocument = async (userId, docId) => {
     };
   }
   revalidatePath("/dashboard");
+};
+
+export const downloadDocument = async (userId, docId) => {
+  try {
+    // Increment document download count
+    await prisma.document.update({
+      where: { id: docId },
+      data: {
+        download_count: {
+          increment: 1,
+        },
+      },
+    });
+
+    // Optionally track user download history if needed
+    // You could add a UserDownloadedDocument table similar to UserViewedDocument
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error downloading document:", error);
+    return {
+      error: {
+        message: "Đã xảy ra lỗi khi tải tài liệu.",
+      },
+    };
+  }
 };
 
 export const likeDocument = async (userId, docId) => {
@@ -363,3 +401,115 @@ export const updateUserProfile = async (prevState, formData) => {
     return { error: "Đã xảy ra lỗi khi cập nhật hồ sơ." };
   }
 };
+
+// Admin Actions
+export const getAdminStats = async () => {
+  try {
+    // Get total counts
+    const totalDocuments = await prisma.document.count();
+    const totalUsers = await prisma.user.count({ where: { role: "client" } }); // Only count regular users
+    const totalAdmins = await prisma.user.count({ where: { role: "admin" } });
+
+    // Calculate total downloads (assuming download_count field exists)
+    // If it doesn't exist, we can track downloads differently
+    const totalDownloads = await prisma.document.aggregate({
+      _sum: {
+        download_count: true,
+      },
+    });
+
+    // Calculate total views (assuming view_count field exists)
+    const totalViews = await prisma.document.aggregate({
+      _sum: {
+        view_count: true,
+      },
+    });
+
+    // Get users list
+    const users = await prisma.user.findMany({
+      include: {
+        majors: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+      // Add is_banned field if it exists, otherwise remove this filter
+      where: { role: "client" }, // Only show regular users in admin panel
+    });
+
+    // Get documents list
+    const documents = await prisma.document.findMany({
+      include: {
+        users: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+
+    return {
+      stats: {
+        totalDocuments,
+        totalUsers,
+        totalAdmins,
+        totalDownloads: totalDownloads._sum.download_count || 0,
+        totalViews: totalViews._sum.view_count || 0,
+      },
+      users: users.map((user) => ({
+        ...user,
+        major: user.majors, // Rename to match frontend expectation
+        is_banned: false, // Always false since we removed banned functionality
+      })),
+      documents,
+    };
+  } catch (error) {
+    console.error("Error fetching admin stats:", error);
+    throw new Error("Failed to fetch admin statistics");
+  }
+};
+
+export const deleteDocument = async (documentId) => {
+  try {
+    // Check if user is admin (implement proper authentication later)
+    const session = await getSession();
+    if (session?.user?.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+
+    // First, delete related records to maintain referential integrity
+    await prisma.comment.deleteMany({
+      where: { document_id: documentId },
+    });
+
+    await prisma.userLikedDocument.deleteMany({
+      where: { document_id: documentId },
+    });
+
+    await prisma.userViewedDocument.deleteMany({
+      where: { document_id: documentId },
+    });
+
+    // Then delete the document
+    await prisma.document.delete({
+      where: { id: documentId },
+    });
+
+    // Revalidate admin page
+    revalidatePath("/admin");
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting document:", error);
+    throw new Error("Failed to delete document");
+  }
+};
+
+

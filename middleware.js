@@ -3,27 +3,48 @@ import { auth } from "./auth";
 
 const protectedRoutes = ["/dashboard", "/profile", "/upload"];
 
+const adminRoutes = ["/admin"];
+
 const publicRoutes = [
-  "/login",
-  "/register",
-  "/",
-  "/donate",
+"/login",
+"/register",
+"/",
+"/donate",
   "/forgot-password",
   "/reset-password",
 ];
 
 export default async function middleware(req) {
-  const path = req.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
+const path = req.nextUrl.pathname;
+const isProtectedRoute = protectedRoutes.includes(path);
+const isAdminRoute = adminRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
 
   const session = await auth();
 
-  if (isProtectedRoute && !session?.user) {
-    const loginUrl = new URL("/login", req.nextUrl.origin);
-    loginUrl.searchParams.set("callbackUrl", path);
-    return NextResponse.redirect(loginUrl);
+// Check admin routes first
+if (isAdminRoute) {
+if (!session?.user) {
+// Not authenticated, redirect to login
+const loginUrl = new URL("/login", req.nextUrl.origin);
+loginUrl.searchParams.set("callbackUrl", path);
+return NextResponse.redirect(loginUrl);
+}
+
+
+
+  if (session.user.role !== 'admin') {
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin));
   }
+}
+
+  if (isProtectedRoute && !session?.user) {
+  const loginUrl = new URL("/login", req.nextUrl.origin);
+  loginUrl.searchParams.set("callbackUrl", path);
+  return NextResponse.redirect(loginUrl);
+  }
+
+  
 
   if (
     isPublicRoute &&
