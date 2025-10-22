@@ -20,7 +20,7 @@ const RegisterPage = ({ majorsList }) => {
           Đăng ký tài khoản
         </h1>
         <form
-          className="space-y-5 rounded-2xl bg-white p-8 shadow-lg"
+          className="ring-secondary space-y-5 rounded-2xl bg-white p-8 shadow-xl ring-1"
           action={action}
         >
           <div>

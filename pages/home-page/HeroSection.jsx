@@ -6,8 +6,7 @@ const HeroSection = () => {
       <h1
         className={`${anton.className} text-4xl leading-14 sm:text-5xl sm:leading-20`}
       >
-        Học và thi dễ dàng hơn với{" "}
-        <span className="text-secondary">HaUIDOC</span>
+        Học và thi dễ dàng hơn với <span className="text-primary">HaUIDOC</span>
       </h1>
       <p className="sm:text-xl">
         Nền tảng chia sẻ tài liệu học tập dành riêng cho sinh viên Đại học Công

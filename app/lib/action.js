@@ -160,13 +160,13 @@ export async function resetPassword(prevState, formData) {
 }
 
 export const uploadDocument = async (prevState, formData) => {
-let newDocument = null;
+  let newDocument = null;
 
-try {
-const title = formData.get("title");
-const description = formData.get("description");
-const documentFile = formData.get("documentFile");
-const subjectName = formData.get("subjectName");
+  try {
+    const title = formData.get("title");
+    const description = formData.get("description");
+    const documentFile = formData.get("documentFile");
+    const subjectName = formData.get("subjectName");
 
     const parsed = uploadSchema.safeParse({
       title: title,
@@ -511,5 +511,3 @@ export const deleteDocument = async (documentId) => {
     throw new Error("Failed to delete document");
   }
 };
-
-

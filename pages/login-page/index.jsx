@@ -55,12 +55,12 @@ export default function LoginPage() {
       {" "}
       <section className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-6 py-12 sm:max-w-lg sm:px-0">
         <h1
-          className={`${anton.className} text-primary mb-2 text-center text-3xl font-extrabold`}
+          className={`${anton.className} text-primary mb-6 text-center text-3xl font-extrabold`}
         >
           Đăng nhập vào HaUIDOC{" "}
         </h1>{" "}
         <form
-          className="rounded-2xl bg-white p-8 shadow-lg"
+          className="ring-secondary rounded-2xl bg-white p-8 shadow-xl ring-1"
           onSubmit={handleSubmit}
         >
           {" "}
@@ -98,7 +98,7 @@ export default function LoginPage() {
               placeholder="••••••••"
             />{" "}
           </div>
-          {error && <div className="pb-6 text-sm text-red-600">{error}</div>}
+          {error && <div className="pt-2 text-sm text-red-600">{error}</div>}
           <div className="flex items-center justify-end py-2">
             <Link
               href="/forgot-password"

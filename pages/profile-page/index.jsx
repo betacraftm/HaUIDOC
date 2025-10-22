@@ -6,8 +6,6 @@ import Image from "next/image";
 import { startTransition, useActionState, useState } from "react";
 
 const ProfileFormClient = ({ user, majors }) => {
-  console.log(user);
-
   const [majorId, setMajorId] = useState(
     user?.major_id || user?.majors?.id || "",
   );

@@ -116,7 +116,7 @@ const UploadPage = ({ subjectsList }) => {
           Tải lên tài liệu
         </h1>
         <form
-          className="space-y-5 rounded-2xl bg-white p-8 shadow-lg"
+          className="ring-secondary space-y-5 rounded-2xl bg-white p-8 shadow-xl ring-1"
           onSubmit={handleSubmit}
         >
           {/* Trường Tiêu đề */}

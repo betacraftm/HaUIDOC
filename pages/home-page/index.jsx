@@ -1,5 +1,5 @@
-import HeroSection from "pages/home-page/HeroSection";
-import AboutSection from "pages/home-page/AboutSection";
+import AboutSection from "./AboutSection";
+import HeroSection from "./HeroSection";
 
 const HomePage = () => {
   return (

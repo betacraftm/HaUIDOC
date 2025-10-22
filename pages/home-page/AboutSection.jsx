@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { anton } from "public/fonts";
 
 const AboutSection = () => {
@@ -50,23 +51,23 @@ const AboutSection = () => {
         từ chính những trải nghiệm của mình tại trường. Nếu bạn có bất kỳ câu
         hỏi, ý tưởng đóng góp hay phát hiện lỗi, xin đừng ngần ngại liên hệ với
         mình qua&nbsp;
-        <a
-          href="mailto:hoangkimc9@gmail.com"
+        <Link
+          href="https://zalo.me/0963136904"
           className="text-secondary underline"
           target="_blank"
           rel="noopener noreferrer"
         >
-          email
-        </a>
+          zalo
+        </Link>
         &nbsp;hoặc&nbsp;
-        <a
+        <Link
           href="https://www.facebook.com/ngocdat204"
           className="text-secondary underline"
           target="_blank"
           rel="noopener noreferrer"
         >
           facebook
-        </a>
+        </Link>
         .
       </p>
     </section>

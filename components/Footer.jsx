@@ -40,12 +40,12 @@ const Footer = () => {
           <ul className="space-y-1 text-base text-gray-800">
             <li>
               <a
-                href="mailto:hoangkimc9@gmail.com"
+                href="https://zalo.me/0963136904"
                 className="hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Email
+                Zalo
               </a>
             </li>
             <li>
@@ -69,14 +69,13 @@ const Footer = () => {
             HaUIDOC là một dự án cá nhân phi lợi nhuận. Nếu bạn thấy trang web
             này hữu ích, một khoản ủng hộ nhỏ sẽ là nguồn động viên to lớn. Bạn
             có thể donate{" "}
-            <a
-              href="https://www.buymeacoffee.com/"
+            <Link
+              href="/donate"
               className="text-secondary hover:text-secondary/80 underline"
-              target="_blank"
               rel="noopener noreferrer"
             >
               tại đây.
-            </a>
+            </Link>
           </p>
         </div>
       </div>

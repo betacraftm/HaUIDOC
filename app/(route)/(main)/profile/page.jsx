@@ -1,7 +1,7 @@
 // app/profile/page.tsx
 import { getSession } from "@/lib/getSession";
 import { PrismaClient } from "generated/prisma";
-import ProfileFormClient from "pages/profile-page/ProfileFormClient";
+import ProfileFormClient from "pages/profile-page";
 import { anton } from "public/fonts";
 
 const prisma = new PrismaClient();
@@ -22,7 +22,7 @@ export default async function page() {
 
   return (
     <main className="min-h-screen bg-gray-50 py-12">
-      <div className="mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow-md">
+      <div className="ring-secondary mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow-xl ring-1">
         <h1
           className={`text-primary mb-6 text-center ${anton.className} text-3xl font-bold`}
         >
