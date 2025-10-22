@@ -1,13 +1,7 @@
 import DocumentCard from "components/DocumentCard";
 import Link from "next/link";
 
-const DashBoardSection = ({
-  title,
-  data = [],
-  viewAllString,
-  metaData,
-  href,
-}) => {
+const HomeSection = ({ title, data = [], viewAllString, metaData, href }) => {
   return (
     <section className="mb-10">
       <h2 className="mb-6 text-2xl font-bold text-gray-800">{title}</h2>
@@ -43,4 +37,4 @@ const DashBoardSection = ({
   );
 };
 
-export default DashBoardSection;
+export default HomeSection;

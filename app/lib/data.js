@@ -20,7 +20,7 @@ export const fetchSubjects = async () => {
   return subjects;
 };
 
-export const getDashboardDocument = async (userId) => {
+export const getHomeDocuments = async (userId) => {
   try {
     const recentlyDocuments = await prisma.document.findMany({
       take: 5,

@@ -16,7 +16,7 @@ const Pagination = ({ total, page }) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", nextPage.toString());
 
-    router.push(`/dashboard?${params.toString()}`);
+    router.push(`/home?${params.toString()}`);
   };
 
   const getPageNumbers = () => {

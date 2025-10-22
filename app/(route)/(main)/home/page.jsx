@@ -1,8 +1,8 @@
 import SearchBar from "components/SearchBar";
-import { getDashboardDocument } from "@/lib/data";
-import DashBoard from "pages/dashboard-page";
+import { getHomeDocuments } from "@/lib/data";
+import HomePage from "pages/home-page";
 import { Suspense } from "react";
-import SearchResult from "pages/dashboard-page/SearchResult";
+import SearchResult from "pages/home-page/SearchResult";
 import SearchSkeleton from "components/skeletons/SearchSkeleton";
 import { auth } from "auth";
 
@@ -14,8 +14,8 @@ const page = async ({ searchParams }) => {
   const page = Number(params?.page) || 1;
 
   const { recentlyDocuments, viewedDocument, likedDocument, userDocument } =
-    await getDashboardDocument(userId);
-  const dashboardSection = {
+    await getHomeDocuments(userId);
+  const homeSection = {
     recently: {
       title: "Tài liệu mới nhất",
       data: recentlyDocuments,
@@ -59,7 +59,7 @@ const page = async ({ searchParams }) => {
             <SearchResult query={query} page={page} />
           </Suspense>
         ) : (
-          <DashBoard dashboardSection={dashboardSection} />
+          <HomePage homeSection={homeSection} />
         )}
       </div>
     </main>

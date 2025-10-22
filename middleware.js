@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "./auth";
 
-const protectedRoutes = ["/dashboard", "/profile", "/upload", "/documents"];
+const protectedRoutes = ["/home", "/profile", "/upload", "/documents"];
 
 const adminRoutes = ["/admin"];
 
@@ -31,7 +31,7 @@ export default async function middleware(req) {
     }
 
     if (session.user.role !== "admin") {
-      return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin));
+      return NextResponse.redirect(new URL("/home", req.nextUrl.origin));
     }
   }
 
@@ -44,9 +44,9 @@ export default async function middleware(req) {
   if (
     isPublicRoute &&
     session?.user &&
-    !req.nextUrl.pathname.startsWith("/dashboard")
+    !req.nextUrl.pathname.startsWith("/home")
   ) {
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin));
+    return NextResponse.redirect(new URL("/home", req.nextUrl.origin));
   }
 
   return NextResponse.next();

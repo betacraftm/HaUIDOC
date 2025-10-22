@@ -237,7 +237,7 @@ export const uploadDocument = async (prevState, formData) => {
     console.error("Error uploading document:", error);
     return { error: { message: "Đã xảy ra lỗi khi tải lên tài liệu" } };
   }
-  revalidatePath("/dashboard");
+  revalidatePath("/home");
   redirect(`/upload/complete/${newDocument.id}`);
 };
 
@@ -279,7 +279,7 @@ export const viewedDocument = async (userId, docId) => {
       },
     };
   }
-  revalidatePath("/dashboard");
+  revalidatePath("/home");
 };
 
 export const downloadDocument = async (userId, docId) => {
@@ -345,7 +345,7 @@ export const likeDocument = async (userId, docId) => {
     };
   }
 
-  revalidatePath("/dashboard");
+  revalidatePath("/home");
 };
 
 export const getLikedState = async (userId, docId) => {

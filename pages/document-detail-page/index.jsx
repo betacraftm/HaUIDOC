@@ -71,7 +71,7 @@ const DocumentDetail = ({ docId, userId, doc }) => {
         {/* Header */}
         <div className="border-b border-gray-200 p-6">
           <Link
-            href={"/dashboard"}
+            href={"/home"}
             rel="noopener noreferrer"
             className="group text-secondary hover:text-primary flex items-center text-sm font-medium transition"
           >
