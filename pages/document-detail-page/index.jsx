@@ -148,7 +148,3 @@ const DocumentDetail = ({ docId, userId, doc }) => {
 };
 
 export default DocumentDetail;
-
-// TODO: build donate api
-
-// **: Build group chat section, video call etc...

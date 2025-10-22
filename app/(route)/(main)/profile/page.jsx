@@ -6,6 +6,16 @@ import { anton } from "public/fonts";
 
 const prisma = new PrismaClient();
 
+export const metadata = {
+  title: "Thông tin cá nhân - HaUIDOC",
+  description: "Quản lý thông tin cá nhân, cập nhật hồ sơ và tùy chỉnh tài khoản HaUIDOC của bạn.",
+  keywords: "thông tin cá nhân, hồ sơ, cập nhật, tài khoản, HaUIDOC",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
 export default async function page() {
   const session = await getSession();
   const userId = session?.user?.id;
