@@ -2,13 +2,14 @@
 
 import { useSearchParams } from "next/navigation";
 import { resetPassword } from "@/lib/action";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { anton } from "public/fonts";
 
 export default function ResetPassword() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-  const [state, formAction, pending] = useActionState(resetPassword, undefined);
+const searchParams = useSearchParams();
+const token = searchParams.get("token");
+const [state, formAction, pending] = useActionState(resetPassword, undefined);
+  const [passwordError, setPasswordError] = useState("");
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center bg-gray-50 px-4">
@@ -22,7 +23,22 @@ export default function ResetPassword() {
           Nhập mật khẩu mới cho tài khoản của bạn
         </p>
 
-        <form action={formAction} className="space-y-5">
+        <form action={(formData) => {
+        const password = formData.get("password");
+        const confirmPassword = formData.get("confirmPassword");
+
+        if (password !== confirmPassword) {
+        setPasswordError("Mật khẩu xác nhận không khớp");
+        return;
+        }
+
+        setPasswordError("");
+        // Create new FormData with only the fields we need
+          const cleanFormData = new FormData();
+          cleanFormData.append("token", formData.get("token"));
+          cleanFormData.append("password", password);
+          formAction(cleanFormData);
+        }} className="space-y-5">
           <input type="hidden" name="token" value={token || ""} />
 
           <div>
@@ -60,7 +76,19 @@ export default function ResetPassword() {
           </div>
 
           {state?.error && (
-            <p className="text-sm text-red-600">{state.error}</p>
+          <div className="space-y-1">
+              {/* Handle field validation errors (objects) */}
+              {typeof state.error === 'object' && state.error.password && (
+                <p className="text-sm text-red-600">{state.error.password}</p>
+              )}
+              {/* Handle general errors (strings) */}
+              {typeof state.error === 'string' && (
+                <p className="text-sm text-red-600">{state.error}</p>
+              )}
+            </div>
+          )}
+          {passwordError && (
+            <p className="text-sm text-red-600">{passwordError}</p>
           )}
           {state?.success && (
             <p className="text-sm text-green-600">{state.success}</p>

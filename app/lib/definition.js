@@ -31,7 +31,18 @@ export const loginSchema = z.object({
 });
 
 export const uploadSchema = z.object({
-  title: z.string().min(1, "Tiêu đề là bắt buộc"),
-  description: z.string().optional(),
-  subject: z.string().min(1, "Môn học là bắt buộc"),
+title: z.string().min(1, "Tiêu đề là bắt buộc"),
+description: z.string().optional(),
+subject: z.string().min(1, "Môn học là bắt buộc"),
+});
+
+export const passwordSchema = z
+  .string()
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/,
+    "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
+  );
+
+export const resetPasswordSchema = z.object({
+  password: passwordSchema,
 });
