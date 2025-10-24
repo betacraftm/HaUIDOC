@@ -8,7 +8,8 @@ const prisma = new PrismaClient();
 
 export const metadata = {
   title: "Thông tin cá nhân - HaUIDOC",
-  description: "Quản lý thông tin cá nhân, cập nhật hồ sơ và tùy chỉnh tài khoản HaUIDOC của bạn.",
+  description:
+    "Quản lý thông tin cá nhân, cập nhật hồ sơ và tùy chỉnh tài khoản HaUIDOC của bạn.",
   keywords: "thông tin cá nhân, hồ sơ, cập nhật, tài khoản, HaUIDOC",
   robots: {
     index: false,
@@ -31,7 +32,7 @@ export default async function page() {
   });
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12">
+    <main className="min-h-screen bg-gray-50 px-6 py-12">
       <div className="ring-secondary mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow-xl ring-1">
         <h1
           className={`text-primary mb-6 text-center ${anton.className} text-3xl font-bold`}

@@ -1,7 +1,11 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { registerSchema, uploadSchema, resetPasswordSchema } from "./definition";
+import {
+  registerSchema,
+  uploadSchema,
+  resetPasswordSchema,
+} from "./definition";
 import { storage } from "./firebase/config";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { getSession } from "./getSession";
@@ -137,15 +141,15 @@ export const sendResetPasswordEmail = async (prevState, formData) => {
 };
 
 export async function resetPassword(prevState, formData) {
-const token = formData.get("token");
-const newPassword = formData.get("password");
+  const token = formData.get("token");
+  const newPassword = formData.get("password");
 
-const parsed = resetPasswordSchema.safeParse({
-password: newPassword,
-});
-if (!parsed.success) {
-return { error: parsed.error.flatten().fieldErrors };
-}
+  const parsed = resetPasswordSchema.safeParse({
+    password: newPassword,
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.flatten().fieldErrors };
+  }
 
   const resetToken = await prisma.passwordResetToken.findUnique({
     where: { token },

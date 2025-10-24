@@ -2,15 +2,11 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import "react-pdf/dist/Page/TextLayer.css";
-import "react-pdf/dist/Page/AnnotationLayer.css";
 import PdfSkeleton from "./skeletons/PdfSkeleton";
 
-// Cấu hình worker của PDF.js
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url,
-).toString();
+// Cấu hình worker của PDF.js for Next.js 13+
+// Use local worker file to avoid ESM import issues
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 export default function PDFViewerClient({ file }) {
   const [numPages, setNumPages] = useState(null);
