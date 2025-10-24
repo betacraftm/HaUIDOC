@@ -1,4 +1,4 @@
-import HomePage from "pages/hero-page";
+import HomePage from "components/page-components/HeroPage";
 
 export const metadata = {
 title: "HaUIDOC - Nền tảng chia sẻ tài liệu học tập Đại học Công nghiệp Hà Nội",

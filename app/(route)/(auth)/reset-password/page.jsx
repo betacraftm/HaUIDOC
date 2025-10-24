@@ -1,4 +1,4 @@
-import ResetPassword from "pages/reset-pass-page";
+import ResetPassword from "components/page-components/ResetPasswordPage";
 
 export const metadata = {
 title: "Đặt lại mật khẩu - HaUIDOC",
@@ -10,8 +10,11 @@ title: "Đặt lại mật khẩu - HaUIDOC",
   },
 };
 
-const page = () => {
-  return <ResetPassword />;
+const page = ({ searchParams }) => {
+  const params = searchParams;
+  const token = params?.token;
+
+  return <ResetPassword token={token} />;
 };
 
 export default page;

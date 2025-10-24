@@ -1,4 +1,4 @@
-import LoginPage from "pages/login-page";
+import LoginPage from "components/page-components/LoginPage";
 
 export const metadata = {
 title: "Đăng nhập - HaUIDOC",

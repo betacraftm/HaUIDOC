@@ -1,6 +1,6 @@
 import { getSession } from "@/lib/getSession";
 import { getDocuments } from "@/lib/data";
-import DocumentsPage from "pages/documents-page";
+import DocumentsPage from "components/page-components/DocumentsPage";
 
 export const metadata = {
 title: "Tài liệu học tập - HaUIDOC",

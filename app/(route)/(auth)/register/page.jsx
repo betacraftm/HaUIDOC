@@ -1,4 +1,4 @@
-import RegisterPage from "pages/register-page";
+import RegisterPage from "components/page-components/RegisterPage";
 import { fetchMajors } from "@/lib/data";
 
 export const metadata = {

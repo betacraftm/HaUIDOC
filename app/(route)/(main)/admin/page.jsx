@@ -1,4 +1,4 @@
-import AdminPage from "pages/admin-page";
+import AdminPage from "components/page-components/AdminPage";
 
 export const metadata = {
 title: "Quản trị - HaUIDOC",

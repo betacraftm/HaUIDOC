@@ -1,4 +1,4 @@
-import ForgotPassword from "pages/forgot-pass-page";
+import ForgotPassword from "components/page-components/ForgotPasswordPage";
 
 export const metadata = {
 title: "Quên mật khẩu - HaUIDOC",

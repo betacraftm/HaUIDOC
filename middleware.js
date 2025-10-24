@@ -41,9 +41,19 @@ export default async function middleware(req) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Redirect authenticated users from root "/" to "/home" (entry point)
+  if (
+    session?.user &&
+  req.nextUrl.pathname === "/"
+  ) {
+  return NextResponse.redirect(new URL("/home", req.nextUrl.origin));
+  }
+
+  // Redirect authenticated users from other public routes to "/home"
   if (
     isPublicRoute &&
     session?.user &&
+    req.nextUrl.pathname !== "/" &&
     !req.nextUrl.pathname.startsWith("/home")
   ) {
     return NextResponse.redirect(new URL("/home", req.nextUrl.origin));

@@ -1,4 +1,4 @@
-import CompletePage from "pages/upload-page/complete-page";
+import CompletePage from "components/page-components/CompletePage";
 import { getDocumentById } from "@/lib/data";
 
 export async function generateMetadata({ params }) {

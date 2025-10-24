@@ -1,8 +1,8 @@
 import SearchBar from "components/SearchBar";
 import { getHomeDocuments } from "@/lib/data";
-import HomePage from "pages/home-page";
+import HomePage from "components/HomePageComponent";
 import { Suspense } from "react";
-import SearchResult from "pages/home-page/SearchResult";
+import SearchResult from "components/SearchResult";
 import SearchSkeleton from "components/skeletons/SearchSkeleton";
 import { auth } from "auth";
 

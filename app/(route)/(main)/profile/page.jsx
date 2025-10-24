@@ -1,7 +1,7 @@
 // app/profile/page.tsx
 import { getSession } from "@/lib/getSession";
 import { PrismaClient } from "generated/prisma";
-import ProfileFormClient from "pages/profile-page";
+import ProfileFormClient from "components/page-components/ProfilePage";
 import { anton } from "public/fonts";
 
 const prisma = new PrismaClient();

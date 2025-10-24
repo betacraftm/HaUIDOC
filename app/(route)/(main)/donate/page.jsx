@@ -1,4 +1,4 @@
-import DonatePage from "pages/donate-page";
+import DonatePage from "components/page-components/DonatePage";
 
 export const metadata = {
 title: "Ủng hộ HaUIDOC",

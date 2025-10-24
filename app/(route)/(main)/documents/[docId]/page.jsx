@@ -1,6 +1,6 @@
 import { getSession } from "@/lib/getSession";
 import { checkDocumentExcist, getDocumentById } from "@/lib/data";
-import DocumentDetail from "pages/document-detail-page";
+import DocumentDetail from "components/DocumentDetail";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {

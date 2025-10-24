@@ -1,5 +1,5 @@
 import { fetchSubjects } from "@/lib/data";
-import UploadPage from "pages/upload-page";
+import UploadPage from "components/page-components/UploadPage";
 
 export const metadata = {
 title: "Tải lên tài liệu - HaUIDOC",

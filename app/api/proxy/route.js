@@ -1,26 +1,88 @@
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getStorage } from 'firebase-admin/storage';
+
+// Initialize Firebase Admin if not already initialized
+if (!getApps().length) {
+  const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
+
+  if (!privateKey) {
+    throw new Error('FIREBASE_ADMIN_PRIVATE_KEY environment variable is not set');
+  }
+
+  // Handle private key formatting - environment variables may have different newline formats
+  const formattedPrivateKey = privateKey.replace(/\\n/g, '\n');
+
+  console.log('Initializing Firebase Admin with:', {
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    privateKeyLength: formattedPrivateKey.length,
+  });
+
+  try {
+    initializeApp({
+      credential: cert({
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+        privateKey: formattedPrivateKey,
+      }),
+      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    });
+    console.log('Firebase Admin initialized successfully');
+  } catch (error) {
+    console.error('Failed to initialize Firebase Admin:', error);
+    throw error;
+  }
+}
+
+const bucket = getStorage().bucket();
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const pdfUrl = searchParams.get("url");
+  const firebaseUrl = searchParams.get("url");
 
-  if (!pdfUrl) {
+  if (!firebaseUrl) {
     return new Response("Missing url parameter", { status: 400 });
   }
 
   try {
-    const response = await fetch(pdfUrl, { cache: "no-store" });
-
-    if (!response.ok) {
-      return new Response("Failed to fetch PDF", { status: response.status });
+    // Extract file path from Firebase Storage URL
+    // Firebase URLs look like: https://firebasestorage.googleapis.com/v0/b/bucket/o/file?alt=media&token=...
+    const urlParts = firebaseUrl.split('/o/');
+    if (urlParts.length < 2) {
+      throw new Error('Invalid Firebase Storage URL format');
     }
 
-    const blob = await response.blob();
-    return new Response(blob, {
+    const filePath = decodeURIComponent(urlParts[1].split('?')[0]);
+
+    console.log('Attempting to fetch file:', filePath);
+
+    // Get file from Firebase Storage
+    const file = bucket.file(filePath);
+
+    // Check if file exists
+    const [exists] = await file.exists();
+    if (!exists) {
+      console.error('File not found:', filePath);
+      return new Response("File not found", { status: 404 });
+    }
+
+    // Get file contents
+    const [buffer] = await file.download();
+
+    console.log('Successfully fetched file:', filePath, 'Size:', buffer.length);
+
+    return new Response(buffer, {
       headers: {
         "Content-Type": "application/pdf",
         "Cache-Control": "no-store",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Headers": "Content-Type",
       },
     });
   } catch (error) {
-    return new Response("Error fetching PDF", { status: 500 });
+    console.error("Proxy error:", error);
+    return new Response(`Error fetching PDF: ${error.message}`, { status: 500 });
   }
 }

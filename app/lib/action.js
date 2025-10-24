@@ -10,7 +10,6 @@ import { storage } from "./firebase/config";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { getSession } from "./getSession";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { getAuth, signInAnonymously } from "firebase/auth";
 import { promisify } from "util";
 import libre from "libreoffice-convert";
@@ -68,11 +67,11 @@ export const registerUser = async (prevState, formData) => {
       },
     });
   } catch (error) {
-    console.log("Error registering user:", error);
-    return { error: { message: "Đã xảy ra lỗi khi đăng ký" } };
+  console.log("Error registering user:", error);
+  return { error: { message: "Đã xảy ra lỗi khi đăng ký" } };
   }
 
-  redirect("/login");
+  return { success: true };
 };
 
 export const sendResetPasswordEmail = async (prevState, formData) => {
@@ -245,11 +244,11 @@ export const uploadDocument = async (prevState, formData) => {
       },
     });
   } catch (error) {
-    console.error("Error uploading document:", error);
-    return { error: { message: "Đã xảy ra lỗi khi tải lên tài liệu" } };
+  console.error("Error uploading document:", error);
+  return { error: { message: "Đã xảy ra lỗi khi tải lên tài liệu" } };
   }
   revalidatePath("/home");
-  redirect(`/upload/complete/${newDocument.id}`);
+  return { success: true, documentId: newDocument.id };
 };
 
 export const viewedDocument = async (userId, docId) => {
