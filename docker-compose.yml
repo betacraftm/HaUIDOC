@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mysql:8
+    container_name: hauidoc-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hauidoc
+      MYSQL_USER: betacraft
+      MYSQL_PASSWORD: Datvipbn003!
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  web:
+    build: .
+    container_name: hauidoc-web
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.docker.local
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: "production"
+
+volumes:
+  mysql_data:

@@ -75,8 +75,17 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto flex max-w-7xl items-center justify-between">
-        <Link href={session ? "/home" : "/"} className="text-primary text-2xl font-extrabold">
-        <Image src="/logo.svg" alt="HaUIDOC Logo" width={128} height={28} />
+        <Link
+          href={session ? "/home" : "/"}
+          className="text-primary text-2xl font-extrabold"
+        >
+          <Image
+            src="/logo.svg"
+            alt="HaUIDOC Logo"
+            width={128}
+            height={28}
+            unoptimized
+          />
         </Link>
 
         {session ? (

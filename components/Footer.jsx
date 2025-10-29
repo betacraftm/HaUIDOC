@@ -15,6 +15,7 @@ const Footer = () => {
               height={28}
               className="inline-block"
               priority
+              unoptimized
             />
           </div>
         </div>
@@ -88,6 +89,7 @@ const Footer = () => {
             width={128}
             height={28}
             className="inline-block"
+            unoptimized
           />
         </div>
       </div>

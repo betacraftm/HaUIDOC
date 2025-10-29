@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { fetchSubjects } from "@/lib/data";
 import UploadPage from "components/page-components/UploadPage";
 

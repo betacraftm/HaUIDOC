@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import RegisterPage from "components/page-components/RegisterPage";
 import { fetchMajors } from "@/lib/data";
 

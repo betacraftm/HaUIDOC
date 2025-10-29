@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import SearchBar from "components/SearchBar";
 import { getHomeDocuments } from "@/lib/data";
 import HomePage from "components/HomePageComponent";
