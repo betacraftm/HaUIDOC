@@ -18,7 +18,6 @@ const CommentSection = ({ docId, userId }) => {
         setComments(result);
         setIsLoading(false);
       } catch (error) {
-        console.log(error);
         setIsLoading(false);
       }
     };
@@ -40,9 +39,7 @@ const CommentSection = ({ docId, userId }) => {
       const data = await response.json();
       setComments([data, ...comments]);
       setComment("");
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const displayTime = (timeStamp) => {

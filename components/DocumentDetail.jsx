@@ -22,12 +22,40 @@ const DocumentDetail = ({ docId, userId, doc }) => {
   };
 
   const handleDownload = async () => {
-    await fetch("/api/document/download", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, docId }),
-    });
-    window.open(doc.file_url, "_blank");
+    try {
+      // Track the download first
+      await fetch("/api/document/download", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, docId }),
+      });
+
+      // Use the proxy route to download the file securely
+      const proxyUrl = `/api/proxy?url=${encodeURIComponent(doc.file_url)}`;
+
+      // Try to fetch the file through proxy first
+      const response = await fetch(proxyUrl);
+      if (response.ok) {
+        // If proxy works, create a download link
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = doc.title || 'document.pdf';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        console.error("Proxy failed:", response.status, response.statusText);
+        // Fallback: try to open the file URL directly
+        window.open(doc.file_url, "_blank");
+      }
+    } catch (error) {
+      console.error("Download error:", error);
+      // Fallback: try to open the file URL directly
+      window.open(doc.file_url, "_blank");
+    }
   };
 
   useEffect(() => {

@@ -20,7 +20,7 @@ const CompletePage = ({ docId }) => {
           </p>
 
           <div className="flex flex-col gap-4 sm:flex-row">
-            {/* Nút Upload thêm */}
+            {/* Upload more */}
             <Link
               href="/upload"
               className="bg-primary inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white shadow-md transition hover:opacity-90"
@@ -29,7 +29,7 @@ const CompletePage = ({ docId }) => {
               Upload thêm tài liệu
             </Link>
 
-            {/* Nút Xem tài liệu */}
+            {/* View document */}
             <Link
               href={`/documents/${docId}`}
               className="border-primary text-primary hover:bg-primary inline-flex items-center gap-2 rounded-xl border-2 px-6 py-3 font-semibold shadow-sm transition hover:text-white"

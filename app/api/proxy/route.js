@@ -1,23 +1,40 @@
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getStorage } from 'firebase-admin/storage';
+/**
+ * PDF Proxy API Route
+ *
+ * This API route serves as a secure proxy for Firebase Storage files, specifically PDFs.
+ * It uses Firebase Admin SDK to access files server-side, avoiding CORS issues and
+ * providing better security control over file access.
+ *
+ * Key Features:
+ * - Server-side Firebase Storage access using Admin SDK
+ * - PDF file streaming with proper content-type headers
+ * - Security through service account authentication
+ * - Error handling for missing or inaccessible files
+ *
+ * Why a proxy is needed:
+ * - Firebase Storage URLs can expire or have access restrictions
+ * - CORS issues when accessing from client-side
+ * - Better control over file access permissions
+ * - Server-side authentication using service accounts
+ *
+ * @param {Request} request - GET request with 'url' query parameter
+ * @returns {Response} PDF file or error response
+ */
+
+import { initializeApp, getApps, cert } from "firebase-admin/app";
+import { getStorage } from "firebase-admin/storage";
 
 // Initialize Firebase Admin if not already initialized
 if (!getApps().length) {
   const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
 
   if (!privateKey) {
-    throw new Error('FIREBASE_ADMIN_PRIVATE_KEY environment variable is not set');
+    throw new Error(
+      "FIREBASE_ADMIN_PRIVATE_KEY environment variable is not set",
+    );
   }
 
-  // Handle private key formatting - environment variables may have different newline formats
-  const formattedPrivateKey = privateKey.replace(/\\n/g, '\n');
-
-  console.log('Initializing Firebase Admin with:', {
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    privateKeyLength: formattedPrivateKey.length,
-  });
+  const formattedPrivateKey = privateKey.replace(/\\n/g, "\n");
 
   try {
     initializeApp({
@@ -28,9 +45,9 @@ if (!getApps().length) {
       }),
       storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
     });
-    console.log('Firebase Admin initialized successfully');
+    console.log("Firebase Admin initialized successfully");
   } catch (error) {
-    console.error('Failed to initialize Firebase Admin:', error);
+    console.error("Failed to initialize Firebase Admin:", error);
     throw error;
   }
 }
@@ -46,16 +63,22 @@ export async function GET(request) {
   }
 
   try {
+    console.log('Proxy request for URL:', firebaseUrl);
+
     // Extract file path from Firebase Storage URL
-    // Firebase URLs look like: https://firebasestorage.googleapis.com/v0/b/bucket/o/file?alt=media&token=...
-    const urlParts = firebaseUrl.split('/o/');
+    const urlParts = firebaseUrl.split("/o/");
     if (urlParts.length < 2) {
-      throw new Error('Invalid Firebase Storage URL format');
+      console.error('Invalid Firebase Storage URL format:', firebaseUrl);
+      throw new Error("Invalid Firebase Storage URL format");
     }
 
-    const filePath = decodeURIComponent(urlParts[1].split('?')[0]);
+    const filePath = decodeURIComponent(urlParts[1].split("?")[0]);
+    console.log('Extracted file path:', filePath);
+    console.log('Bucket name:', bucket.name);
 
-    console.log('Attempting to fetch file:', filePath);
+    // Also log the original URL parts for debugging
+    console.log('URL parts:', urlParts);
+    console.log('Full firebaseUrl:', firebaseUrl);
 
     // Get file from Firebase Storage
     const file = bucket.file(filePath);
@@ -63,9 +86,11 @@ export async function GET(request) {
     // Check if file exists
     const [exists] = await file.exists();
     if (!exists) {
-      console.error('File not found:', filePath);
+      console.error("File not found:", filePath);
       return new Response("File not found", { status: 404 });
     }
+
+    console.log('File exists, downloading...');
 
     // Get file contents
     const [buffer] = await file.download();
@@ -83,6 +108,8 @@ export async function GET(request) {
     });
   } catch (error) {
     console.error("Proxy error:", error);
-    return new Response(`Error fetching PDF: ${error.message}`, { status: 500 });
+    return new Response(`Error fetching PDF: ${error.message}`, {
+      status: 500,
+    });
   }
 }

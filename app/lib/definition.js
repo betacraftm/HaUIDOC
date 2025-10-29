@@ -1,3 +1,25 @@
+/**
+ * Zod Validation Schemas
+ *
+ * This file contains all Zod validation schemas used throughout the HaUIDOC application.
+ * Zod provides runtime type checking and validation for form inputs, API requests,
+ * and data processing to ensure data integrity and security.
+ *
+ * Schema Categories:
+ * - User Authentication: Login, registration, password reset
+ * - Document Management: Upload validation and metadata
+ * - Profile Management: User profile updates
+ *
+ * Validation Features:
+ * - Input sanitization and type checking
+ * - Custom error messages in Vietnamese
+ * - File upload restrictions (size, type)
+ * - Password strength requirements
+ * - Email format validation
+ *
+ * @see https://zod.dev/ for schema documentation
+ */
+
 import { z } from "zod";
 
 export const registerSchema = z.object({

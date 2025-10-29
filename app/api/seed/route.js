@@ -23,7 +23,6 @@ export async function GET() {
 
     return new Response("ok", { status: 200 });
   } catch (error) {
-    console.log("Error in seed data: ", error);
     return new Response("Error", { status: 500 });
   }
 }

@@ -1,3 +1,25 @@
+/**
+ * Header Component
+ *
+ * The main navigation header component that appears on all authenticated pages.
+ * Provides navigation links, user menu, and responsive design for mobile devices.
+ *
+ * Features:
+ * - Logo navigation (dynamic based on auth status)
+ * - User dropdown menu with profile options
+ * - Responsive design with mobile hamburger menu
+ * - Session management and logout functionality
+ * - Upload button for quick document uploads
+ *
+ * Navigation Logic:
+ * - Authenticated users: Logo goes to "/home"
+ * - Non-authenticated users: Logo goes to "/" (landing page)
+ *
+ * @component
+ * @requires next-auth/react for session management
+ * @requires next/navigation for routing
+ */
+
 "use client";
 
 import { useSession, signOut } from "next-auth/react";

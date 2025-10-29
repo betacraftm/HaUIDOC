@@ -1,12 +1,11 @@
 "use client";
 
-// Removed server action imports - now using API routes
 import { useState } from "react";
 import { anton } from "public/fonts";
 
 export default function ResetPassword({ token }) {
-const [state, setState] = useState(undefined);
-const [pending, setPending] = useState(false);
+  const [state, setState] = useState(undefined);
+  const [pending, setPending] = useState(false);
   const [passwordError, setPasswordError] = useState("");
 
   return (
@@ -21,38 +20,40 @@ const [pending, setPending] = useState(false);
           Nhập mật khẩu mới cho tài khoản của bạn
         </p>
 
-        <form action={(formData) => {
-        const password = formData.get("password");
-        const confirmPassword = formData.get("confirmPassword");
+        <form
+          action={(formData) => {
+            const password = formData.get("password");
+            const confirmPassword = formData.get("confirmPassword");
 
-        if (password !== confirmPassword) {
-        setPasswordError("Mật khẩu xác nhận không khớp");
-        return;
-        }
+            if (password !== confirmPassword) {
+              setPasswordError("Mật khẩu xác nhận không khớp");
+              return;
+            }
 
-        setPasswordError("");
-        setPending(true);
+            setPasswordError("");
+            setPending(true);
 
-        // Create new FormData with only the fields we need
-        const cleanFormData = new FormData();
-        cleanFormData.append("password", password);
+            const cleanFormData = new FormData();
+            cleanFormData.append("password", password);
 
-        fetch(`/api/auth/reset-password/${token}`, {
-          method: "POST",
-          body: cleanFormData,
-        })
-          .then((response) => response.json())
-          .then((result) => {
-            setState(result);
-          })
-          .catch((error) => {
-            console.error("Reset password error:", error);
-            setState({ error: "Đã xảy ra lỗi khi đặt lại mật khẩu" });
-          })
-          .finally(() => {
-            setPending(false);
-          });
-        }} className="space-y-5">
+            fetch(`/api/auth/reset-password/${token}`, {
+              method: "POST",
+              body: cleanFormData,
+            })
+              .then((response) => response.json())
+              .then((result) => {
+                setState(result);
+              })
+              .catch((error) => {
+                console.error("Reset password error:", error);
+                setState({ error: "Đã xảy ra lỗi khi đặt lại mật khẩu" });
+              })
+              .finally(() => {
+                setPending(false);
+              });
+          }}
+          className="space-y-5"
+        >
           <input type="hidden" name="token" value={token || ""} />
 
           <div>
@@ -90,13 +91,17 @@ const [pending, setPending] = useState(false);
           </div>
 
           {state?.error && (
-          <div className="space-y-1">
+            <div className="space-y-1">
               {/* Handle field validation errors (objects) */}
-              {typeof state.error === 'object' && Array.isArray(state.error.password) && state.error.password.length > 0 && (
-                <p className="text-sm text-red-600">{state.error.password[0]}</p>
-              )}
+              {typeof state.error === "object" &&
+                Array.isArray(state.error.password) &&
+                state.error.password.length > 0 && (
+                  <p className="text-sm text-red-600">
+                    {state.error.password[0]}
+                  </p>
+                )}
               {/* Handle general errors (strings) */}
-              {typeof state.error === 'string' && (
+              {typeof state.error === "string" && (
                 <p className="text-sm text-red-600">{state.error}</p>
               )}
 

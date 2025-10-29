@@ -23,7 +23,7 @@ export default function LoginPage() {
 
     try {
       const result = await signIn("credentials", {
-        redirect: false, // không redirect tự động
+        redirect: false,
         username,
         password,
       });
@@ -34,7 +34,7 @@ export default function LoginPage() {
         router.push("/home");
       }
     } catch (err) {
-      // console.log(err);
+      console.log(err);
 
       setError("Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại.");
     } finally {
@@ -108,11 +108,11 @@ export default function LoginPage() {
             </Link>
           </div>
           <button
-          type="submit"
-          disabled={pending}
-          className="bg-primary hover:bg-primary/90 mb-4 flex w-full items-center justify-center gap-2 rounded-xl py-3 text-base font-bold text-white transition disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-50"
+            type="submit"
+            disabled={pending}
+            className="bg-primary hover:bg-primary/90 mb-4 flex w-full items-center justify-center gap-2 rounded-xl py-3 text-base font-bold text-white transition disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-50"
           >
-          {pending ? (
+            {pending ? (
               <>
                 <svg
                   className="h-5 w-5 animate-spin text-white"

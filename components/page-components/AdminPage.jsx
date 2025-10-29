@@ -10,7 +10,6 @@ import {
   Shield,
   BarChart3,
 } from "lucide-react";
-// Removed server action imports - now using API routes
 
 const AdminPage = () => {
   const [stats, setStats] = useState(null);
@@ -23,16 +22,16 @@ const AdminPage = () => {
   }, []);
 
   const loadAdminData = async () => {
-  try {
-  const response = await fetch("/api/admin/stats");
-  if (response.ok) {
-    const statsData = await response.json();
-    setStats(statsData.stats);
-      setUsers(statsData.users);
-    setDocuments(statsData.documents);
-    } else {
-    console.error("Failed to load admin data");
-    }
+    try {
+      const response = await fetch("/api/admin/stats");
+      if (response.ok) {
+        const statsData = await response.json();
+        setStats(statsData.stats);
+        setUsers(statsData.users);
+        setDocuments(statsData.documents);
+      } else {
+        console.error("Failed to load admin data");
+      }
     } catch (error) {
       console.error("Failed to load admin data:", error);
     } finally {
@@ -48,7 +47,7 @@ const AdminPage = () => {
         });
 
         if (response.ok) {
-          await loadAdminData(); // Refresh data
+          await loadAdminData();
         } else {
           alert("Không thể xóa tài liệu");
         }
@@ -57,8 +56,6 @@ const AdminPage = () => {
       }
     }
   };
-
-  
 
   if (isLoading) {
     return (
@@ -86,7 +83,7 @@ const AdminPage = () => {
       <div className="mx-auto max-w-7xl p-6">
         {/* Content */}
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">
@@ -103,9 +100,7 @@ const AdminPage = () => {
           <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Total Users
-                </p>
+                <p className="text-sm font-medium text-gray-600">Total Users</p>
                 <p className="text-3xl font-bold text-gray-900">
                   {stats?.totalUsers || 0}
                 </p>
@@ -131,9 +126,7 @@ const AdminPage = () => {
           <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Total Views
-                </p>
+                <p className="text-sm font-medium text-gray-600">Total Views</p>
                 <p className="text-3xl font-bold text-gray-900">
                   {stats?.totalViews || 0}
                 </p>
@@ -149,59 +142,59 @@ const AdminPage = () => {
               Document Management
             </h2>
           </div>
-        <div className="overflow-x-auto">
+          <div className="overflow-x-auto">
             <table className="w-full">
-        <thead className="bg-gray-50">
-        <tr>
-        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-        Title
-        </th>
-        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-        Author
-        </th>
-        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-        Views
-        </th>
-        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-        Downloads
-        </th>
-        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-        Actions
-        </th>
-        </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
-        {documents.map((doc) => (
-        <tr key={doc.id}>
-        <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm font-medium text-gray-900">
-        {doc.title}
-        </div>
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm text-gray-500">
-        {doc.users?.name}
-        </div>
-        </td>
-        <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
-        {doc.view_count}
-        </td>
-        <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
-        {doc.download_count}
-        </td>
-        <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
-        <button
-        onClick={() => handleDeleteDocument(doc.id)}
-        className="text-red-600 transition hover:text-red-900"
-        >
-        <Trash2 size={18} />
-        </button>
-        </td>
-        </tr>
-        ))}
-        </tbody>
-        </table>
-        </div>
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Title
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Author
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Views
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Downloads
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {documents.map((doc) => (
+                  <tr key={doc.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {doc.title}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">
+                        {doc.users?.name}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                      {doc.view_count}
+                    </td>
+                    <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                      {doc.download_count}
+                    </td>
+                    <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
+                      <button
+                        onClick={() => handleDeleteDocument(doc.id)}
+                        className="text-red-600 transition hover:text-red-900"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -210,58 +203,59 @@ const AdminPage = () => {
               User Management
             </h2>
           </div>
-        <div className="overflow-x-auto">
-        <table className="w-full">
-        <thead className="bg-gray-50">
-        <tr>
-        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-        Name
-        </th>
-        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-        Email
-        </th>
-        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-        Major
-        </th>
-        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-        Status
-        </th>
-        </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
-        {users.map((user) => (
-        <tr key={user.id}>
-        <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm font-medium text-gray-900">
-        {user.name}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Major
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {users.map((user) => (
+                  <tr key={user.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {user.name}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        @{user.username}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                      {user.email}
+                    </td>
+                    <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                      {user.major?.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                          user.role === "admin"
+                            ? "bg-purple-100 text-purple-800"
+                            : "bg-blue-100 text-blue-800"
+                        }`}
+                      >
+                        {user.role === "admin" ? "Admin" : "User"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div className="text-sm text-gray-500">
-        @{user.username}
-        </div>
-        </td>
-        <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
-        {user.email}
-        </td>
-        <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
-        {user.major?.name}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
-          <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-            user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
-          }`}>
-            {user.role === 'admin' ? 'Admin' : 'User'}
-          </span>
-        </td>
-        
-        </tr>
-        ))}
-        </tbody>
-        </table>
-        </div>
-        </div>
-
-
-        </div>
+      </div>
     </div>
   );
 };

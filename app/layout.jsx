@@ -1,3 +1,18 @@
+/**
+ * Root Layout Component
+ *
+ * This is the root layout component for the HaUIDOC application. It wraps all pages
+ * and provides global context, styling, and functionality that applies to the entire app.
+ *
+ * Features:
+ * - Global CSS imports and Tailwind CSS setup
+ * - Header and Footer components for consistent layout
+ * - Custom font loading (Raleway)
+ * - Session management via NextAuth SessionProvider
+ * - Metadata configuration for SEO
+ * - Responsive design setup
+ */
+
 import "./globals.css";
 import Header from "components/Header";
 import Footer from "components/Footer";

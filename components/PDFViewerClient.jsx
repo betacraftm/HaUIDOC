@@ -4,9 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import PdfSkeleton from "./skeletons/PdfSkeleton";
 
-// Cấu hình worker của PDF.js for Next.js 13+
-// Use local worker file to avoid ESM import issues
-pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
 export default function PDFViewerClient({ file }) {
   const [numPages, setNumPages] = useState(null);
@@ -17,7 +15,6 @@ export default function PDFViewerClient({ file }) {
     setNumPages(numPages);
   }
 
-  // Resize để luôn fit width
   useEffect(() => {
     function handleResize() {
       if (containerRef.current) {

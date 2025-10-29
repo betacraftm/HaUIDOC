@@ -1,3 +1,24 @@
+/**
+ * JavaScript Configuration
+ *
+ * Configuration file for JavaScript projects in VS Code and other editors.
+ * Defines path mapping, compiler options, and module resolution for better
+ * development experience and IntelliSense support.
+ *
+ * Key Settings:
+ * - Path aliases for clean imports (@/lib, @/components)
+ * - ES modules support
+ * - JSX support for React components
+ * - Base URL for absolute imports
+ *
+ * Path Mapping:
+ * - "@/lib/*" → "./app/lib/*"
+ * - "@/components/*" → "./components/*"
+ * - "@/utils/*" → "./app/utils/*"
+ *
+ * @see https://code.visualstudio.com/docs/languages/jsconfig
+ */
+
 {
   "compilerOptions": {
     "baseUrl": ".",

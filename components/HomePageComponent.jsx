@@ -1,3 +1,28 @@
+/**
+ * Home Dashboard Component
+ *
+ * The main dashboard component that displays personalized content for authenticated users.
+ * Shows recent documents, viewed documents, liked documents, and user's own documents
+ * in organized sections with view-all links to detailed pages.
+ *
+ * Features:
+ * - Personalized content based on user activity
+ * - Multiple document sections (recent, viewed, liked, user docs)
+ * - Responsive grid layout
+ * - Navigation to detailed document lists
+ *
+ * Data Structure:
+ * homeSection: {
+ *   recently: { title, data, viewAllString, href, metaData },
+ *   viewed: { ... },
+ *   liked: { ... },
+ *   user: { ... }
+ * }
+ *
+ * @component
+ * @param {Object} props.homeSection - Section data from server
+ */
+
 import HomeSection from "components/HomeSection";
 
 const HomePage = ({ homeSection }) => {

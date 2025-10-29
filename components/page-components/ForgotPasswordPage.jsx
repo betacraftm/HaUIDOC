@@ -5,28 +5,27 @@ import { anton } from "public/fonts";
 
 const ForgotPassword = () => {
   const [state, setState] = useState(undefined);
-const [pending, setPending] = useState(false);
+  const [pending, setPending] = useState(false);
 
-const handleSubmit = async (formData) => {
-  setPending(true);
-  try {
-    // Add a small delay to ensure spinner is visible
-    await new Promise(resolve => setTimeout(resolve, 500));
+  const handleSubmit = async (formData) => {
+    setPending(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const response = await fetch("/api/auth/reset-password", {
-      method: "POST",
-      body: formData,
-    });
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        body: formData,
+      });
 
-    const result = await response.json();
-    setState(result);
-  } catch (error) {
-    console.error("Error:", error);
-    setState({ error: "Đã xảy ra lỗi khi gửi email" });
-  } finally {
-    setPending(false);
-  }
-};
+      const result = await response.json();
+      setState(result);
+    } catch (error) {
+      console.error("Error:", error);
+      setState({ error: "Đã xảy ra lỗi khi gửi email" });
+    } finally {
+      setPending(false);
+    }
+  };
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center bg-gray-50 px-4">
@@ -40,7 +39,13 @@ const handleSubmit = async (formData) => {
           Nhập email của bạn để nhận liên kết đặt lại mật khẩu
         </p>
 
-        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(new FormData(e.target)); }} className="space-y-5">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(new FormData(e.target));
+          }}
+          className="space-y-5"
+        >
           <div>
             <input
               type="email"

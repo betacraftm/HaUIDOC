@@ -1,3 +1,19 @@
+/**
+ * Root Page Component (Landing Page)
+ *
+ * This is the main landing page component that serves as the entry point for
+ * non-authenticated users. It displays the hero section, features, and general
+ * information about HaUIDOC to encourage user registration and engagement.
+ *
+ * Features:
+ * - Hero section with call-to-action
+ * - Feature highlights
+ * - Statistics and social proof
+ * - Responsive design for all devices
+ *
+ * Note: Authenticated users are automatically redirected to /home by middleware
+ */
+
 import HomePage from "components/page-components/HeroPage";
 
 export const metadata = {

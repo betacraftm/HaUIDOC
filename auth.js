@@ -1,3 +1,21 @@
+/**
+ * NextAuth.js Configuration
+ *
+ * This file configures authentication for the HaUIDOC application using NextAuth.js v5.
+ * It supports multiple authentication providers including credentials (email/password)
+ * and Google OAuth for seamless user authentication.
+ *
+ * Features:
+ * - Email/password authentication with bcrypt hashing
+ * - Google OAuth integration for social login
+ * - JWT-based sessions with configurable expiration
+ * - Automatic user creation for new Google users
+ * - Role-based access control (client/admin)
+ * - Secure session management
+ *
+ * @see https://next-auth.js.org/
+ */
+
 import { loginSchema } from "@/lib/definition";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";

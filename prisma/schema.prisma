@@ -1,3 +1,26 @@
+// Prisma Schema Definition for HaUIDOC
+//
+// This file defines the complete database schema for the HaUIDOC application.
+// It uses Prisma ORM to provide type-safe database operations and automatic
+// migration generation.
+//
+// Database: MySQL 8.0+
+// Features:
+// - Type-safe database queries
+// - Automatic migrations
+// - Data validation
+// - Relationship management
+//
+// Key Entities:
+// - User: User accounts and authentication
+// - Major: Academic majors/departments
+// - Subject: Academic subjects/topics
+// - Document: Uploaded documents and metadata
+// - Comment: User comments on documents
+// - UserViewedDocument: Document view tracking
+// - UserLikedDocument: Document like tracking
+// - PasswordResetToken: Password reset functionality
+
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"

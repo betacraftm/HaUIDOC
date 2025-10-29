@@ -4,7 +4,6 @@ import Link from "next/link";
 import { anton } from "public/fonts";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-// Removed server action imports - now using API routes
 import DropDown from "components/DropDown";
 
 const RegisterPage = ({ majorsList }) => {
@@ -44,8 +43,8 @@ const RegisterPage = ({ majorsList }) => {
           Đăng ký tài khoản
         </h1>
         <form
-        className="ring-secondary space-y-5 rounded-2xl bg-white p-8 shadow-xl ring-1"
-        action={handleSubmit}
+          className="ring-secondary space-y-5 rounded-2xl bg-white p-8 shadow-xl ring-1"
+          action={handleSubmit}
         >
           <div>
             <label
@@ -62,9 +61,12 @@ const RegisterPage = ({ majorsList }) => {
               className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:outline-none"
               placeholder="Nhập họ và tên"
             />
-            {Array.isArray(state?.error?.name) && state.error.name.length > 0 && (
-              <div className="text-sm text-red-600">{state.error.name[0]}</div>
-            )}
+            {Array.isArray(state?.error?.name) &&
+              state.error.name.length > 0 && (
+                <div className="text-sm text-red-600">
+                  {state.error.name[0]}
+                </div>
+              )}
           </div>
           <div>
             <label
@@ -81,9 +83,12 @@ const RegisterPage = ({ majorsList }) => {
               className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:outline-none"
               placeholder="Nhập tên đăng nhập"
             />
-            {Array.isArray(state?.error?.username) && state.error.username.length > 0 && (
-              <div className="text-sm text-red-600">{state.error.username[0]}</div>
-            )}
+            {Array.isArray(state?.error?.username) &&
+              state.error.username.length > 0 && (
+                <div className="text-sm text-red-600">
+                  {state.error.username[0]}
+                </div>
+              )}
           </div>
           <div>
             <label
@@ -100,9 +105,12 @@ const RegisterPage = ({ majorsList }) => {
               className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:outline-none"
               placeholder="Nhập email"
             />
-            {Array.isArray(state?.error?.email) && state.error.email.length > 0 && (
-              <div className="text-sm text-red-600">{state.error.email[0]}</div>
-            )}
+            {Array.isArray(state?.error?.email) &&
+              state.error.email.length > 0 && (
+                <div className="text-sm text-red-600">
+                  {state.error.email[0]}
+                </div>
+              )}
           </div>
           <div>
             <label
@@ -119,9 +127,12 @@ const RegisterPage = ({ majorsList }) => {
               className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:outline-none"
               placeholder="Nhập mật khẩu"
             />
-            {Array.isArray(state?.error?.password) && state.error.password.length > 0 && (
-              <div className="text-sm text-red-600">{state.error.password[0]}</div>
-            )}
+            {Array.isArray(state?.error?.password) &&
+              state.error.password.length > 0 && (
+                <div className="text-sm text-red-600">
+                  {state.error.password[0]}
+                </div>
+              )}
           </div>
 
           <DropDown
@@ -134,15 +145,15 @@ const RegisterPage = ({ majorsList }) => {
             <div className="text-sm text-red-600">{state.error.message}</div>
           )}
 
-          {typeof state?.error === 'string' && (
+          {typeof state?.error === "string" && (
             <div className="text-sm text-red-600">{state.error}</div>
           )}
           <button
-          type="submit"
-          disabled={pending}
-          className="bg-primary hover:bg-primary/90 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2 text-base font-bold text-white transition disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-50"
+            type="submit"
+            disabled={pending}
+            className="bg-primary hover:bg-primary/90 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2 text-base font-bold text-white transition disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-50"
           >
-          {pending ? (
+            {pending ? (
               <>
                 <svg
                   className="h-5 w-5 animate-spin text-white"

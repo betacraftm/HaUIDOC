@@ -1,6 +1,5 @@
 "use client";
 
-// Removed server action imports - now using API routes
 import ProfileDropDown from "components/ProfileDropdown";
 import Image from "next/image";
 import { useState } from "react";
@@ -104,7 +103,9 @@ const ProfileFormClient = ({ user, majors }) => {
 
       {state?.error && (
         <div className="text-center text-sm text-red-600">
-          {typeof state.error === 'string' ? state.error : state.error?.message || 'Đã xảy ra lỗi'}
+          {typeof state.error === "string"
+            ? state.error
+            : state.error?.message || "Đã xảy ra lỗi"}
         </div>
       )}
       {state?.ok && (

@@ -1,10 +1,33 @@
+/**
+ * Next.js Middleware Configuration
+ *
+ * This middleware handles route protection, authentication redirects, and access control
+ * for the HaUIDOC application. It runs on every request and controls navigation flow
+ * based on user authentication status and roles.
+ *
+ * Route Categories:
+ * - Protected Routes: Require authentication (/home, /profile, /upload, /documents)
+ * - Admin Routes: Require admin role (/admin)
+ * - Public Routes: Accessible without authentication
+ *
+ * Flow Logic:
+ * - Authenticated users accessing "/" are redirected to "/home" (entry point)
+ * - Unauthenticated users are redirected to login for protected routes
+ * - Admin routes require both authentication and admin role
+ *
+ * @see https://nextjs.org/docs/advanced-features/middleware
+ */
+
 import { NextResponse } from "next/server";
 import { auth } from "./auth";
 
+// Routes that require authentication
 const protectedRoutes = ["/home", "/profile", "/upload", "/documents"];
 
+// Routes that require admin privileges
 const adminRoutes = ["/admin"];
 
+// Routes accessible without authentication
 const publicRoutes = [
   "/login",
   "/register",

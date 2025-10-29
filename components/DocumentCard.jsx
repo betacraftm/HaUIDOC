@@ -1,4 +1,3 @@
-// components/DocumentCard.jsx
 import { formatDate } from "@/utils/utils";
 import Link from "next/link";
 

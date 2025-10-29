@@ -1,3 +1,24 @@
+/**
+ * Database Operations and Data Access Layer
+ *
+ * This file contains all database operations for the HaUIDOC application using Prisma ORM.
+ * It provides type-safe database queries, data aggregation, and business logic functions
+ * that are used throughout the application.
+ *
+ * Key Features:
+ * - User management operations
+ * - Document CRUD operations
+ * - Search and filtering functionality
+ * - Analytics and statistics queries
+ * - Data validation and sanitization
+ *
+ * All functions are marked as "use server" to ensure they only run on the server side
+ * and cannot be called from client components directly.
+ *
+ * @requires Prisma ORM
+ * @requires MySQL database
+ */
+
 "use server";
 
 import { PrismaClient } from "generated/prisma";

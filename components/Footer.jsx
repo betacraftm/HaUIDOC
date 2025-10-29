@@ -18,14 +18,14 @@ const Footer = () => {
             />
           </div>
         </div>
-        {/* Về dự án */}
+        {/* About */}
         <div>
           <h4 className="text-secondary mb-2 text-lg font-bold">Về dự án</h4>
           <ul className="space-y-1 text-base text-gray-800">
             <li>
-              <a href="#about" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 Giới thiệu về HaUIDOC
-              </a>
+              </Link>
             </li>
             <li>
               <Link href="/upload" className="hover:underline">
@@ -34,7 +34,7 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        {/* Liên hệ */}
+        {/* Contact */}
         <div>
           <h4 className="text-secondary mb-2 text-lg font-bold">Liên hệ</h4>
           <ul className="space-y-1 text-base text-gray-800">

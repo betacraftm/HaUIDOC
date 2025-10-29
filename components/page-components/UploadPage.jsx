@@ -5,13 +5,11 @@ import { anton } from "public/fonts";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { UploadCloud, XCircle, FileText } from "lucide-react";
-// Removed server action imports - now using API routes
 import { acceptedFileTypes } from "@/utils/utils";
 import DropDown from "components/DropDown";
 
 const UploadPage = ({ subjectsList }) => {
-const router = useRouter();
-// State chỉ lưu trữ File object
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -30,21 +28,20 @@ const router = useRouter();
       return false;
     }
 
-    // Kiểm tra kích thước tệp (ví dụ: tối đa 5MB)
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     if (file.size > MAX_FILE_SIZE) {
       setFileError("Kích thước tệp không được vượt quá 5MB.");
       return false;
     }
 
-    setFileError(""); // Xóa lỗi nếu tệp hợp lệ
+    setFileError("");
     return true;
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && handleFileValidation(file)) {
-      setSelectedFile({ file }); // Chỉ lưu file, không cần previewUrl
+      setSelectedFile({ file });
     } else {
       setSelectedFile(null);
     }
@@ -55,7 +52,7 @@ const router = useRouter();
     e.stopPropagation();
     const file = e.dataTransfer.files[0];
     if (file && handleFileValidation(file)) {
-      setSelectedFile({ file }); // Chỉ lưu file, không cần previewUrl
+      setSelectedFile({ file });
     } else {
       setSelectedFile(null);
     }
@@ -106,13 +103,12 @@ const router = useRouter();
     })
       .then((response) => response.json())
       .then((result) => {
-      setState(result);
-      if (result.success && result.documentId) {
-      setSelectedFile(null);
-      setTitle("");
-      setDescription("");
-      setIsSubmit(!isSubmit);
-        // Redirect to completion page
+        setState(result);
+        if (result.success && result.documentId) {
+          setSelectedFile(null);
+          setTitle("");
+          setDescription("");
+          setIsSubmit(!isSubmit);
           router.push(`/upload/complete/${result.documentId}`);
         }
       })
@@ -139,7 +135,7 @@ const router = useRouter();
           className="ring-secondary space-y-5 rounded-2xl bg-white p-8 shadow-xl ring-1"
           onSubmit={handleSubmit}
         >
-          {/* Trường Tiêu đề */}
+          {/* Title field*/}
           <div>
             <label
               htmlFor="title"
@@ -166,15 +162,16 @@ const router = useRouter();
             <div className="text-sm text-red-600">{state.error.message}</div>
           )}
 
-          {typeof state?.error === 'string' && (
+          {typeof state?.error === "string" && (
             <div className="text-sm text-red-600">{state.error}</div>
           )}
 
-          {Array.isArray(state?.error?.title) && state.error.title.length > 0 && (
-            <div className="text-sm text-red-600">{state.error.title[0]}</div>
-          )}
+          {Array.isArray(state?.error?.title) &&
+            state.error.title.length > 0 && (
+              <div className="text-sm text-red-600">{state.error.title[0]}</div>
+            )}
 
-          {/* Trường Mô tả */}
+          {/* Description field */}
           <div>
             <label
               htmlFor="description"
@@ -195,13 +192,14 @@ const router = useRouter();
             ></textarea>
           </div>
 
-          {Array.isArray(state?.error?.description) && state.error.description.length > 0 && (
-            <div className="text-sm text-red-600">
-              {state.error.description[0]}
-            </div>
-          )}
+          {Array.isArray(state?.error?.description) &&
+            state.error.description.length > 0 && (
+              <div className="text-sm text-red-600">
+                {state.error.description[0]}
+              </div>
+            )}
 
-          {/* Input chọn môn học */}
+          {/* Subject field */}
           <DropDown
             title={"Môn học"}
             list={subjectsList}
@@ -210,11 +208,14 @@ const router = useRouter();
             isSubmit={isSubmit}
           />
 
-          {Array.isArray(state?.error?.subject) && state.error.subject.length > 0 && (
-            <div className="text-sm text-red-600">{state.error.subject[0]}</div>
-          )}
+          {Array.isArray(state?.error?.subject) &&
+            state.error.subject.length > 0 && (
+              <div className="text-sm text-red-600">
+                {state.error.subject[0]}
+              </div>
+            )}
 
-          {/* Input Tải file */}
+          {/* File input */}
           <div>
             <label
               htmlFor="documentFile"
@@ -226,8 +227,8 @@ const router = useRouter();
               <div
                 className={`cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition duration-200 ${
                   isDragging
-                    ? "border-primary bg-primary/5" // Màu sắc khi đang kéo
-                    : "hover:border-primary border-gray-300" // Màu sắc mặc định và hover bình thường
+                    ? "border-primary bg-primary/5"
+                    : "hover:border-primary border-gray-300"
                 }`}
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
@@ -259,7 +260,6 @@ const router = useRouter();
               <div className="mt-4 rounded-lg border border-gray-300 bg-gray-50 p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center overflow-hidden">
-                    {/* Sử dụng icon chung hoặc logic icon đơn giản */}
                     <FileText className="mr-2 h-5 w-5 flex-shrink-0 text-gray-500" />
                     <span className="truncate font-medium text-gray-800">
                       {selectedFile.file.name}
@@ -284,7 +284,7 @@ const router = useRouter();
             )}
           </div>
 
-          {/* Nút Tải lên */}
+          {/* Upload button */}
           <button
             type="submit"
             className="bg-primary hover:bg-primary/90 flex w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-base font-bold text-white transition disabled:cursor-not-allowed disabled:bg-gray-400 disabled:opacity-50"

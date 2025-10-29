@@ -10,12 +10,12 @@ const DonatePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Receiver information - you can customize these
+  // Receiver information
   const receiverInfo = {
     name: "Hoàng Ngọc Đạt",
     bank: "Viettinbank",
     accountNumber: "101877695764",
-    bankCode: "ICB", // Vietcombank code for VietQR
+    bankCode: "ICB",
   };
 
   const handleDonate = () => {

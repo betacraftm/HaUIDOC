@@ -1,3 +1,32 @@
+/**
+ * Server Actions - Business Logic Layer
+ *
+ * This file contains all server actions (form handlers) for the HaUIDOC application.
+ * Server actions are functions that run on the server and handle form submissions,
+ * data mutations, and complex business logic that requires server-side processing.
+ *
+ * Key Features:
+ * - User registration and authentication
+ * - Document upload with file conversion
+ * - Password reset functionality
+ * - User profile management
+ * - Admin operations and statistics
+ *
+ * All functions are marked as "use server" and can only be called from server components
+ * or through form actions. They provide a secure way to handle sensitive operations
+ * like database writes and file processing.
+ *
+ * Security Considerations:
+ * - Input validation using Zod schemas
+ * - Authentication checks for protected operations
+ * - Secure password hashing with bcrypt
+ * - File upload restrictions and validation
+ *
+ * @requires Next.js 15+ (Server Actions)
+ * @requires Zod for validation
+ * @requires Prisma for database operations
+ */
+
 "use server";
 
 import bcrypt from "bcryptjs";
@@ -67,8 +96,8 @@ export const registerUser = async (prevState, formData) => {
       },
     });
   } catch (error) {
-  console.log("Error registering user:", error);
-  return { error: { message: "Đã xảy ra lỗi khi đăng ký" } };
+    console.log("Error registering user:", error);
+    return { error: { message: "Đã xảy ra lỗi khi đăng ký" } };
   }
 
   return { success: true };
@@ -85,7 +114,7 @@ export const sendResetPasswordEmail = async (prevState, formData) => {
 
   // generate token
   const token = crypto.randomBytes(32).toString("hex");
-  const expires = new Date(Date.now() + 1000 * 60 * 15); // 15 phút
+  const expires = new Date(Date.now() + 1000 * 60 * 15);
 
   await prisma.passwordResetToken.create({
     data: {
@@ -244,8 +273,8 @@ export const uploadDocument = async (prevState, formData) => {
       },
     });
   } catch (error) {
-  console.error("Error uploading document:", error);
-  return { error: { message: "Đã xảy ra lỗi khi tải lên tài liệu" } };
+    console.error("Error uploading document:", error);
+    return { error: { message: "Đã xảy ra lỗi khi tải lên tài liệu" } };
   }
   revalidatePath("/home");
   return { success: true, documentId: newDocument.id };
@@ -305,8 +334,6 @@ export const downloadDocument = async (userId, docId) => {
     });
 
     // Optionally track user download history if needed
-    // You could add a UserDownloadedDocument table similar to UserViewedDocument
-
     return { success: true };
   } catch (error) {
     console.error("Error downloading document:", error);
@@ -417,18 +444,15 @@ export const getAdminStats = async () => {
   try {
     // Get total counts
     const totalDocuments = await prisma.document.count();
-    const totalUsers = await prisma.user.count({ where: { role: "client" } }); // Only count regular users
+    const totalUsers = await prisma.user.count({ where: { role: "client" } });
     const totalAdmins = await prisma.user.count({ where: { role: "admin" } });
 
-    // Calculate total downloads (assuming download_count field exists)
-    // If it doesn't exist, we can track downloads differently
     const totalDownloads = await prisma.document.aggregate({
       _sum: {
         download_count: true,
       },
     });
 
-    // Calculate total views (assuming view_count field exists)
     const totalViews = await prisma.document.aggregate({
       _sum: {
         view_count: true,
@@ -447,8 +471,7 @@ export const getAdminStats = async () => {
       orderBy: {
         created_at: "desc",
       },
-      // Add is_banned field if it exists, otherwise remove this filter
-      where: { role: "client" }, // Only show regular users in admin panel
+      where: { role: "client" },
     });
 
     // Get documents list
@@ -475,8 +498,8 @@ export const getAdminStats = async () => {
       },
       users: users.map((user) => ({
         ...user,
-        major: user.majors, // Rename to match frontend expectation
-        is_banned: false, // Always false since we removed banned functionality
+        major: user.majors,
+        is_banned: false,
       })),
       documents,
     };
