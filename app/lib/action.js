@@ -40,14 +40,11 @@ import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { getSession } from "./getSession";
 import { revalidatePath } from "next/cache";
 import { getAuth, signInAnonymously } from "firebase/auth";
-import { promisify } from "util";
-import libre from "libreoffice-convert";
 import { PrismaClient } from "generated/prisma";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
 const prisma = new PrismaClient();
-const convertAsync = promisify(libre.convert);
 
 export const registerUser = async (prevState, formData) => {
   try {
@@ -243,10 +240,24 @@ export const uploadDocument = async (prevState, formData) => {
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
       documentFile.type === "application/msword"
     ) {
-      const buffer = Buffer.from(await documentFile.arrayBuffer());
+      const buffer = await documentFile.arrayBuffer();
 
-      // Convert DOC/DOCX → PDF
-      const pdfBuffer = await convertAsync(buffer, ".pdf", undefined);
+      const response = await fetch(
+        `${process.env.CONVERT_API_URL}/api/convert`,
+        {
+          method: "POST",
+          body: buffer,
+          headers: {
+            "Content-Type": documentFile.type,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Conversion failed");
+      }
+
+      const pdfBuffer = await response.arrayBuffer();
 
       // Replace file with PDF
       fileName = fileName.replace(/\.(docx|doc)$/i, ".pdf");

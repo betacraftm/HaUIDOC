@@ -1,5 +1,5 @@
 import { initializeApp, getApps, cert } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
+import { getStorage } from "firebase-admin/storage";
 
 export async function GET() {
   try {
@@ -74,40 +74,48 @@ export async function GET() {
     // Test Firebase Admin functionality including storage access
     try {
       const bucket = getStorage().bucket();
-      console.log('Firebase Admin initialized successfully with storage access');
+      console.log(
+        "Firebase Admin initialized successfully with storage access",
+      );
 
       // Try to list files to verify storage access
-      const [files] = await bucket.getFiles({ maxResults: 1, prefix: 'documents/' });
+      const [files] = await bucket.getFiles({
+        maxResults: 1,
+        prefix: "documents/",
+      });
 
       return Response.json({
         success: true,
-        message: 'Firebase Admin credentials and storage access are working!',
+        message: "Firebase Admin credentials and storage access are working!",
         details: {
           projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
           clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
           bucketName: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
           privateKeyLength: privateKey.length,
-          hasBeginHeader: privateKey.includes('-----BEGIN PRIVATE KEY-----'),
-          hasEndHeader: privateKey.includes('-----END PRIVATE KEY-----'),
+          hasBeginHeader: privateKey.includes("-----BEGIN PRIVATE KEY-----"),
+          hasEndHeader: privateKey.includes("-----END PRIVATE KEY-----"),
           storageAccess: true,
           filesFound: files.length,
-        }
+        },
       });
     } catch (storageError) {
-      console.error('Storage access failed:', storageError);
+      console.error("Storage access failed:", storageError);
 
-      return Response.json({
-        success: false,
-        message: 'Firebase Admin initialized but storage access failed',
-        details: {
-          projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-          clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-          bucketName: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-          privateKeyLength: privateKey.length,
-          storageError: storageError.message,
-          errorCode: storageError.code,
-        }
-      }, { status: 500 });
+      return Response.json(
+        {
+          success: false,
+          message: "Firebase Admin initialized but storage access failed",
+          details: {
+            projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+            clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+            bucketName: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+            privateKeyLength: privateKey.length,
+            storageError: storageError.message,
+            errorCode: storageError.code,
+          },
+        },
+        { status: 500 },
+      );
     }
   } catch (error) {
     console.error("Firebase Admin test failed:", error);

@@ -25,7 +25,6 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { LogOut, Upload, User, UserCog } from "lucide-react";
 
@@ -35,7 +34,6 @@ const Header = () => {
   const lastScrollY = useRef(0);
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
   const userDropdownRef = useRef(null);
-  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -126,11 +124,10 @@ const Header = () => {
                   </li>
                   <li>
                     <button
-                      onClick={async () => {
-                        setUserDropdownOpen(false);
-                        await signOut({ redirect: false });
-                        router.push("/");
-                      }}
+                    onClick={async () => {
+                    setUserDropdownOpen(false);
+                    await signOut({ callbackUrl: "/" });
+                    }}
                       className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100"
                     >
                       <LogOut className="h-4 w-4" />
