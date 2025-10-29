@@ -21,8 +21,16 @@ services:
       - .env.docker.local
     depends_on:
       - db
+      - libreoffice
     environment:
       NODE_ENV: "production"
+
+  libreoffice:
+    build: ../libre-convert
+    container_name: hauidoc-libreoffice
+    restart: always
+    depends_on:
+      - db
 
 volumes:
   mysql_data:
