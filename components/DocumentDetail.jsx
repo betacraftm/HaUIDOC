@@ -39,9 +39,9 @@ const DocumentDetail = ({ docId, userId, doc }) => {
         // If proxy works, create a download link
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
-        a.download = doc.title || 'document.pdf';
+        a.download = doc.title || "document.pdf";
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
@@ -101,17 +101,18 @@ const DocumentDetail = ({ docId, userId, doc }) => {
             <TitleSkeleton />
           ) : (
             <div className="w-full border-b border-gray-200 p-6 lg:w-1/3 lg:border-r lg:border-b-0">
-              <div className="mb-4 flex items-center justify-between">
-                <h1 className="text-3xl font-extrabold text-gray-900">
+              <div className="mb-4 flex items-start justify-between gap-4">
+                <h1 className="line-clamp-3 max-w-full flex-1 text-2xl leading-snug font-extrabold break-words whitespace-normal text-gray-900 lg:text-3xl">
                   {doc.title}
                 </h1>
+
                 <Star
                   size={30}
                   strokeWidth={1.5}
                   style={{ color: "var(--color-primary)" }}
                   onClick={toggleLike}
                   fill={isLiked ? "var(--color-primary)" : "white"}
-                  className="cursor-pointer"
+                  className="mt-1 flex-shrink-0 cursor-pointer"
                 />
               </div>
               <div className="mb-6 flex flex-col gap-2 text-sm text-gray-500">

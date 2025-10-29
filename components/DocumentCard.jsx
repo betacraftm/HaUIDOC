@@ -34,7 +34,7 @@ const DocumentCard = ({ title, subject, linkUrl, metaData, doc }) => {
     >
       <div className="flex flex-col px-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="mb-4 sm:mb-0 sm:w-2/3">
-          <h3 className="line-clamp-2 text-xl font-bold text-gray-800 transition-colors duration-200">
+          <h3 className="truncate text-xl font-bold text-gray-800 transition-colors duration-200">
             {title}
           </h3>
         </div>
