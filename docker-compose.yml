@@ -3,13 +3,10 @@ services:
     image: mysql:8
     container_name: hauidoc-db
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
+    env_file:
+      - .env.db
 
   phpMyAdmin:
     image: phpmyadmin
@@ -34,8 +31,8 @@ services:
     depends_on:
       - db
       - libreoffice
-    environment:
-      NODE_ENV: "production"
+    # environment:
+    #   NODE_ENV: "production"
 
   libreoffice:
     build: ../libre-convert

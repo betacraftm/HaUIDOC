@@ -96,6 +96,7 @@ const Header = () => {
                 width={28}
                 onClick={() => setUserDropdownOpen(!isUserDropdownOpen)}
                 className="ring-primary h-7 w-7 cursor-pointer rounded-full p-0.5 ring-2"
+                unoptimized
               />
               {isUserDropdownOpen && (
                 <ul className="ring-opacity-5 absolute right-0 z-50 mt-5 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black">
@@ -124,10 +125,10 @@ const Header = () => {
                   </li>
                   <li>
                     <button
-                    onClick={async () => {
-                    setUserDropdownOpen(false);
-                    await signOut({ callbackUrl: "/" });
-                    }}
+                      onClick={async () => {
+                        setUserDropdownOpen(false);
+                        await signOut({ callbackUrl: "/" });
+                      }}
                       className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100"
                     >
                       <LogOut className="h-4 w-4" />

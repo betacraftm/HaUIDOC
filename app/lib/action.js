@@ -240,30 +240,45 @@ export const uploadDocument = async (prevState, formData) => {
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
       documentFile.type === "application/msword"
     ) {
-      const buffer = await documentFile.arrayBuffer();
+      console.log("Converting Word document to PDF...");
+      console.log("Original file size:", documentFile.size, "bytes");
 
+      // Get the file as ArrayBuffer
+      const arrayBuffer = await documentFile.arrayBuffer();
+
+      console.log("ArrayBuffer size:", arrayBuffer.byteLength, "bytes");
+
+      // Send as binary data
       const response = await fetch(
         `${process.env.CONVERT_API_URL}/api/convert`,
         {
           method: "POST",
-          body: buffer,
+          body: arrayBuffer, // Send ArrayBuffer directly
           headers: {
             "Content-Type": documentFile.type,
+            "Content-Length": arrayBuffer.byteLength.toString(),
           },
         },
       );
 
       if (!response.ok) {
-        throw new Error("Conversion failed");
+        const errorText = await response.text();
+        console.error("Conversion failed:", response.status, errorText);
+        throw new Error(`Conversion failed: ${response.status} - ${errorText}`);
       }
 
+      // Get the PDF as ArrayBuffer
       const pdfBuffer = await response.arrayBuffer();
 
-      // Replace file with PDF
+      console.log("Converted PDF size:", pdfBuffer.byteLength, "bytes");
+
+      // Create new File object with PDF data
       fileName = fileName.replace(/\.(docx|doc)$/i, ".pdf");
       fileToUpload = new File([pdfBuffer], fileName, {
         type: "application/pdf",
       });
+
+      console.log("PDF file created:", fileName);
     }
 
     const storageRef = ref(storage, `documents/${fileName}`);

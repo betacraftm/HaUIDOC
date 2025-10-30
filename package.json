@@ -9,8 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test-firebase-admin": "curl http://localhost:3000/api/test-admin",
-    "postinstall": "mkdir -p public && curl -o public/pdf.worker.min.mjs https://unpkg.com/pdfjs-dist@5.3.93/build/pdf.worker.min.mjs"
+    "test-firebase-admin": "curl http://localhost:3000/api/test-admin"
   },
   "dependencies": {
     "@prisma/client": "^6.11.1",

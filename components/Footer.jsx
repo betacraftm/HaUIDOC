@@ -88,8 +88,8 @@ const Footer = () => {
             alt="HaUIDOC Logo"
             width={128}
             height={28}
-            className="inline-block"
             unoptimized
+            className="inline-block"
           />
         </div>
       </div>

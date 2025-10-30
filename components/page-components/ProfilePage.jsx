@@ -58,6 +58,7 @@ const ProfileFormClient = ({ user, majors }) => {
               className="h-full w-full object-cover"
               height={78}
               width={78}
+              unoptimized
             />
           </div>
         </div>

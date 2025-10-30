@@ -108,6 +108,7 @@ const CommentSection = ({ docId, userId }) => {
                   height={40}
                   width={40}
                   className="h-10 w-10 rounded-full object-cover"
+                  unoptimized
                 />
               </div>
               <div className="min-w-0 flex-1">
