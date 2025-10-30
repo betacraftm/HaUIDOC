@@ -4,12 +4,24 @@ services:
     container_name: hauidoc-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: hauidoc
-      MYSQL_USER: betacraft
-      MYSQL_PASSWORD: Datvipbn003!
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
+
+  phpMyAdmin:
+    image: phpmyadmin
+    container_name: hauidoc-phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: db
+    depends_on:
+      - db
 
   web:
     build: .
