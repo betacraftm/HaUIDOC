@@ -2,15 +2,12 @@
 
 import Link from "next/link";
 import { anton } from "public/fonts";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-const router = useRouter();
-const { data: session, update } = useSession();
-const [error, setError] = useState("");
-const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
   const [pendingGoogle, setPendingGoogle] = useState(false);
 
   async function handleSubmit(event) {
@@ -30,11 +27,10 @@ const [pending, setPending] = useState(false);
       });
 
       if (result?.error) {
-      setError("Tên đăng nhập hoặc mật khẩu không đúng.");
+        setError("Tên đăng nhập hoặc mật khẩu không đúng.");
       } else {
-      // Wait for session to update
-        await update();
-        router.push("/home");
+        // Force full page reload to update session
+        window.location.href = "/home";
       }
     } catch (err) {
       console.log(err);
@@ -46,12 +42,12 @@ const [pending, setPending] = useState(false);
   }
 
   async function handleGoogleSubmit(event) {
-  event.preventDefault();
-  setPendingGoogle(true);
+    event.preventDefault();
+    setPendingGoogle(true);
 
-  const res = await signIn("google");
-  if (res?.ok) {
-      await update();
+    const res = await signIn("google");
+    if (res?.ok) {
+      window.location.href = "/home";
     }
     console.log(res);
   }
