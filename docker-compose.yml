@@ -2,7 +2,7 @@ services:
   db:
     image: mysql:8
     container_name: hauidoc-db
-    restart: always
+    restart: no
     volumes:
       - mysql_data:/var/lib/mysql
     env_file:
@@ -11,7 +11,7 @@ services:
   phpMyAdmin:
     image: phpmyadmin
     container_name: hauidoc-phpmyadmin
-    restart: always
+    restart: no
     ports:
       - "8080:80"
     environment:
@@ -23,7 +23,7 @@ services:
   web:
     build: .
     container_name: hauidoc-web
-    restart: always
+    restart: no
     ports:
       - "3000:3000"
     env_file:
@@ -37,7 +37,7 @@ services:
   libreoffice:
     build: ../libre-convert
     container_name: hauidoc-libreoffice
-    restart: always
+    restart: no
     depends_on:
       - db
 
