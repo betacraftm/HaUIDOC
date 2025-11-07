@@ -253,7 +253,7 @@ const UploadPage = ({ subjectsList }) => {
                   <span className="text-primary font-bold">chọn tệp</span>
                 </p>
                 <p className="mt-1 text-sm text-gray-500">
-                  Hỗ trợ: PDF, DOCX (tối đa 10MB)
+                  Hỗ trợ: PDF, DOCX (tối đa 5MB)
                 </p>
               </div>
             ) : (
