@@ -26,7 +26,7 @@ const SearchBar = () => {
     <div className="relative mb-8 overflow-hidden rounded-full bg-white shadow-md">
       <input
         type="text"
-        placeholder="Tìm kiếm tài liệu, khóa học, hoặc đề tài..."
+        placeholder="Tìm kiếm tài liệu, môn học..."
         className="focus:ring-primary-light w-full rounded-full py-3 pr-12 pl-5 text-lg transition-all duration-200 focus:ring-2 focus:outline-none"
         defaultValue={searchParams.get("query")?.toString()}
         onChange={(e) => {
