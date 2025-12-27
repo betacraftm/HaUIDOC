@@ -28,9 +28,9 @@ const UploadPage = ({ subjectsList }) => {
       return false;
     }
 
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 5MB
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10mb
     if (file.size > MAX_FILE_SIZE) {
-      setFileError("Kích thước tệp không được vượt quá 5MB.");
+      setFileError("Kích thước tệp không được vượt quá 10MB.");
       return false;
     }
 
@@ -253,7 +253,7 @@ const UploadPage = ({ subjectsList }) => {
                   <span className="text-primary font-bold">chọn tệp</span>
                 </p>
                 <p className="mt-1 text-sm text-gray-500">
-                  Hỗ trợ: PDF, DOCX (tối đa 5MB)
+                  Hỗ trợ: PDF, DOCX (tối đa 10MB)
                 </p>
               </div>
             ) : (
