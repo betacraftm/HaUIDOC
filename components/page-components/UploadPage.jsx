@@ -28,7 +28,7 @@ const UploadPage = ({ subjectsList }) => {
       return false;
     }
 
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 5MB
     if (file.size > MAX_FILE_SIZE) {
       setFileError("Kích thước tệp không được vượt quá 5MB.");
       return false;
