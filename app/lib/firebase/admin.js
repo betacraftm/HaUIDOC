@@ -1,14 +1,14 @@
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getStorage } from "firebase-admin/storage";
 
-// Initialize Firebase Admin if not already initialized
-if (!getApps().length) {
-  const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
+// Khởi tạo Firebase Admin lazily hoặc bỏ qua lỗi ở build time
+function initFirebase() {
+  if (getApps().length > 0) return true;
 
+  const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
   if (!privateKey) {
-    throw new Error(
-      "FIREBASE_ADMIN_PRIVATE_KEY environment variable is not set",
-    );
+    console.warn("FIREBASE_ADMIN_PRIVATE_KEY is not set. Firebase Admin is not initialized.");
+    return false;
   }
 
   const formattedPrivateKey = privateKey.replace(/\\n/g, "\n");
@@ -23,12 +23,19 @@ if (!getApps().length) {
       storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
     });
     console.log("Firebase Admin initialized successfully");
+    return true;
   } catch (error) {
     console.error("Failed to initialize Firebase Admin:", error);
-    throw error;
+    return false;
   }
 }
 
-const bucket = getStorage().bucket();
+let bucket;
+if (initFirebase()) {
+  bucket = getStorage().bucket();
+} else {
+  // Dummy object to prevent destructuring errors if any
+  bucket = null;
+}
 
 export { bucket };

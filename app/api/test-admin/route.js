@@ -1,5 +1,7 @@
 import { bucket } from "@/lib/firebase/admin";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     if (!process.env.FIREBASE_ADMIN_PRIVATE_KEY) {
