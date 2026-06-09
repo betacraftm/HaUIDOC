@@ -13,4 +13,12 @@ export const authConfig = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   trustHost: true,
+  callbacks: {
+    async session({ session, token }) {
+      if (token.user) {
+        session.user = token.user;
+      }
+      return session;
+    },
+  },
 };
