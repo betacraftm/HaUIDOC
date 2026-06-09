@@ -13,7 +13,7 @@ services:
     container_name: hauidoc-phpmyadmin
     restart: no
     ports:
-      - "8080:80"
+      - "8081:80"
     environment:
       PMA_ARBITRARY: 1
       PMA_HOST: db
@@ -38,8 +38,6 @@ services:
     build: ../libre-convert
     container_name: hauidoc-libreoffice
     restart: no
-    depends_on:
-      - db
 
 volumes:
   mysql_data:

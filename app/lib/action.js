@@ -35,11 +35,9 @@ import {
   uploadSchema,
   resetPasswordSchema,
 } from "./definition";
-import { storage } from "./firebase/config";
-import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { bucket } from "./firebase/admin";
 import { getSession } from "./getSession";
 import { revalidatePath } from "next/cache";
-import { getAuth, signInAnonymously } from "firebase/auth";
 import { PrismaClient } from "generated/prisma";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
@@ -229,9 +227,6 @@ export const uploadDocument = async (prevState, formData) => {
         .then((subject) => subject.id);
     }
 
-    const auth = getAuth();
-    await signInAnonymously(auth);
-
     let fileToUpload = documentFile;
     let fileName = documentFile.name;
 
@@ -281,13 +276,19 @@ export const uploadDocument = async (prevState, formData) => {
       console.log("PDF file created:", fileName);
     }
 
-    const storageRef = ref(storage, `documents/${fileName}`);
-
-    const snapshot = await uploadBytes(storageRef, fileToUpload);
+    const fileBuffer = Buffer.from(await fileToUpload.arrayBuffer());
+    const filePath = `documents/${fileName}`;
+    const file = bucket.file(filePath);
+    
+    await file.save(fileBuffer, {
+      metadata: {
+        contentType: fileToUpload.type,
+      },
+    });
 
     const { user } = await getSession();
 
-    const dowloadURL = await getDownloadURL(snapshot.ref);
+    const dowloadURL = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filePath)}?alt=media`;
 
     newDocument = await prisma.document.create({
       data: {

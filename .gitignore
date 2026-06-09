@@ -47,3 +47,5 @@ create-db.sql
 
 # PDF worker (downloaded from CDN)
 public/pdf.worker.min.mjs
+
+FEATURE_PROPOSALS.md

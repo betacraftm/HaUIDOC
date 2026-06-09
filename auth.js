@@ -21,12 +21,14 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "generated/prisma";
-import Google from "next-auth/providers/google";
+import { authConfig } from "./auth.config";
 
 const prisma = new PrismaClient();
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   providers: [
+    ...authConfig.providers,
     Credentials({
       credentials: {
         username: { label: "Username or Email" },
@@ -69,13 +71,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         };
       },
     }),
-    Google,
   ],
-
-  session: {
-    strategy: "jwt",
-    maxAge: 7 * 24 * 60 * 60,
-  },
 
   callbacks: {
     async signIn({ user, account, profile }) {
@@ -153,10 +149,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
 
-  pages: {
-    signIn: "/login",
-  },
-  secret: process.env.NEXTAUTH_SECRET,
   basePath: "/api/auth",
-  trustHost: true,
 });

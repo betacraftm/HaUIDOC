@@ -1,5 +1,4 @@
-import { initializeApp, getApps, cert } from "firebase-admin/app";
-import { getStorage } from "firebase-admin/storage";
+import { bucket } from "@/lib/firebase/admin";
 
 export async function GET() {
   try {
@@ -59,21 +58,8 @@ export async function GET() {
       );
     }
 
-    // Try to initialize Firebase Admin
-    if (!getApps().length) {
-      initializeApp({
-        credential: cert({
-          projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-          clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-          privateKey: privateKey,
-        }),
-        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-      });
-    }
-
     // Test Firebase Admin functionality including storage access
     try {
-      const bucket = getStorage().bucket();
       console.log(
         "Firebase Admin initialized successfully with storage access",
       );
